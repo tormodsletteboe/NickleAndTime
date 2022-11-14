@@ -21,6 +21,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
+import GoogleMaps from '../GoogleMapsWrapper/GoogleMaps';
 
 function App() {
   const dispatch = useDispatch();
@@ -66,6 +67,14 @@ function App() {
             path="/info"
           >
             <InfoPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in shows InfoPage else shows LoginPage
+            exact
+            path="/map"
+          >
+            <GoogleMaps />
           </ProtectedRoute>
 
           <Route

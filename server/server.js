@@ -1,6 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+var cron = require('node-cron');
+let i=0;
+cron.schedule('*/10 * * * * *', () => {
+    console.log(new Date().toLocaleString());
+    console.log('Hi I am Tom with the Ramirez cohort',i++);
+    console.log('-------------');
+});
+cron.schedule('*/12 * * * * *', () => {
+  console.log(new Date().toLocaleString());
+  console.log('To the 🚌 👆');
+  console.log('-------------');
+});
 
 const app = express();
 
