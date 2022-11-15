@@ -4,17 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 function RegisterForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneNnumber, setPhoneNumber] = useState('');
   const errors = useSelector((store) => store.errors);
   const dispatch = useDispatch();
 
   const registerUser = (event) => {
     event.preventDefault();
-
+    console.log('asdfasfasdfasf',phoneNnumber);
     dispatch({
       type: 'REGISTER',
       payload: {
         username: username,
         password: password,
+        phoneNumber: phoneNnumber,
       },
     });
   }; // end registerUser
@@ -52,6 +54,21 @@ function RegisterForm() {
         </label>
       </div>
       <div>
+      <div>
+        <label htmlFor="phone_number">
+          Phone #:
+          <input
+            type="text"
+            name="phone_number"
+            required
+            value={phoneNnumber}
+            onChange={(event) => {
+              setPhoneNumber(event.target.value);
+              // console.log(phoneNnumber);
+            }}
+          />
+        </label>
+      </div>
         <input className="btn" type="submit" name="submit" value="Register" />
       </div>
     </form>

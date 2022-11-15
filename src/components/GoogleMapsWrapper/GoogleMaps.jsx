@@ -36,7 +36,15 @@ export default function GoogleMaps() {
 
 function GoogleMapsTheMap() {
    const [mapContainer, setMapContainer] = useState(null);
-   const [selected, setSelected] = useState(null);
+   const [selected, setSelected] = useState({lat: 44.6, lng: -93.6 });
+   const [marker, setMarker] = useState();
+
+  useEffect(()=>{
+   // console.log('in useeffect GoogleMapsTheMap');
+   // console.log(`selected.lat: ${selected.lat} selected.lng: ${selected.lng}`);
+
+  },[selected])
+   
 
    return (
       <GoogleMapProvider
@@ -50,8 +58,9 @@ function GoogleMapsTheMap() {
          <div className="places-container">
             <PlacesAutocomplete setSelected={setSelected} />
          </div>
-         {selected && console.log('selected: ',selected.lat,selected.lng)}
-         {/* {selected && <Marker position={selected} />} */}
+         {console.log('selected.lat',selected.lat)}
+         {/* <Marker position = {{lat: selected.lat, lng: selected.lng}} /> */}
+         
          
       </GoogleMapProvider>
    );
@@ -106,12 +115,16 @@ const PlacesAutocomplete = ({ setSelected }) => {
    } = usePlacesAutocomplete();
 
    const handleSelect = async (address) => {
+
+      console.log('in handleselect');
       setValue(address, false);
       clearSuggestions();
 
       const results = await getGeocode({ address });
       const { lat, lng } = await getLatLng(results[0]);
-      // console.log(`lat: ${lat} lng: ${lng}`);
+       console.log(`lat: ${lat} lng: ${lng}`);
+       console.log(address);
+       console.log(results);
       setSelected({ lat, lng });
    };
 
