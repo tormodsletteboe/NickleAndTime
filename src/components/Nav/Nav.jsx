@@ -32,9 +32,9 @@ function Nav() {
               Info Page
             </Link>
 
-            <Link className="navLink" to="/map">
+            {/* <Link className="navLink" to="/map">
               Map
-            </Link>
+            </Link> */}
 
             <LogOutButton className="navLink" />
           </>
