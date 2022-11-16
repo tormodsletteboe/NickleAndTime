@@ -2,6 +2,7 @@ import React from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import './GoogleMapNickleAndTime.css';
+import globalconst from '../../GlobalVar.jsx';
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -14,10 +15,10 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 
 
-const libraries = ["places"];
+
 const containerStyle = {
   width: '100%',
   height: '700px'
@@ -44,8 +45,9 @@ function GoogleMapNickleAndTime() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
   const [placeSelected, SetPlaceSelected] = useState([]);
-  const [visitlimit,setVisitLimit]=useState();
+  const [visitlimit, setVisitLimit] = useState();
   const dispatch = useDispatch();
+  const user = useSelector((store)=>store.user);
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -59,12 +61,37 @@ function GoogleMapNickleAndTime() {
     // console.log(`Longitude: ${crd.longitude}`);
     // console.log(`More or less ${crd.accuracy} meters.`);
   }
-  function onAdd(){
+  function onAdd() {
     //create a dispatch with a payload to update 2 tables
+    console.log('in onAdd');
+    console.log(user);
+    console.log(placeSelected);
+    console.log(lat);
+    console.log(lng);
+    console.log(visitlimit);
+    
+    //junction table
+    const user_id = user.id;
+    const visit_limit = visitlimit;
 
-    // dispatch({
-    //   type: ''
-    // });
+    //place to avoid table
+    const name = 'starbucks';
+    const google_place_id = placeSelected[0].place_id;
+    const latitude = lat;
+    const longitude = lng;
+
+
+      dispatch({
+        type: 'ADD_PLACE_TO_AVOID',
+        payload: {
+          user_id,
+          visit_limit,
+          name,
+          google_place_id,
+          latitude,
+          longitude
+        }
+      });
   }
 
   useEffect(() => {
@@ -74,16 +101,16 @@ function GoogleMapNickleAndTime() {
   return (
     <LoadScript
       googleMapsApiKey="AIzaSyCZytryhTMKdfGGhl-A-6dRhHdgj_pz1gs"
-      libraries={libraries}
+      libraries={globalconst.libraries}
     >
       <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} />
       {/* <button onClick={() => console.log('selected is :', placeSelected[0].place_id)}>CLicke Me</button>
       <button onClick={() => console.log(`lat: ${lat} lng:${lng}`)} style={{marginBottom:5}}>CLicke Me</button> */}
       <button onClick={onAdd}>Add</button>
-      <input 
-      type={'number'}
-      placeholder='weekly visit limit ex:2'
-      onChange={(evt)=>setVisitLimit(Number(evt.target.value))}
+      <input
+        type={'number'}
+        placeholder='weekly visit limit ex:2'
+        onChange={(evt) => setVisitLimit(Number(evt.target.value))}
       />
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -92,7 +119,7 @@ function GoogleMapNickleAndTime() {
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
-        <Marker position={{lat: lat, lng:lng}} />
+        <Marker position={{ lat: lat, lng: lng }} />
 
       </GoogleMap>
 
@@ -102,7 +129,7 @@ function GoogleMapNickleAndTime() {
 
 
 const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng }) => {
- 
+
   const {
     ready,
     value,
@@ -116,9 +143,9 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng }) => {
     // console.log('in handleselect');
     setValue(address, false);
     clearSuggestions();
-    // console.log('asddddddddddd', address);
+    console.log('asddddddddddd', address);
     const results = await getGeocode({ address });
-    // console.log('resultttttttt', results);
+    console.log('resultttttttt', results);
     const { lat, lng } = await getLatLng(results[0]);
     // console.log(`lat: ${lat} lng: ${lng}`);
     SetLat(lat);
