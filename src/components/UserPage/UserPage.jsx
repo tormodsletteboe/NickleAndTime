@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useEffect,useState } from 'react';
-import UbiGoogleMaps from '../UbiLabsGoogleMaps/UbiGoogleMaps';
+// import { useEffect,useState } from 'react';
+// import UbiGoogleMaps from '../UbiLabsGoogleMaps/UbiGoogleMaps';
 import GoogleMapNickleAndTime from '../GoogleMap/GoogleMapNickleAndTime';
 
 

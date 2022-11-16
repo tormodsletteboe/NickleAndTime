@@ -14,6 +14,7 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
+import { useDispatch } from 'react-redux';
 
 
 const libraries = ["places"];
@@ -43,7 +44,8 @@ function GoogleMapNickleAndTime() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
   const [placeSelected, SetPlaceSelected] = useState([]);
-
+  const [visitlimit,setVisitLimit]=useState();
+  const dispatch = useDispatch();
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -57,7 +59,13 @@ function GoogleMapNickleAndTime() {
     // console.log(`Longitude: ${crd.longitude}`);
     // console.log(`More or less ${crd.accuracy} meters.`);
   }
+  function onAdd(){
+    //create a dispatch with a payload to update 2 tables
 
+    // dispatch({
+    //   type: ''
+    // });
+  }
 
   useEffect(() => {
     getLocation();
@@ -69,8 +77,14 @@ function GoogleMapNickleAndTime() {
       libraries={libraries}
     >
       <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} />
-      <button onClick={() => console.log('selected is :', placeSelected[0].place_id)}>CLicke Me</button>
-      <button onClick={() => console.log(`lat: ${lat} lng:${lng}`)} style={{marginBottom:5}}>CLicke Me</button>
+      {/* <button onClick={() => console.log('selected is :', placeSelected[0].place_id)}>CLicke Me</button>
+      <button onClick={() => console.log(`lat: ${lat} lng:${lng}`)} style={{marginBottom:5}}>CLicke Me</button> */}
+      <button onClick={onAdd}>Add</button>
+      <input 
+      type={'number'}
+      placeholder='weekly visit limit ex:2'
+      onChange={(evt)=>setVisitLimit(Number(evt.target.value))}
+      />
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: lat, lng: lng }}
