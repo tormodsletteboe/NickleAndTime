@@ -21,8 +21,28 @@ function* addPlaceToAvoid(action){
     
 
 }
+
+function* fetchPlacesToAvoid(){
+    try {
+        const config = {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+          };
+          const result = yield axios.get('/api/user/places',config);
+          console.log('result.data',result.data);
+          yield put({
+            type: 'SET_PLACES_TO_AVOID',
+            payload: result.data
+          })
+        
+    } 
+    catch (error) {
+        console.error('Error in fetchPlacesToAvoid',error);
+    }
+}
 function* placesToAvoidSaga() {
     yield takeLatest('ADD_PLACE_TO_AVOID', addPlaceToAvoid);
+    yield takeLatest('FETCH_PLACES_TO_AVOID',fetchPlacesToAvoid);
   }
   
   export default placesToAvoidSaga;

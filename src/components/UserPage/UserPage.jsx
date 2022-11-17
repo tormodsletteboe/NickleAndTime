@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 // import { useEffect,useState } from 'react';
 // import UbiGoogleMaps from '../UbiLabsGoogleMaps/UbiGoogleMaps';
 import GoogleMapNickleAndTime from '../GoogleMap/GoogleMapNickleAndTime';
-
+import PlacesToAvoidDrawer from '../Drawer/Drawer';
 
 
 
@@ -18,7 +18,7 @@ function UserPage() {
   return (
     <div className="container">
       <GoogleMapNickleAndTime />
-      {/* <UbiGoogleMaps /> */}
+      <PlacesToAvoidDrawer />
     </div>
   );
 }

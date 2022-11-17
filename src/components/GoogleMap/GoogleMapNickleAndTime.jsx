@@ -100,7 +100,7 @@ function GoogleMapNickleAndTime() {
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyCZytryhTMKdfGGhl-A-6dRhHdgj_pz1gs"
+      googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
       <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} />
