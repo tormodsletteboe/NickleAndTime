@@ -106,11 +106,31 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
   const sqlParams = [req.user.id];
   pool.query(sqlText, sqlParams)
     .then((dbRes) => {
-      console.log('dbRes.rows asdfasdfasdf',dbRes.rows);
+      console.log('dbRes.rows asdfasdfasdf', dbRes.rows);
       res.send(dbRes.rows);
     })
     .catch((err) => {
       console.log('GET /places failed: ', err);
+      res.sendStatus(500);
+    });
+});
+
+router.post('/currentLocation', rejectUnauthenticated, (req, res) => {
+  const sqlText = `
+  INSERT INTO user_location (user_id,current_latitude,current_longitude)
+  VALUES ($1,$2,$3)
+  ON CONFLICT (user_id)
+  DO UPDATE SET
+    current_latitude = $2, current_longitude = $3
+  WHERE user_location.user_id = $1
+  ;`;
+  const params = [req.user.id,req.body.current_latitude,req.body.current_longitude];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.log('POST /currentLocation failed: ', err);
       res.sendStatus(500);
     });
 });

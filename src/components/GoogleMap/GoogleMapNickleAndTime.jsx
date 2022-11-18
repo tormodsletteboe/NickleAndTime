@@ -46,6 +46,7 @@ function GoogleMapNickleAndTime() {
   const [lng, setLng] = useState();
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
+  const [businessName,setBusinessName] = useState();
   const dispatch = useDispatch();
   const user = useSelector((store)=>store.user);
 
@@ -75,7 +76,7 @@ function GoogleMapNickleAndTime() {
     const visit_limit = visitlimit;
 
     //place to avoid table
-    const name = 'starbucks';
+    const name = businessName;
     const google_place_id = placeSelected[0].place_id;
     const latitude = lat;
     const longitude = lng;
@@ -103,7 +104,7 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
-      <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} />
+      <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
       {/* <button onClick={() => console.log('selected is :', placeSelected[0].place_id)}>CLicke Me</button>
       <button onClick={() => console.log(`lat: ${lat} lng:${lng}`)} style={{marginBottom:5}}>CLicke Me</button> */}
       <button onClick={onAdd}>Add</button>
@@ -128,7 +129,7 @@ function GoogleMapNickleAndTime() {
 }
 
 
-const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng }) => {
+const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng,SetB_Name }) => {
 
   const {
     ready,
@@ -144,6 +145,9 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng }) => {
     setValue(address, false);
     clearSuggestions();
     console.log('asddddddddddd', address);
+    console.log(address.split(','));
+    console.log(address.split(",")[0]);
+
     const results = await getGeocode({ address });
     console.log('resultttttttt', results);
     const { lat, lng } = await getLatLng(results[0]);
@@ -151,6 +155,7 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng }) => {
     SetLat(lat);
     SetLng(lng);
     SetPlaceSelected(results);
+    SetB_Name(address.split(",")[0]);
   };
 
   return (
