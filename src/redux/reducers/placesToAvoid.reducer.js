@@ -1,4 +1,4 @@
-const placesToAvoidReducer = (state = {}, action) => {
+const placesToAvoidReducer = (state = [], action) => {
     switch (action.type) {
       case 'SET_PLACES_TO_AVOID':
         return action.payload;

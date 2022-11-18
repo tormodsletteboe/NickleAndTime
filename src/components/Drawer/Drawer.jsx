@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -10,17 +10,21 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import {useDispatch} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+
 export default function PlacesToAvoidDrawer() {
 
     const dispatch = useDispatch();
-    React.useEffect(() => {
+    const placesToAvoid = useSelector((store) => store.placesToAvoid);
+    // console.log('asdfasdfasdfasdfasf',placesToAvoid);
+    useEffect(() => {
         dispatch({
             type: 'FETCH_PLACES_TO_AVOID'
         });
 
-    });
-    const [state, setState] = React.useState({
+    }, []);
+    const [state, setState] = useState({
         top: false,
         left: false,
         bottom: false,
@@ -35,43 +39,49 @@ export default function PlacesToAvoidDrawer() {
         setState({ ...state, [anchor]: open });
     };
 
-    const list = (anchor) => (
-        <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-            role="presentation"
-            onClick={toggleDrawer(anchor, false)}
-            onKeyDown={toggleDrawer(anchor, false)}
-        >
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-        </Box>
-    );
+    // const list = (anchor) => (
+    //     <Box
+    //         sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+    //         role="presentation"
+    //         onClick={toggleDrawer(anchor, false)}
+    //         onKeyDown={toggleDrawer(anchor, false)}
+    //     >
+    //         <List>
+    //             {placesToAvoid ?? placesToAvoid.map((place) => (
+    //                 <ListItem key={place.name} disablePadding>
+    //                     <ListItemButton>
+    //                         <ListItemIcon>
+    //                             <MailIcon />
+    //                         </ListItemIcon>
+    //                         <ListItemText primary={place.name} />
+    //                     </ListItemButton>
+    //                 </ListItem>
+    //             ))}
+    //         </List>
+    //         <Divider />
+    //     </Box>
+    // );
+
 
     return (
         <div>
             {['bottom'].map((anchor) => (
-                <React.Fragment key={anchor}>
+                <Fragment key={anchor}>
                     <Button onClick={toggleDrawer(anchor, true)}>{"Places To Avoid"}</Button>
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
                         onClose={toggleDrawer(anchor, false)}
                     >
-                        {list(anchor)}
+                        {/* {list(anchor)} */}
+                        {placesToAvoid.map((place) => (
+                            <button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>
+                        ))}
                     </Drawer>
-                </React.Fragment>
+                </Fragment>
             ))}
         </div>
     );
+
+
 }
