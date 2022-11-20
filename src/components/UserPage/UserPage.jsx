@@ -34,7 +34,7 @@ function UserPage() {
     const interval = setInterval(() => getLocation(), 60000);
     //dostuff();
     return () => clearInterval(interval);
-
+    //TODO: uncomment above
   }, []);
 
 
@@ -162,6 +162,14 @@ const dostuff = (currentLocationD, placesToAv, callback) => {
 
           console.log('severity is: ', severity);
           //get message from table with id, based on severity
+          dispatch({
+            type: 'FETCH_SEVERITY_MSG',
+            payload: {
+              severity: severity
+            }
+          })
+            //do a dispatch to set reduc store message
+            //display message
           //post to trigger_sms (user_id,avoid_place_id,message_id);
           //alert user
           console.log('get out of there...........');

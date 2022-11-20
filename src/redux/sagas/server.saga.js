@@ -22,9 +22,33 @@ function* incrementVisitCount(action){
     }
 }
 
+function* fetchSeverityMSG(action){
+    try {
+        // const config = {
+        //     headers: { 'Content-Type': 'application/json' },
+        //     withCredentials: true,
+        //   };
+      
+          // send the action.payload as the body
+          // the config includes credentials which
+          // allow the server session to recognize the user
+          const msg = yield axios.get('/message',action.payload);
+          console.log('msg is:',msg);
+          yield put({
+            type: 'SET_SEVERITY_MSG',
+            payload: msg.data
+
+          });
+    } 
+    catch (error) {
+        console.error('Error in incrementVisitCount',error);
+    }
+}
+
 
 function* serverSaga() {
     yield takeLatest('INCREMENT_VISIT_COUNT', incrementVisitCount);
+    yield takeLatest('FETCH_SEVERITY_MSG', fetchSeverityMSG);
   }
   
   export default serverSaga;
