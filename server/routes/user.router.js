@@ -94,6 +94,7 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
   const sqlText = `
     SELECT 
           avoid_place."name",
+          avoid_place.id,
           user_avoidplace.visit_count,
           user_avoidplace.visit_limit,
           user_avoidplace.active,

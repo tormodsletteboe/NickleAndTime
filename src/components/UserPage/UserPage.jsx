@@ -28,13 +28,13 @@ function UserPage() {
 
   const dispatch = useDispatch();
   const currentLocationData = useSelector((store) => store.currentLocation);
-  const placesToAvoidData = useSelector((store)=>store.placesToAvoid);
+  const placesToAvoidData = useSelector((store) => store.placesToAvoid);
 
   useEffect(() => {
     const interval = setInterval(() => getLocation(), 60000);
     //dostuff();
     return () => clearInterval(interval);
-   
+
   }, []);
 
 
@@ -59,13 +59,13 @@ function UserPage() {
       }
     })
   }
- 
+
 
 
   return (
     <div className="container">
       <GoogleMapNickleAndTime />
-      <button onClick={() => dostuff(currentLocationData,placesToAvoidData,dispatch)}>CLICK ME</button>
+      <button onClick={() => dostuff(currentLocationData, placesToAvoidData, dispatch)}>CLICK ME</button>
       <PlacesToAvoidDrawer />
     </div>
   );
@@ -106,48 +106,70 @@ function deg2rad(deg) {
 // const lat2 = 59.3225525;
 // const lng2 = 13.4619422;
 
-const dostuff = (currentLocationD, placesToAv,callback) => {
+const dostuff = (currentLocationD, placesToAv, callback) => {
 
   //const userLat = currentLocationData
   console.log(new Date().toLocaleString());
   let userLat = currentLocationD[0].current_latitude;
   let userLng = currentLocationD[0].current_longitude;
 
-  let places = placesToAv.map((place)=>{
+  let places = placesToAv.map((place) => {
     return {
       lat: place.latitude,
       lng: place.longitude,
-      id: place.id
+      id: place.id,
+      visitCount: place.visit_count,
+      visitLimit: place.visit_limit
     }
   });
 
-  for(let place of places){
-    let distance = getDistanceFromLatLonInKm(userLat,userLng,place.lat,place.lng)*1000;
-    let distance2=0;
-    console.log("the distance is: ",distance, 'm' );
-    if(distance <100){
+  for (let place of places) {
+    let distance = getDistanceFromLatLonInKm(userLat, userLng, place.lat, place.lng) * 1000;
+    let distance2 = 0;
+    console.log("the distance is: ", distance, 'm');
+    if (distance < 100) {
       console.log('You are to close .........');
       const tmer = setTimeout(() => {
-        distance2 = getDistanceFromLatLonInKm(userLat,userLng,place.lat,place.lng)*1000;
-        console.log("the distance is: ",distance2, 'm' );
-        if(distance2<100){
+        distance2 = getDistanceFromLatLonInKm(userLat, userLng, place.lat, place.lng) * 1000;
+        console.log("the distance is: ", distance2, 'm');
+        if (distance2 < 100) {
           //update visit count
           callback({
             type: 'INCREMENT_VISIT_COUNT',
-            payload:{
-              place_id:place.id
-            } 
+            payload: {
+              place_id: place.id
+            }
           })
-           //calculate severity
+          //calculate severity
+          let visitCount = place.visitCount + 1; // pluss 1 here means that the data has not been update in time, so eventually it will be 
+          let visitLimit = place.visitLimit;
+          let severity = -1;
+          if (visitLimit == 0) {
+            severity = 3;
+          }
+          else {
+            severity = visitCount / visitLimit;
+            if (severity < 0.5) {
+              severity = 1;
+            }
+            else if (severity >= 0.5 && severity <= 1.0) {
+              severity = 2;
+            }
+            else {
+              severity = 3;
+            }
+          }
+
+          console.log('severity is: ', severity);
           //get message from table with id, based on severity
           //post to trigger_sms (user_id,avoid_place_id,message_id);
           //alert user
-          alert('get out of there');
+          console.log('get out of there...........');
         }
       }, 6000);
-     
+
     }
-    
+
   }
 
   let lat1;
