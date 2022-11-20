@@ -5,7 +5,8 @@ import React from 'react';
 import GoogleMapNickleAndTime from '../GoogleMap/GoogleMapNickleAndTime';
 import PlacesToAvoidDrawer from '../Drawer/Drawer';
 import { useEffect } from 'react';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 const options = {
   enableHighAccuracy: true,
@@ -20,8 +21,23 @@ function error(err) {
 }
 
 
+
+
 function UserPage() {
   // this component doesn't do much to start, just renders some user reducer info to the DOM
+
+  const dispatch = useDispatch();
+  const currentLocationData = useSelector((store) => store.currentLocation);
+  const placesToAvoidData = useSelector((store)=>store.placesToAvoid);
+
+  useEffect(() => {
+    const interval = setInterval(() => getLocation(), 60000);
+    //dostuff();
+    return () => clearInterval(interval);
+   
+  }, []);
+
+
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
   }
@@ -43,19 +59,13 @@ function UserPage() {
       }
     })
   }
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setInterval(getLocation, 60000);
-    //do a dispatch with coords to database
-    
-
-  }, [])
+ 
 
 
   return (
     <div className="container">
       <GoogleMapNickleAndTime />
+      <button onClick={() => dostuff(currentLocationData,placesToAvoidData,dispatch)}>CLICK ME</button>
       <PlacesToAvoidDrawer />
     </div>
   );
@@ -66,4 +76,85 @@ export default UserPage;
 {/* <h2>Welcome, {user.username}!</h2>
       <p>Your ID is: {user.id}</p> */}
 {/* <LogOutButton className="btn" /> */ }
-      // import LogOutButton from '../LogOutButton/LogOutButton';
+// import LogOutButton from '../LogOutButton/LogOutButton';
+
+
+
+////////////////move this out eventuelly //////////////////////////////
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+  var dLon = deg2rad(lon2 - lon1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180)
+}
+
+
+// const lat1 = 59.3293371;
+// const lng1 = 13.4877472;
+
+// const lat2 = 59.3225525;
+// const lng2 = 13.4619422;
+
+const dostuff = (currentLocationD, placesToAv,callback) => {
+
+  //const userLat = currentLocationData
+  console.log(new Date().toLocaleString());
+  let userLat = currentLocationD[0].current_latitude;
+  let userLng = currentLocationD[0].current_longitude;
+
+  let places = placesToAv.map((place)=>{
+    return {
+      lat: place.latitude,
+      lng: place.longitude,
+      id: place.id
+    }
+  });
+
+  for(let place of places){
+    let distance = getDistanceFromLatLonInKm(userLat,userLng,place.lat,place.lng)*1000;
+    let distance2=0;
+    console.log("the distance is: ",distance, 'm' );
+    if(distance <100){
+      console.log('You are to close .........');
+      const tmer = setTimeout(() => {
+        distance2 = getDistanceFromLatLonInKm(userLat,userLng,place.lat,place.lng)*1000;
+        console.log("the distance is: ",distance2, 'm' );
+        if(distance2<100){
+          //update visit count
+          callback({
+            type: 'INCREMENT_VISIT_COUNT',
+            payload:{
+              place_id:place.id
+            } 
+          })
+           //calculate severity
+          //get message from table with id, based on severity
+          //post to trigger_sms (user_id,avoid_place_id,message_id);
+          //alert user
+          alert('get out of there');
+        }
+      }, 6000);
+     
+    }
+    
+  }
+
+  let lat1;
+  let lat2;
+  //const distance = getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2);
+  //console.log('distance: ', distance, 'km');
+}
+
+
+

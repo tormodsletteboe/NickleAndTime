@@ -134,4 +134,20 @@ router.post('/currentLocation', rejectUnauthenticated, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+router.get('/currentLocation', rejectUnauthenticated, (req, res) => {
+  const sqlText = `
+  SELECT * FROM user_location
+  WHERE user_id = $1
+ ;`;
+  const params = [req.user.id];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.send(dbRes.rows);
+    })
+    .catch((err) => {
+      console.log('GET /currentLocation failed: ', err);
+      res.sendStatus(500);
+    });
+});
 module.exports = router;
