@@ -45,5 +45,22 @@ router.put('/incrementVisitCount',rejectUnauthenticated,(req,res)=>{
 });
 
 
+//resetVisitCount
+router.put('/resetVisitCount',rejectUnauthenticated,(req,res)=>{
+    const sqlText  = `
+        UPDATE user_avoidplace
+        SET visit_count = 0
+        WHERE user_id = $1 AND avoid_place_id = $2
+    ;`;
+    const params = [req.user.id,req.body.place_id];
+    pool.query(sqlText,params)
+    .then((dBRes)=>{
+        res.sendStatus(200);
+    })
+    .catch((err)=>{
+        console.log('POST /incrementVisitCount failed: ', err);
+        res.sendStatus(500);
+    });
+});
 
 module.exports = router;

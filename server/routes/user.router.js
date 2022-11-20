@@ -64,7 +64,7 @@ router.post('/places', rejectUnauthenticated, (req, res) => {
   const params = [req.body.name, req.body.latitude, req.body.longitude, req.body.google_place_id];
   pool.query(queryText, params)
     .then((dbRes) => {
-      console.log('sdfasdfasdfasdfa', dbRes.rows[0].id);
+      // console.log('sdfasdfasdfasdfa', dbRes.rows[0].id);
       const sqlText = `
   INSERT INTO user_avoidplace (user_id,avoid_place_id,visit_limit,"user_id_CONCAT_avoid_place_id")
   VALUES ($1,$2,$3,$4)
@@ -107,7 +107,7 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
   const sqlParams = [req.user.id];
   pool.query(sqlText, sqlParams)
     .then((dbRes) => {
-      console.log('dbRes.rows asdfasdfasdf', dbRes.rows);
+      // console.log('dbRes.rows asdfasdfasdf', dbRes.rows);
       res.send(dbRes.rows);
     })
     .catch((err) => {

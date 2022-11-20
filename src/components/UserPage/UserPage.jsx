@@ -29,11 +29,12 @@ function UserPage() {
   const dispatch = useDispatch();
   const currentLocationData = useSelector((store) => store.currentLocation);
   const placesToAvoidData = useSelector((store) => store.placesToAvoid);
+  const severityMsg = useSelector((store)=> store.severityMsg);
 
   useEffect(() => {
-    const interval = setInterval(() => getLocation(), 60000);
-    //dostuff();
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => getLocation(), 6000);
+    // //dostuff();
+    // return () => clearInterval(interval);
     //TODO: uncomment above
   }, []);
 
@@ -59,13 +60,19 @@ function UserPage() {
       }
     })
   }
+  const resetVisitCountsIfConditionsAllow = ()=> {
+    dispatch({
+      type: 'RESET_VISIT_COUNT'
+    })
+  }
 
 
 
   return (
     <div className="container">
       <GoogleMapNickleAndTime />
-      <button onClick={() => dostuff(currentLocationData, placesToAvoidData, dispatch)}>CLICK ME</button>
+      <button onClick={() => dostuff(currentLocationData, placesToAvoidData, dispatch,severityMsg)}>CLICK ME</button>
+      <button onClick={resetVisitCountsIfConditionsAllow}> RESET VISIT COUNT</button>
       <PlacesToAvoidDrawer />
     </div>
   );
@@ -106,8 +113,7 @@ function deg2rad(deg) {
 // const lat2 = 59.3225525;
 // const lng2 = 13.4619422;
 
-const dostuff = (currentLocationD, placesToAv, callback) => {
-
+const dostuff = (currentLocationD, placesToAv, callback, severityMsg) => {
   //const userLat = currentLocationData
   console.log(new Date().toLocaleString());
   let userLat = currentLocationD[0].current_latitude;
@@ -162,28 +168,22 @@ const dostuff = (currentLocationD, placesToAv, callback) => {
 
           console.log('severity is: ', severity);
           //get message from table with id, based on severity
-          dispatch({
+           callback({
             type: 'FETCH_SEVERITY_MSG',
             payload: {
-              severity: severity
+              severity: severity,
+              avoidPlaceId: place.id
             }
           })
-            //do a dispatch to set reduc store message
-            //display message
-          //post to trigger_sms (user_id,avoid_place_id,message_id);
-          //alert user
-          console.log('get out of there...........');
+         
+         
         }
       }, 6000);
 
     }
 
   }
-
-  let lat1;
-  let lat2;
-  //const distance = getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2);
-  //console.log('distance: ', distance, 'km');
+  setTimeout(()=>{console.log(`xxxxxxx`,severityMsg[0].body)},1000);
 }
 
 
