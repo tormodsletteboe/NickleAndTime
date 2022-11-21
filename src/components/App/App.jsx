@@ -21,7 +21,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
-import GoogleMaps from '../GoogleMapsWrapper/GoogleMaps';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -38,16 +38,16 @@ function App() {
         <Nav />
         <Switch>
           {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-          <Redirect exact from="/" to="/home" />
+          {/* <Redirect exact from="/" to="/home" /> */}
 
           {/* Visiting localhost:3000/about will show the about page. */}
-          <Route
+          {/* <Route
             // shows AboutPage at all times (logged in or not)
             exact
             path="/about"
           >
             <AboutPage />
-          </Route>
+          </Route> */}
 
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:3000/user will show the UserPage if the user is logged in.
@@ -61,20 +61,12 @@ function App() {
             <UserPage />
           </ProtectedRoute>
 
-          <ProtectedRoute
+          {/* <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
             path="/info"
           >
             <InfoPage />
-          </ProtectedRoute>
-
-          {/* <ProtectedRoute
-            // logged in shows InfoPage else shows LoginPage
-            exact
-            path="/map"
-          >
-            <GoogleMaps />
           </ProtectedRoute> */}
 
           <Route
@@ -105,7 +97,7 @@ function App() {
             }
           </Route>
 
-          <Route
+          {/* <Route
             exact
             path="/home"
           >
@@ -117,7 +109,7 @@ function App() {
               // Otherwise, show the Landing page
               <LandingPage />
             }
-          </Route>
+          </Route> */}
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>

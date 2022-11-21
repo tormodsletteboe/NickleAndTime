@@ -10,7 +10,7 @@ function RegisterForm() {
 
   const registerUser = (event) => {
     event.preventDefault();
-    console.log('asdfasfasdfasf',phoneNnumber);
+    // console.log('asdfasfasdfasf',phoneNnumber);
     dispatch({
       type: 'REGISTER',
       payload: {
