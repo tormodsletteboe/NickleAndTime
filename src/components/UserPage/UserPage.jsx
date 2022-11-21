@@ -32,9 +32,9 @@ function UserPage() {
   const severityMsg = useSelector((store)=> store.severityMsg);
 
   useEffect(() => {
-    const interval = setInterval(() => getLocation(), 60000);
-    //dostuff();
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => getLocation(), 60000);
+    // //dostuff();
+    // return () => clearInterval(interval);
     //TODO: uncomment above
   }, []);
 

@@ -16,7 +16,7 @@ async function resetVisitCount() {
     const sqlText = `
     UPDATE user_avoidplace
     SET visit_count = 0, next_reset_date = now()+ INTERVAL '7 days'
-    WHERE next_reset_date < now()
+    WHERE next_reset_date > now()
     ;`;
 
     await pool.query(sqlText)
@@ -32,5 +32,3 @@ async function resetVisitCount() {
 }
 
 module.exports = cron;
-
-// resetVisitCount();
