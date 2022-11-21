@@ -2,13 +2,14 @@
 // const axios = require('axios');
 const pool = require('../server/modules/pool');
 const cron = require('node-cron');
+const msg = require('./send_sms');
 
-
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/60 * * * * *', () => {
     let date = new Date();
     console.log(date.toLocaleTimeString());
     console.log('running a task every 10 seconds');
     //resetVisitCount();
+    //msg();
 });
 
 async function resetVisitCount() {
