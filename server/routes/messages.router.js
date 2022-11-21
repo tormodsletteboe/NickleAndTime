@@ -29,4 +29,9 @@ router.get('/:severity', rejectUnauthenticated, (req, res) => {
         });
 });
 
+router.get('/test',rejectUnauthenticated, (req, res) => {
+    console.log('in GET /test message');
+    res.sendStatus(201);
+});
+
 module.exports = router;
