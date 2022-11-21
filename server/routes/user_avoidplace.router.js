@@ -39,7 +39,7 @@ router.put('/incrementVisitCount',rejectUnauthenticated,(req,res)=>{
         res.sendStatus(200);
     })
     .catch((err)=>{
-        console.log('POST /incrementVisitCount failed: ', err);
+        console.log('PUT /incrementVisitCount failed: ', err);
         res.sendStatus(500);
     });
 });
@@ -47,18 +47,20 @@ router.put('/incrementVisitCount',rejectUnauthenticated,(req,res)=>{
 
 //resetVisitCount
 router.put('/resetVisitCount',rejectUnauthenticated,(req,res)=>{
+    // console.log('in PUT resetVisitCount');
+    //this code should run everyday at the same time ie 7 pm or midnight, but once a day is fine too
     const sqlText  = `
-        UPDATE user_avoidplace
-        SET visit_count = 0
-        WHERE user_id = $1 AND avoid_place_id = $2
+    UPDATE user_avoidplace
+    SET visit_count = 0, next_reset_date = now()+ INTERVAL '7 days'
+    WHERE next_reset_date < now()
     ;`;
-    const params = [req.user.id,req.body.place_id];
-    pool.query(sqlText,params)
+   
+    pool.query(sqlText)
     .then((dBRes)=>{
         res.sendStatus(200);
     })
     .catch((err)=>{
-        console.log('POST /incrementVisitCount failed: ', err);
+        console.log('PUT /resetVisitCount failed: ', err);
         res.sendStatus(500);
     });
 });

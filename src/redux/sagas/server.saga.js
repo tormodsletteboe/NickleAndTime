@@ -85,10 +85,8 @@ function* resetVisitCount(){
           // the config includes credentials which
           // allow the server session to recognize the user
         //   console.log('action payload is:',action.payload);
+        // console.log('in resetVisitCount');
         yield axios.put(`/api/user/user_avoidplace/resetVisitCount`,config);
-        //   console.log('msg is:',msg);
-          
-
     } 
     catch (error) {
         console.error('Error in postToTriggerSMS',error);
