@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-
+require('./test');
 const app = express();
 
 const sessionMiddleware = require('./modules/session-middleware');
