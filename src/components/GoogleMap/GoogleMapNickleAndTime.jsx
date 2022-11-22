@@ -98,7 +98,7 @@ function GoogleMapNickleAndTime() {
   useEffect(() => {
     getLocation();
   }, [])
-
+//{process.env.NEXT_PUBLIC_MAP_API_KEY}
   return (
     <LoadScript
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
