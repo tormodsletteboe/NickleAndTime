@@ -5,6 +5,7 @@ const { getUsersLocation, getLocations_OfPlacesUserIsAvoiding } = require('./ser
 const { getDistanceFromLatLonIn_meters } = require('./services/distance.calc');
 const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit } = require('./services/user_avoidplace');
 const {getSeverity} = require('./services/serverity.calc');
+const {getMessage}= require('./services/messages');
 const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
@@ -56,7 +57,8 @@ cron.schedule('*/60 * * * * *', async () => {
                         let severity = getSeverity(visitCount,visitLimit);
                         
                         //get message to send out based on severity rating
-                        
+                        let msg = await getMessage(severity);
+                        console.log('msg" is ',msg);
                         //sendMsg();
 
 
