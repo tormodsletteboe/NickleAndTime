@@ -11,10 +11,8 @@ const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
 //engine
 cron.schedule('*/60 * * * * *', async () => {
-    let date = new Date();
-    console.log(date.toLocaleTimeString());
-    //console.log('running a task every 60 seconds');
 
+    console.log('Heart beat ',new Date().toLocaleTimeString());
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.
     let usersLocation = await getUsersLocation();
 
@@ -62,40 +60,28 @@ cron.schedule('*/60 * * * * *', async () => {
                         let usrPhoneNum = await getUserPhoneNumber(userId);
                         console.log(`${usrName} ${msg} ${place.name}`);
                         let totalmsg = `${usrName} ${msg} ${place.name}`;
-                        //console.log('msg" is ',msg);
+                       
+                        //TODO: turn this on
                         //sendMsg(totalmsg,usrPhoneNum);
 
-
-
-
-                        //send out a message
-                        //console.log(`user ${userId} you need to get the heck away from ${place.name}`);
+                        //add record to trigger_sms (ie, its like a history table)
                     }
                 }, timeUserIsAllowedToStayBeforeItCountsAsAVisit); //wait 1 min
-
-
             }
-
         }
-
-
     }
-    //msg();
+   
 });
 
 //house keeping, should run 1 time per day, but for demo it will have to run, more often
 cron.schedule('*/5 * * * *', () => {
-    console.log('Server doing house keeping');
+    console.log('Server doing house keeping',new Date().toLocaleTimeString());
+    console.log('Reset Visit Count');
     resetVisitCount();
 
 
 
 });
-
-
-
-
-
 
 
 module.exports = { cron };
