@@ -12,6 +12,7 @@ async function getUsers() {
     }
 
 }
+
 //get the current location of several users
 async function getUsersLocation(){
     try {
@@ -23,11 +24,17 @@ async function getUsersLocation(){
         console.error('getUsersLocations failed',error);
     }
 }
+
 //find places that this user is avoiding
 async function getLocations_OfPlacesUserIsAvoiding(user_id){
     try {
         const sqlText = `
-        SELECT avoid_place.latitude,avoid_place.longitude,avoid_place.name FROM "user_avoidplace"
+        SELECT 
+            avoid_place.latitude,
+            avoid_place.longitude,
+            avoid_place.name,
+            avoid_place.id
+        FROM "user_avoidplace"
         LEFT JOIN avoid_place ON avoid_place.id = user_avoidplace.avoid_place_id
         WHERE user_avoidplace.user_id = $1
         ;`;

@@ -1,3 +1,6 @@
+
+//calculate distance as the crow flies between to lat,lng coords, taking the curvature of the earth into account
+//
 function getDistanceFromLatLonIn_meters(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -15,6 +18,7 @@ function getDistanceFromLatLonIn_meters(lat1, lon1, lat2, lon2) {
   function deg2rad(deg) {
     return deg * (Math.PI / 180)
   }
+
   module.exports = {
     getDistanceFromLatLonIn_meters,
   }
