@@ -15,7 +15,7 @@ const client = require('twilio')(accountSid, authToken);
     .create({
        body: message,
        from: '+14254751813',
-       to: to
+       to: `+1${to}`
      })
     .then(message => console.log(message.sid));
   }

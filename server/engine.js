@@ -1,7 +1,7 @@
 
 const cron = require('node-cron');
 const {sendMsg} = require('./send_sms');
-const { getUsersLocation, getLocations_OfPlacesUserIsAvoiding } = require('./services/users');
+const { getUserName,getUserPhoneNumber,getUsersLocation, getLocations_OfPlacesUserIsAvoiding } = require('./services/users');
 const { getDistanceFromLatLonIn_meters } = require('./services/distance.calc');
 const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit } = require('./services/user_avoidplace');
 const {getSeverity} = require('./services/serverity.calc');
@@ -58,14 +58,18 @@ cron.schedule('*/60 * * * * *', async () => {
                         
                         //get message to send out based on severity rating
                         let msg = await getMessage(severity);
-                        console.log('msg" is ',msg);
-                        //sendMsg();
+                        let usrName = await getUserName(userId);
+                        let usrPhoneNum = await getUserPhoneNumber(userId);
+                        console.log(`${usrName} ${msg} ${place.name}`);
+                        let totalmsg = `${usrName} ${msg} ${place.name}`;
+                        //console.log('msg" is ',msg);
+                        //sendMsg(totalmsg,usrPhoneNum);
 
 
 
 
                         //send out a message
-                        console.log(`user ${userId} you need to get the heck away from ${place.name}`);
+                        //console.log(`user ${userId} you need to get the heck away from ${place.name}`);
                     }
                 }, timeUserIsAllowedToStayBeforeItCountsAsAVisit); //wait 1 min
 
