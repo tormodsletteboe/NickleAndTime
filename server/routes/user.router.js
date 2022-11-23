@@ -40,8 +40,7 @@ router.post('/register', (req, res, next) => {
 // this middleware will run our POST if successful
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
-  //add user to the Engine users array
-  //TODO:
+  
 
   res.sendStatus(200);
 });
@@ -50,11 +49,11 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
 router.post('/logout', (req, res) => {
   // Use passport's built-in method to log out the user
   req.logout();
-  //remove from engine users array
-  //TODO: 
+  
   res.sendStatus(200);
 });
 
+//add place that the user wants to avoid
 router.post('/places', rejectUnauthenticated, (req, res) => {
 
   //send data to database
@@ -96,6 +95,7 @@ router.post('/places', rejectUnauthenticated, (req, res) => {
 });
 
 
+//get all the places the user wants to avoid
 router.get('/places', rejectUnauthenticated, (req, res) => {
   const sqlText = `
     SELECT 
@@ -122,6 +122,7 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
     });
 });
 
+//update the database on where the user is 
 router.post('/currentLocation', rejectUnauthenticated, (req, res) => {
   const sqlText = `
   INSERT INTO user_location (user_id,current_latitude,current_longitude)
@@ -142,6 +143,8 @@ router.post('/currentLocation', rejectUnauthenticated, (req, res) => {
     });
 });
 
+//get the current location of this user from the database
+//probably dont need this one
 router.get('/currentLocation', rejectUnauthenticated, (req, res) => {
   const sqlText = `
   SELECT * FROM user_location

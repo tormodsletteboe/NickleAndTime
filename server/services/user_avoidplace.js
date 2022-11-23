@@ -37,7 +37,29 @@ async function resetVisitCount() {
 
 }
 
+//get visit count and visit limit
+async function get_VisitCountAndVisitLimit(user_id, place_id) {
+    try {
+        const sqlText = `
+            SELECT 
+            "user_avoidplace".visit_count,
+            "user_avoidplace".visit_limit
+            FROM "user_avoidplace"
+            WHERE user_avoidplace.user_id = $1 AND user_avoidplace.avoid_place_id= $2
+    ;`;
+        const params = [user_id,place_id];
+        let dbRes = await pool.query(sqlText,params);
+        console.log(`Server get_VisitCountAndVisitLimit  ${dbRes.rowCount} rows`);
+        return dbRes.rows[0];
+    }
+    catch (error) {
+        console.error('get_VisitCountAndVisitLimit failed: ', error);
+    }
+
+}
+
 module.exports = {
     incrementVisitCount,
     resetVisitCount,
+    get_VisitCountAndVisitLimit,
 }
