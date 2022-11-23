@@ -80,7 +80,7 @@ cron.schedule('*/60 * * * * *', async () => {
 //house keeping, should run 1 time per day, but for demo it will have to run, more often
 cron.schedule('*/5 * * * *', () => {
     console.log('Server doing house keeping',new Date().toLocaleTimeString());
-    console.log('Reset Visit Count');
+    console.log('Cheking if any visit counts need to be reset');
     resetVisitCount();
 });
 
