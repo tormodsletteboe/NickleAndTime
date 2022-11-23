@@ -8,6 +8,7 @@ const userStrategy = require('../strategies/user.strategy');
 
 const router = express.Router();
 
+
 // Handles Ajax request for user information if user is authenticated
 router.get('/', rejectUnauthenticated, (req, res) => {
   // Send back user object from the session (previously queried from the database)
@@ -39,6 +40,9 @@ router.post('/register', (req, res, next) => {
 // this middleware will run our POST if successful
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
+  //add user to the Engine users array
+  //TODO:
+
   res.sendStatus(200);
 });
 
@@ -46,6 +50,8 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
 router.post('/logout', (req, res) => {
   // Use passport's built-in method to log out the user
   req.logout();
+  //remove from engine users array
+  //TODO: 
   res.sendStatus(200);
 });
 
