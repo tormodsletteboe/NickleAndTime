@@ -12,6 +12,8 @@ async function getUsers() {
     }
 
 }
+
+//get user name
 async function getUserName(user_id) {
     try {
         const sqlText = `
@@ -28,6 +30,7 @@ async function getUserName(user_id) {
 
 }
 
+//get user phone number
 async function getUserPhoneNumber(user_id) {
     try {
         const sqlText = `

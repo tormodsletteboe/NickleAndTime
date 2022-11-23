@@ -1,5 +1,6 @@
 
 const pool = require('../modules/pool');
+
 //get a random message based on severity rating
 async function getMessage(severity) {
     try {
@@ -11,7 +12,6 @@ async function getMessage(severity) {
         ;`;
         const params = [severity];
         let dbRes = await pool.query(sqlText, params);
-        //console.log('dbRes',dbRes);
         return dbRes.rows[0].body;
     }
     catch (error) {
