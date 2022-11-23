@@ -6,15 +6,14 @@ const { getDistanceFromLatLonIn_meters } = require('./services/distance.calc');
 const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit } = require('./services/user_avoidplace');
 const {getSeverity} = require('./services/serverity.calc');
 const {getMessage}= require('./services/messages');
+const {sendRecordToTrigger_SMS_table} = require('./services/trigger_sms');
 const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
 //engine
 cron.schedule('*/60 * * * * *', async () => {
-    let date = new Date();
-    console.log(date.toLocaleTimeString());
-    //console.log('running a task every 60 seconds');
 
+    console.log('Heart beat ',new Date().toLocaleTimeString());
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.
     let usersLocation = await getUsersLocation();
 
@@ -57,46 +56,33 @@ cron.schedule('*/60 * * * * *', async () => {
                         let severity = getSeverity(visitCount,visitLimit);
                         
                         //get message to send out based on severity rating
-                        let msg = await getMessage(severity);
+                        let msgData = await getMessage(severity);
+                        let msg = msgData.body;
+                        let msgId = msgData.id;
                         let usrName = await getUserName(userId);
                         let usrPhoneNum = await getUserPhoneNumber(userId);
                         console.log(`${usrName} ${msg} ${place.name}`);
                         let totalmsg = `${usrName} ${msg} ${place.name}`;
-                        //console.log('msg" is ',msg);
+                       
+                        //TODO: turn this on
                         //sendMsg(totalmsg,usrPhoneNum);
 
-
-
-
-                        //send out a message
-                        //console.log(`user ${userId} you need to get the heck away from ${place.name}`);
+                        //add record to trigger_sms (ie, its like a history table)
+                        sendRecordToTrigger_SMS_table(userId,place.id,msgId);
                     }
                 }, timeUserIsAllowedToStayBeforeItCountsAsAVisit); //wait 1 min
-
-
             }
-
         }
-
-
     }
-    //msg();
+   
 });
 
 //house keeping, should run 1 time per day, but for demo it will have to run, more often
 cron.schedule('*/5 * * * *', () => {
-    console.log('Server doing house keeping');
+    console.log('Server doing house keeping',new Date().toLocaleTimeString());
+    console.log('Cheking if any visit counts need to be reset');
     resetVisitCount();
-
-
-
 });
-
-
-
-
-
-
 
 module.exports = { cron };
 

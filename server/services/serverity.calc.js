@@ -23,10 +23,6 @@
    
     return severity;
  }
- 
- 
- 
-
  module.exports = {
     getSeverity,
  }
