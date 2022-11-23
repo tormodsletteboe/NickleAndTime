@@ -12,7 +12,7 @@ async function getMessage(severity) {
         ;`;
         const params = [severity];
         let dbRes = await pool.query(sqlText, params);
-        return dbRes.rows[0].body;
+        return dbRes.rows[0];
     }
     catch (error) {
         console.error('error in getMessage', error);

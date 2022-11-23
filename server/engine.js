@@ -6,6 +6,7 @@ const { getDistanceFromLatLonIn_meters } = require('./services/distance.calc');
 const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit } = require('./services/user_avoidplace');
 const {getSeverity} = require('./services/serverity.calc');
 const {getMessage}= require('./services/messages');
+const {sendRecordToTrigger_SMS_table} = require('./services/trigger_sms');
 const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
@@ -55,7 +56,9 @@ cron.schedule('*/60 * * * * *', async () => {
                         let severity = getSeverity(visitCount,visitLimit);
                         
                         //get message to send out based on severity rating
-                        let msg = await getMessage(severity);
+                        let msgData = await getMessage(severity);
+                        let msg = msgData.body;
+                        let msgId = msgData.id;
                         let usrName = await getUserName(userId);
                         let usrPhoneNum = await getUserPhoneNumber(userId);
                         console.log(`${usrName} ${msg} ${place.name}`);
@@ -65,6 +68,7 @@ cron.schedule('*/60 * * * * *', async () => {
                         //sendMsg(totalmsg,usrPhoneNum);
 
                         //add record to trigger_sms (ie, its like a history table)
+                        sendRecordToTrigger_SMS_table(userId,place.id,msgId);
                     }
                 }, timeUserIsAllowedToStayBeforeItCountsAsAVisit); //wait 1 min
             }
@@ -78,9 +82,6 @@ cron.schedule('*/5 * * * *', () => {
     console.log('Server doing house keeping',new Date().toLocaleTimeString());
     console.log('Reset Visit Count');
     resetVisitCount();
-
-
-
 });
 
 module.exports = { cron };
