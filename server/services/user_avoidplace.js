@@ -24,7 +24,7 @@ async function resetVisitCount() {
     try {
         const sqlText = `
     UPDATE user_avoidplace
-    SET visit_count = 0, next_reset_date = now()+ INTERVAL '7 days'
+    SET visit_count = 0, next_reset_date = now()+ INTERVAL '5 minutes'
     WHERE next_reset_date < now()
     ;`;
 
