@@ -5,7 +5,6 @@ const {
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
-
 const router = express.Router();
 
 
@@ -29,9 +28,6 @@ router.get('/:severity', rejectUnauthenticated, (req, res) => {
         });
 });
 
-router.get('/test', (req, res) => {
-    console.log('in GET /test message');
-    res.sendStatus(201);
-});
+
 
 module.exports = router;

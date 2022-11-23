@@ -12,6 +12,37 @@ async function getUsers() {
     }
 
 }
+async function getUserName(user_id) {
+    try {
+        const sqlText = `
+            SELECT username FROM "user" WHERE id=$1
+        ;`;
+        const params =[user_id];
+        let dbRes = await pool.query(sqlText,params);
+        //console.log(' Name dbRes',dbRes);
+        return dbRes.rows[0].username;
+    } 
+    catch (error) {
+        console.error('getUserName failed',error);
+    }
+
+}
+
+async function getUserPhoneNumber(user_id) {
+    try {
+        const sqlText = `
+            SELECT phone_number FROM "user" WHERE id=$1
+        ;`;
+        const params =[user_id];
+        let dbRes = await pool.query(sqlText,params);
+        //console.log('PHONE dbRes',dbRes);
+        return dbRes.rows[0].phone_number;
+    } 
+    catch (error) {
+        console.error('getUserPhoneNumber failed',error);
+    }
+
+}
 
 //get the current location of several users
 async function getUsersLocation(){
@@ -49,6 +80,8 @@ async function getLocations_OfPlacesUserIsAvoiding(user_id){
 }
 module.exports = { 
     getUsers,
+    getUserName,
+    getUserPhoneNumber,
     getUsersLocation,
     getLocations_OfPlacesUserIsAvoiding,
  };
