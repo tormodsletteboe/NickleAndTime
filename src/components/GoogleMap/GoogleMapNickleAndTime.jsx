@@ -1,5 +1,6 @@
 import React from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Circle } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
 import './GoogleMapNickleAndTime.css';
 import globalconst from '../../GlobalVar.jsx';
@@ -15,8 +16,21 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+const optionsCircle = {
+  strokeColor: '#FF0000',
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: '#FF0000',
+  fillOpacity: 0.35,
+  clickable: false,
+  draggable: false,
+  editable: false,
+  visible: true,
+  radius: 100,
+  zIndex: 1
+}
 
 //google maps options
 const containerStyle = {
@@ -43,10 +57,11 @@ function GoogleMapNickleAndTime() {
   const [lng, setLng] = useState();
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
-  const [businessName,setBusinessName] = useState();
+  const [businessName, setBusinessName] = useState();
   const dispatch = useDispatch();
-  const user = useSelector((store)=>store.user);
-
+  const user = useSelector((store) => store.user);
+  const placesToAvoid = useSelector((store) => store.placesToAvoid);
+  const usrLoc = useSelector((store) => store.currentLocation);
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -60,7 +75,7 @@ function GoogleMapNickleAndTime() {
   //user clicks the add button
   function onAdd() {
     //create a dispatch with a payload to update 2 tables
-    
+
     //junction table
     const user_id = user.id;
     const visit_limit = visitlimit;
@@ -71,17 +86,17 @@ function GoogleMapNickleAndTime() {
     const latitude = lat;
     const longitude = lng;
 
-      dispatch({
-        type: 'ADD_PLACE_TO_AVOID',
-        payload: {
-          user_id,
-          visit_limit,
-          name,
-          google_place_id,
-          latitude,
-          longitude
-        }
-      });
+    dispatch({
+      type: 'ADD_PLACE_TO_AVOID',
+      payload: {
+        user_id,
+        visit_limit,
+        name,
+        google_place_id,
+        latitude,
+        longitude
+      }
+    });
   }
 
   //on component load
@@ -109,7 +124,25 @@ function GoogleMapNickleAndTime() {
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
+        {/* {console.log('usrloc',usrLoc)} */}
         <Marker position={{ lat: lat, lng: lng }} />
+        <Marker position={{ lat: usrLoc.current_latitude, lng: usrLoc.current_longitude }} />
+        {placesToAvoid.map(place => (
+          <Circle
+          key={place.id}
+            // // optional
+            // onLoad={onLoad}
+            // // optional
+            // onUnmount={onUnmount}
+            // required
+            center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+            // required
+            options={optionsCircle}
+          />
+        ))}
+
+
+
 
       </GoogleMap>
 
@@ -118,7 +151,7 @@ function GoogleMapNickleAndTime() {
 }
 
 //component to search for a location to avoid
-const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng,SetB_Name }) => {
+const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => {
 
   const {
     ready,

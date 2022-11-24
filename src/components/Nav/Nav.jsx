@@ -36,8 +36,9 @@ function Nav() {
             {/* <Link className="navLink" to="/map">
               Map
             </Link> */}
-
+            <p>{user.username}</p>
             <LogOutButton className="navLink" />
+
           </>
         )}
 

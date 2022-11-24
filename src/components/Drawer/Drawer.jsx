@@ -8,8 +8,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+
+import ShareLocation from '@mui/icons-material/ShareLocation';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -51,10 +51,11 @@ export default function PlacesToAvoidDrawer() {
                     <ListItem key={place.name} disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
-                                <MailIcon />
+                                <ShareLocation />
                             </ListItemIcon>
                             <ListItemText primary={place.name} />
                         </ListItemButton>
+                        <label>Hello</label>
                     </ListItem>
                 ))}
             </List>
@@ -74,9 +75,6 @@ export default function PlacesToAvoidDrawer() {
                         onClose={toggleDrawer(anchor, false)}
                     >
                         {list(anchor)}
-                        {/* {placesToAvoid.map((place) => (
-                            
-                        ))} */}
                     </Drawer>
                 </Fragment>
             ))}
