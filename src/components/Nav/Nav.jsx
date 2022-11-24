@@ -13,6 +13,7 @@ function Nav() {
         
       </Link> */}
       <h2 className="nav-title">Nickle & Time</h2>
+      <p className="nav-title">{user.username}</p>
       <div>
         {/* If no user is logged in, show these links */}
         {!user.id && (
@@ -36,8 +37,9 @@ function Nav() {
             {/* <Link className="navLink" to="/map">
               Map
             </Link> */}
-
+           
             <LogOutButton className="navLink" />
+
           </>
         )}
 

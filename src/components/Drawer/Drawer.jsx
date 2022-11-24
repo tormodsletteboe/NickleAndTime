@@ -8,8 +8,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+
+import ShareLocation from '@mui/icons-material/ShareLocation';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -39,28 +39,29 @@ export default function PlacesToAvoidDrawer() {
         setState({ ...state, [anchor]: open });
     };
 
-    // const list = (anchor) => (
-    //     <Box
-    //         sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-    //         role="presentation"
-    //         onClick={toggleDrawer(anchor, false)}
-    //         onKeyDown={toggleDrawer(anchor, false)}
-    //     >
-    //         <List>
-    //             {placesToAvoid ?? placesToAvoid.map((place) => (
-    //                 <ListItem key={place.name} disablePadding>
-    //                     <ListItemButton>
-    //                         <ListItemIcon>
-    //                             <MailIcon />
-    //                         </ListItemIcon>
-    //                         <ListItemText primary={place.name} />
-    //                     </ListItemButton>
-    //                 </ListItem>
-    //             ))}
-    //         </List>
-    //         <Divider />
-    //     </Box>
-    // );
+    const list = (anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+        >
+            <List>
+                {placesToAvoid.map((place) => (
+                    <ListItem key={place.name} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <ShareLocation />
+                            </ListItemIcon>
+                            <ListItemText primary={place.name} />
+                        </ListItemButton>
+                        <label>Hello</label>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+        </Box>
+    );
 
 
     return (
@@ -73,10 +74,7 @@ export default function PlacesToAvoidDrawer() {
                         open={state[anchor]}
                         onClose={toggleDrawer(anchor, false)}
                     >
-                        {/* {list(anchor)} */}
-                        {placesToAvoid.map((place) => (
-                            <button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>
-                        ))}
+                        {list(anchor)}
                     </Drawer>
                 </Fragment>
             ))}
@@ -85,3 +83,5 @@ export default function PlacesToAvoidDrawer() {
 
 
 }
+
+//<button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>

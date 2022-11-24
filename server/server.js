@@ -9,9 +9,7 @@ const passport = require('./strategies/user.strategy');
 
 // Route includes
 const userRouter = require('./routes/user.router');
-const avoidPlaceRouter = require('./routes/user_avoidplace.router');
-const messagesRouter = require('./routes/messages.router');
-const triggerSMSRouter = require('./routes/trigger_sms.router');
+
 // Body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,9 +23,6 @@ app.use(passport.session());
 
 /* Routes */
 app.use('/api/user', userRouter);
-app.use('/api/user/user_avoidplace',avoidPlaceRouter);
-app.use('/messages',messagesRouter);
-app.use('/triggersms',triggerSMSRouter);
 
 // Serve static files
 app.use(express.static('build'));

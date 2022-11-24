@@ -35,10 +35,10 @@ function* getCurrentLocation(action){
         // the config includes credentials which
         // allow the server session to recognize the user
         const result = yield axios.get('/api/user/currentLocation', config);
-        //console.log('ressssssult', result);
+        // console.log('ressssssult', result);
         yield put({
             type: 'SET_CURRENT_LOCATION',
-            payload: result.data
+            payload: result.data[0]
         })
     } 
     catch (error) {

@@ -33,6 +33,7 @@ cron.schedule('*/60 * * * * *', async () => {
             let lng = place.longitude;
             let dist_between_usrAndPlace = getDistanceFromLatLonIn_meters(usr_lat, usr_lng, lat, lng);
 
+            console.log(`User: ${userId} is ${dist_between_usrAndPlace} meters from ${place.name}`)
             //check if user is to close
             if (dist_between_usrAndPlace < dontGetCloserThanThis) {
                 //this 👇 code (ie the setTimeout block) will need to change, not sure the timeout will work when you have multiple users logged in,
@@ -78,7 +79,7 @@ cron.schedule('*/60 * * * * *', async () => {
 });
 
 //house keeping, should run 1 time per day, but for demo it will have to run, more often
-cron.schedule('*/5 * * * *', () => {
+cron.schedule('* * * * *', () => {
     console.log('Server doing house keeping',new Date().toLocaleTimeString());
     console.log('Cheking if any visit counts need to be reset');
     resetVisitCount();
