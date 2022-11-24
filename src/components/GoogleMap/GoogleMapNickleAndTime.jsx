@@ -61,7 +61,7 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
-  const usrLoc = useSelector((store) => store.currentLocation);
+  //const usrLoc = useSelector((store) => store.currentLocation);
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -126,7 +126,8 @@ function GoogleMapNickleAndTime() {
         <></>
         {/* {console.log('usrloc',usrLoc)} */}
         <Marker position={{ lat: lat, lng: lng }} />
-        <Marker position={{ lat: usrLoc.current_latitude, lng: usrLoc.current_longitude }} />
+        {/* {console.log('usrLoc',usrLoc)} */}
+        {/* <Marker position={{ lat: Number(usrLoc.current_latitude), lng: Number(usrLoc.current_longitude) }} /> */}
         {placesToAvoid.map(place => (
           <Circle
           key={place.id}
