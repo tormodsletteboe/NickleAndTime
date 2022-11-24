@@ -19,6 +19,7 @@ import "@reach/combobox/styles.css";
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 
 
 const optionsCircle = {
@@ -113,14 +114,28 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
-      <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
-      <Button variant="contained" onClick={onAdd}>Add</Button>
-     
-      <TextField size='small' variant="outlined" onChange={(evt) => setVisitLimit(Number(evt.target.value))} placeholder='weekly visit limit ex:2' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
+      <Stack 
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="flex-end"
+      spacing={2}
+       >
+        <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
+       
+
+        <TextField
+          size='small'
+          variant="outlined"
+          onChange={(evt) => setVisitLimit(Number(evt.target.value))}
+          placeholder='weekly visit limit ex:2'
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+        />
+         <Button variant="contained" onClick={onAdd}>Add</Button>
+      </Stack>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: lat, lng: lng }}
-        zoom={18}
+        zoom={13}
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
@@ -130,7 +145,7 @@ function GoogleMapNickleAndTime() {
         {/* <Marker position={{ lat: Number(usrLoc.current_latitude), lng: Number(usrLoc.current_longitude) }} /> */}
         {placesToAvoid.map(place => (
           <Circle
-          key={place.id}
+            key={place.id}
             // // optional
             // onLoad={onLoad}
             // // optional
@@ -175,7 +190,7 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
   };
 
   return (
-    <Combobox onSelect={handleSelect}>
+    <Combobox className='combobox' onSelect={handleSelect}>
       <ComboboxInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
