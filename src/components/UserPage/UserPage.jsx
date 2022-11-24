@@ -25,7 +25,7 @@ function UserPage() {
   const dispatch = useDispatch();
   useEffect(() => {
     //set an interval to get location
-    const interval = setInterval(() => getLocation(), 1000);
+    const interval = setInterval(() => getLocation(), 10000);
     return () => clearInterval(interval); // clear the interval when leaving this component
    
   }, []);

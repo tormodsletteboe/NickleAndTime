@@ -39,28 +39,28 @@ export default function PlacesToAvoidDrawer() {
         setState({ ...state, [anchor]: open });
     };
 
-    // const list = (anchor) => (
-    //     <Box
-    //         sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-    //         role="presentation"
-    //         onClick={toggleDrawer(anchor, false)}
-    //         onKeyDown={toggleDrawer(anchor, false)}
-    //     >
-    //         <List>
-    //             {placesToAvoid ?? placesToAvoid.map((place) => (
-    //                 <ListItem key={place.name} disablePadding>
-    //                     <ListItemButton>
-    //                         <ListItemIcon>
-    //                             <MailIcon />
-    //                         </ListItemIcon>
-    //                         <ListItemText primary={place.name} />
-    //                     </ListItemButton>
-    //                 </ListItem>
-    //             ))}
-    //         </List>
-    //         <Divider />
-    //     </Box>
-    // );
+    const list = (anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+        >
+            <List>
+                {placesToAvoid.map((place) => (
+                    <ListItem key={place.name} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <MailIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={place.name} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+        </Box>
+    );
 
 
     return (
@@ -73,10 +73,10 @@ export default function PlacesToAvoidDrawer() {
                         open={state[anchor]}
                         onClose={toggleDrawer(anchor, false)}
                     >
-                        {/* {list(anchor)} */}
-                        {placesToAvoid.map((place) => (
-                            <button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>
-                        ))}
+                        {list(anchor)}
+                        {/* {placesToAvoid.map((place) => (
+                            
+                        ))} */}
                     </Drawer>
                 </Fragment>
             ))}
@@ -85,3 +85,5 @@ export default function PlacesToAvoidDrawer() {
 
 
 }
+
+//<button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>
