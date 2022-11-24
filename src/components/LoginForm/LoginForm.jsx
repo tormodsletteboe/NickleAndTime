@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {useSelector} from 'react-redux';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -58,7 +59,7 @@ function LoginForm() {
       </div>
       
       <div>
-        <input className="btn" type="submit" name="submit" value="Log In" />
+        <Button variant='contained' className="btn" type="submit" name="submit" value="Log In">Log In</Button>
       </div>
     </form>
   );

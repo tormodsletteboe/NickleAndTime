@@ -1,0 +1,2 @@
+1976d2 -> main color
+1664c0 -> hover color 

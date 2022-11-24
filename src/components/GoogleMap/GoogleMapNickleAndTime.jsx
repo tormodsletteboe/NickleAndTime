@@ -17,6 +17,9 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { useDispatch, useSelector } from 'react-redux';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
 
 const optionsCircle = {
   strokeColor: '#FF0000',
@@ -111,12 +114,9 @@ function GoogleMapNickleAndTime() {
       libraries={globalconst.libraries}
     >
       <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
-      <button onClick={onAdd}>Add</button>
-      <input
-        type={'number'}
-        placeholder='weekly visit limit ex:2'
-        onChange={(evt) => setVisitLimit(Number(evt.target.value))}
-      />
+      <Button variant="contained" onClick={onAdd}>Add</Button>
+     
+      <TextField size='small' variant="outlined" onChange={(evt) => setVisitLimit(Number(evt.target.value))} placeholder='weekly visit limit ex:2' inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: lat, lng: lng }}

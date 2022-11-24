@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 function RegisterForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -30,46 +31,54 @@ function RegisterForm() {
         </h3>
       )}
       <div>
-        <label htmlFor="username">
-          Username:
-          <input
+        {/* <label htmlFor="username"> */}
+          {/* Username: */}
+          <TextField
+            variant="outlined"
+            size='small'
+            label='Username'
             type="text"
             name="username"
             value={username}
             required
             onChange={(event) => setUsername(event.target.value)}
           />
-        </label>
+        {/* </label> */}
       </div>
       <div>
-        <label htmlFor="password">
-          Password:
-          <input
+        {/* <label htmlFor="password"> */}
+          {/* Password: */}
+          <TextField
+            variant="outlined"
+            size='small'
+            label='Password'
             type="password"
             name="password"
             value={password}
             required
             onChange={(event) => setPassword(event.target.value)}
           />
-        </label>
+        {/* </label> */}
       </div>
       <div>
-      <div>
-        <label htmlFor="phone_number">
-          Phone #:
-          <input
+        <div>
+          {/* <label htmlFor="phone_number"> */}
+          {/* Phone #: */}
+          <TextField
+            variant="outlined"
+            size='small'
+            label='Phone Number'
             type="text"
             name="phone_number"
             required
             value={phoneNnumber}
             onChange={(event) => {
               setPhoneNumber(event.target.value);
-              // console.log(phoneNnumber);
             }}
           />
-        </label>
-      </div>
-        <input className="btn" type="submit" name="submit" value="Register" />
+          {/* </label> */}
+        </div>
+        <Button variant='contained' className="btn" type="submit" name="submit" value="Register" >Register</Button>
       </div>
     </form>
   );
