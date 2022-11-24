@@ -60,11 +60,7 @@ function UserPage() {
       }
     })
   }
-  const resetVisitCountsIfConditionsAllow = ()=> {
-    dispatch({
-      type: 'RESET_VISIT_COUNT'
-    })
-  }
+ 
 
 
 
@@ -72,7 +68,7 @@ function UserPage() {
     <div className="container">
       <GoogleMapNickleAndTime />
       <button onClick={() => dostuff(currentLocationData, placesToAvoidData, dispatch,severityMsg)}>CLICK ME</button>
-      <button onClick={resetVisitCountsIfConditionsAllow}> RESET VISIT COUNT</button>
+     
       <PlacesToAvoidDrawer />
     </div>
   );
