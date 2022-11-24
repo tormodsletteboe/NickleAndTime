@@ -14,6 +14,9 @@ function* addPlaceToAvoid(action){
         // the config includes credentials which
         // allow the server session to recognize the user
         yield axios.post('/api/user/places', action.payload, config);
+        yield put({
+            type: 'FETCH_PLACES_TO_AVOID'
+        });
     } 
     catch (error) {
         console.error('Error in addPlaceToAvoid',error);
@@ -29,7 +32,6 @@ function* fetchPlacesToAvoid(){
             withCredentials: true,
           };
           const result = yield axios.get('/api/user/places',config);
-          console.log('result.data',result.data);
           yield put({
             type: 'SET_PLACES_TO_AVOID',
             payload: result.data
