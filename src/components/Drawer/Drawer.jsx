@@ -8,11 +8,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { TextField,Stack } from '@mui/material';
+import { TextField, Stack } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import ShareLocation from '@mui/icons-material/ShareLocation';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Switch from '@mui/material/Switch';
 
 export default function PlacesToAvoidDrawer() {
 
@@ -77,8 +78,10 @@ export default function PlacesToAvoidDrawer() {
                                     value={place.visit_limit}
                                     disabled
                                 />
-                                <Button>DEACTIVATE</Button>
-                                <Button>DELETE</Button>
+                                {/* <Switch /> TODO:do a dispatch to set active state in the database */}
+                                <Button color="error">
+                                   <DeleteIcon />
+                                </Button>
                             </Stack>
                         </ListItemButton>
 
