@@ -122,6 +122,9 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
     });
 });
 
+
+
+
 //update the database on where the user is 
 router.post('/currentLocation', rejectUnauthenticated, (req, res) => {
   const sqlText = `
@@ -160,4 +163,24 @@ router.get('/currentLocation', rejectUnauthenticated, (req, res) => {
       res.sendStatus(500);
     });
 });
+
+router.put('/toggleactive', rejectUnauthenticated, (req, res) => {
+  
+  const sqlText = `
+    UPDATE user_avoidplace
+    SET active = NOT active
+    WHERE user_id = $1 AND avoid_place_id=$2
+  ;`;
+  const params = [req.user.id,req.body.placeId];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.sendStatus(201);
+    })
+    .catch((err) => {
+      console.log('POST /toggleactive failed: ', err);
+      res.sendStatus(500);
+    });
+ 
+});
+
 module.exports = router;

@@ -50,7 +50,11 @@ export default function PlacesToAvoidDrawer() {
         >
             <List>
                 {placesToAvoid.map((place) => (
-                    <ListItem key={place.id} disablePadding>
+                    <ListItem
+                        key={place.id}
+                        disablePadding
+                        style={{ textDecoration : !place.active ? 'line-through' : 'none' }}
+                    >
                         <ListItemButton>
                             <ListItemIcon>
                                 <ShareLocation />
@@ -78,13 +82,14 @@ export default function PlacesToAvoidDrawer() {
                                     value={place.visit_limit}
                                     disabled
                                 />
-                                {/* <Switch /> TODO:do a dispatch to set active state in the database */}
-                                <Button color="error">
-                                   <DeleteIcon />
-                                </Button>
+
+
                             </Stack>
                         </ListItemButton>
-
+                        <Switch checked={place.active} onChange={() => { dispatch({ type: 'TOGGLE_ACTIVE', payload:{placeId:place.id} }) }} />
+                        <Button color="error">
+                            <DeleteIcon />
+                        </Button>
                     </ListItem>
                 ))}
             </List>
