@@ -114,24 +114,42 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
-      <Stack 
-      direction="row"
-      justifyContent="flex-start"
-      alignItems="flex-end"
-      spacing={2}
-       >
-        <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
-       
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-end"
+        spacing={2}
+        sx={{ marginBottom: 1 }}
+
+      >
+        <PlacesAutocomplete
+          className='autocomp'
+          SetPlaceSelected={SetPlaceSelected}
+          SetLat={setLat}
+          SetLng={setLng}
+          SetB_Name={setBusinessName}
+        />
+
 
         <TextField
           size='small'
           variant="outlined"
+          label='Visits/Week'
           onChange={(evt) => setVisitLimit(Number(evt.target.value))}
-          placeholder='weekly visit limit ex:2'
           inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          sx={{ height: 1 }}
+          type="number"
+
         />
-         <Button variant="contained" onClick={onAdd}>Add</Button>
+        <Button
+          variant="contained"
+          onClick={onAdd}
+          sx={{ height: 40 }}
+        >
+          Add
+        </Button>
       </Stack>
+     
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: lat, lng: lng }}
@@ -209,6 +227,8 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
     </Combobox>
   );
 };
+
+
 
 
 export default GoogleMapNickleAndTime
