@@ -183,4 +183,23 @@ router.put('/toggleactive', rejectUnauthenticated, (req, res) => {
  
 });
 
+router.delete('/delete', rejectUnauthenticated, (req, res) => {
+  console.log('in delete route');
+  const sqlText = `
+    DELETE FROM user_avoidplace
+    WHERE user_id = $1 AND avoid_place_id=$2
+  ;`;
+  console.log('user id: ',req.user.id,'req.body.placeId',req.body.placeId);
+  const params = [req.user.id,req.body.placeId];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.log('delete /delete failed: ', err);
+      res.sendStatus(500);
+    });
+ 
+});
+
 module.exports = router;
