@@ -8,10 +8,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { TextField, Stack } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import ShareLocation from '@mui/icons-material/ShareLocation';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Switch from '@mui/material/Switch';
 
 export default function PlacesToAvoidDrawer() {
 
@@ -43,19 +45,51 @@ export default function PlacesToAvoidDrawer() {
         <Box
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
             role="presentation"
-            onClick={toggleDrawer(anchor, false)}
+            // onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
                 {placesToAvoid.map((place) => (
-                    <ListItem key={place.name} disablePadding>
+                    <ListItem
+                        key={place.id}
+                        disablePadding
+                        style={{ textDecoration : !place.active ? 'line-through' : 'none' }}
+                    >
                         <ListItemButton>
                             <ListItemIcon>
                                 <ShareLocation />
                             </ListItemIcon>
                             <ListItemText primary={place.name} />
+                            <Stack
+                                direction="row"
+                                spacing={2}
+                            >
+                                <TextField
+                                    variant="outlined"
+                                    size='small'
+                                    label='Visits'
+                                    type="text"
+                                    name="visitCount"
+                                    value={place.visit_count}
+                                    disabled
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    size='small'
+                                    label='Visit Limit/Week'
+                                    type="text"
+                                    name="visitLimit"
+                                    value={place.visit_limit}
+                                    disabled
+                                />
+
+
+                            </Stack>
                         </ListItemButton>
-                        <label>Hello</label>
+                        <Switch checked={place.active} onChange={() => { dispatch({ type: 'TOGGLE_ACTIVE', payload:{placeId:place.id} }) }} />
+                        <Button onClick={()=>{dispatch({type: 'DELETE_USER_PLACE',payload:{placeId:place.id}})}} color="error">
+                            <DeleteIcon />
+                        </Button>
                     </ListItem>
                 ))}
             </List>
@@ -84,4 +118,3 @@ export default function PlacesToAvoidDrawer() {
 
 }
 
-//<button onClick={() => console.log(place.name)} key={place.name}>{place.name}</button>

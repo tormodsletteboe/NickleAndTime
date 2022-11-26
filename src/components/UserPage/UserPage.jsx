@@ -27,7 +27,9 @@ function UserPage() {
     //get location right away, then every so often
     getLocation();
     //set an interval to get location
-    const interval = setInterval(() => getLocation(), 10000);
+    const interval = setInterval(() =>  dispatch({
+      type:'FETCH_PLACES_TO_AVOID'
+    }), 10000);
     return () => clearInterval(interval); // clear the interval when leaving this component
    
   }, []);
@@ -46,6 +48,9 @@ function UserPage() {
         current_longitude: crd.longitude
       }
     })
+    // dispatch({
+    //   type:'FETCH_PLACES_TO_AVOID'
+    // })
   }
  
   return (

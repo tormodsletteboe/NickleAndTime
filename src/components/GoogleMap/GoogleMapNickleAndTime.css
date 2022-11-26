@@ -1,5 +1,12 @@
 .combobox-input {
-    width: 99%;
+    width: 100%;
     padding: 0rem;
     margin: 0;
+  height: 40px;
   }
+  .combobox{
+    width: 100%;
+    
+  }
+  
+ 

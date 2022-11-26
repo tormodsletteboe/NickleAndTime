@@ -21,7 +21,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
-
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +34,7 @@ function App() {
 
   return (
     <Router>
+      <CssBaseline />
       <div>
         <Nav />
         <Switch>

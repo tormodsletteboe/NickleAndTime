@@ -17,6 +17,9 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { useDispatch, useSelector } from 'react-redux';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 
 const optionsCircle = {
   strokeColor: '#FF0000',
@@ -55,6 +58,7 @@ function error(err) {
 function GoogleMapNickleAndTime() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
+  
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
@@ -69,6 +73,7 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
+   
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -102,6 +107,7 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
+    //console.log('useeffect in google maps ran');
     getLocation();
   }, [])
 
@@ -110,37 +116,82 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
-      <PlacesAutocomplete SetPlaceSelected={SetPlaceSelected} SetLat={setLat} SetLng={setLng} SetB_Name={setBusinessName} />
-      <button onClick={onAdd}>Add</button>
-      <input
-        type={'number'}
-        placeholder='weekly visit limit ex:2'
-        onChange={(evt) => setVisitLimit(Number(evt.target.value))}
-      />
+      <Stack
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="flex-end"
+        spacing={2}
+        sx={{ marginBottom: 1 }}
+
+      >
+        <PlacesAutocomplete
+          className='autocomp'
+          SetPlaceSelected={SetPlaceSelected}
+          SetLat={setLat}
+          SetLng={setLng}
+          SetB_Name={setBusinessName}
+        />
+
+
+        <TextField
+          size='small'
+          variant="outlined"
+          label='Visits/Week'
+          onChange={(evt) => setVisitLimit(Number(evt.target.value))}
+          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          sx={{ height: 1 }}
+          type="number"
+
+        />
+        <Button
+          variant="contained"
+          onClick={onAdd}
+          sx={{ height: 40 }}
+        >
+          Add
+        </Button>
+      </Stack>
+
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: lat, lng: lng }}
-        zoom={18}
+        center={{ lat: Number(lat), lng: Number(lng) }}
+        zoom={13}
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
         {/* {console.log('usrloc',usrLoc)} */}
-        <Marker position={{ lat: lat, lng: lng }} />
+        <Marker position={{ lat: Number(lat), lng: Number(lng) }} 
+        draggable
+        onDragEnd={(e)=>{
+          setLat(e.latLng.lat());
+          setLng(e.latLng.lng());
+          dispatch({
+            type: 'UPDATE_CURRENT_LOCATION',
+            payload: {
+              current_latitude: e.latLng.lat(),
+              current_longitude: e.latLng.lng()
+            }
+          });
+        }}
+     
+        />
         {/* {console.log('usrLoc',usrLoc)} */}
-        {/* <Marker position={{ lat: Number(usrLoc.current_latitude), lng: Number(usrLoc.current_longitude) }} /> */}
-        {placesToAvoid.map(place => (
-          <Circle
-          key={place.id}
-            // // optional
-            // onLoad={onLoad}
-            // // optional
-            // onUnmount={onUnmount}
-            // required
-            center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
-            // required
-            options={optionsCircle}
-          />
-        ))}
+        {/* <Marker
+          position={{ lat: Number(latMap), lng: Number(lngMap) }}
+          icon={{
+            url: "/home.png"
+          }}
+        /> */}
+        {placesToAvoid.map(place => {
+          if (place.active) {
+            return (<Circle
+              key={place.id}
+              center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+              // required
+              options={optionsCircle}
+            />);
+          }
+        })}
 
 
 
@@ -175,7 +226,7 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
   };
 
   return (
-    <Combobox onSelect={handleSelect}>
+    <Combobox className='combobox' onSelect={handleSelect}>
       <ComboboxInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -194,6 +245,8 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
     </Combobox>
   );
 };
+
+
 
 
 export default GoogleMapNickleAndTime

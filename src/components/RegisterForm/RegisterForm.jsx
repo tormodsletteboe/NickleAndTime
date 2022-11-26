@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 function RegisterForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -23,54 +25,64 @@ function RegisterForm() {
 
   return (
     <form className="formPanel" onSubmit={registerUser}>
-      <h2>Register User</h2>
-      {errors.registrationMessage && (
-        <h3 className="alert" role="alert">
-          {errors.registrationMessage}
-        </h3>
-      )}
-      <div>
-        <label htmlFor="username">
-          Username:
-          <input
+      <Stack spacing={2}>
+        <h3>Register User</h3>
+        {errors.registrationMessage && (
+          <h3 className="alert" role="alert">
+            {errors.registrationMessage}
+          </h3>
+        )}
+        <div>
+          {/* <label htmlFor="username"> */}
+          {/* Username: */}
+          <TextField
+            variant="outlined"
+            size='small'
+            label='Username'
             type="text"
             name="username"
             value={username}
             required
             onChange={(event) => setUsername(event.target.value)}
           />
-        </label>
-      </div>
-      <div>
-        <label htmlFor="password">
-          Password:
-          <input
+          {/* </label> */}
+        </div>
+        <div>
+          {/* <label htmlFor="password"> */}
+          {/* Password: */}
+          <TextField
+            variant="outlined"
+            size='small'
+            label='Password'
             type="password"
             name="password"
             value={password}
             required
             onChange={(event) => setPassword(event.target.value)}
           />
-        </label>
-      </div>
-      <div>
-      <div>
-        <label htmlFor="phone_number">
-          Phone #:
-          <input
-            type="text"
-            name="phone_number"
-            required
-            value={phoneNnumber}
-            onChange={(event) => {
-              setPhoneNumber(event.target.value);
-              // console.log(phoneNnumber);
-            }}
-          />
-        </label>
-      </div>
-        <input className="btn" type="submit" name="submit" value="Register" />
-      </div>
+          {/* </label> */}
+        </div>
+        <div>
+          <div>
+            {/* <label htmlFor="phone_number"> */}
+            {/* Phone #: */}
+            <TextField
+              variant="outlined"
+              size='small'
+              label='Phone Number'
+              type="text"
+              name="phone_number"
+              required
+              value={phoneNnumber}
+              onChange={(event) => {
+                setPhoneNumber(event.target.value);
+              }}
+            />
+            {/* </label> */}
+          </div>
+        </div>
+        <Button variant='contained' className="btn" type="submit" name="submit" value="Register" >Register</Button>
+      </Stack>
     </form>
   );
 }
