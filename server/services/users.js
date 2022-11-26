@@ -70,7 +70,7 @@ async function getLocations_OfPlacesUserIsAvoiding(user_id){
             avoid_place.id
         FROM "user_avoidplace"
         LEFT JOIN avoid_place ON avoid_place.id = user_avoidplace.avoid_place_id
-        WHERE user_avoidplace.user_id = $1
+        WHERE user_avoidplace.user_id = $1 AND user_avoidplace.active = TRUE
         ;`;
         const params = [user_id];
         let dbRes = await pool.query(sqlText,params);

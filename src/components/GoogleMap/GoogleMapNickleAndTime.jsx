@@ -149,7 +149,7 @@ function GoogleMapNickleAndTime() {
           Add
         </Button>
       </Stack>
-     
+
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: lat, lng: lng }}
@@ -161,19 +161,16 @@ function GoogleMapNickleAndTime() {
         <Marker position={{ lat: lat, lng: lng }} />
         {/* {console.log('usrLoc',usrLoc)} */}
         {/* <Marker position={{ lat: Number(usrLoc.current_latitude), lng: Number(usrLoc.current_longitude) }} /> */}
-        {placesToAvoid.map(place => (
-          <Circle
-            key={place.id}
-            // // optional
-            // onLoad={onLoad}
-            // // optional
-            // onUnmount={onUnmount}
-            // required
-            center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
-            // required
-            options={optionsCircle}
-          />
-        ))}
+        {placesToAvoid.map(place => {
+          if(place.active){
+            return (<Circle
+              key={place.id}
+              center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+              // required
+              options={optionsCircle}
+            />);
+          }
+        })}
 
 
 

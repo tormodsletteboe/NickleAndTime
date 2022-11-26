@@ -46,6 +46,9 @@ function UserPage() {
         current_longitude: crd.longitude
       }
     })
+    dispatch({
+      type:'FETCH_PLACES_TO_AVOID'
+    })
   }
  
   return (

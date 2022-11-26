@@ -11,7 +11,7 @@ const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
 //engine
-cron.schedule('*/60 * * * * *', async () => {
+cron.schedule('*/59 * * * * *', async () => {
 
     console.log('Heart beat ',new Date().toLocaleTimeString());
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.
@@ -25,7 +25,7 @@ cron.schedule('*/60 * * * * *', async () => {
         let usr_lng = usr.current_longitude;
 
 
-        //grab the places this user is trying to avoid
+        //grab the places this user is trying to avoid and which are active
         let user_avoidLocations = await getLocations_OfPlacesUserIsAvoiding(userId);
         //iterate through the places to avoid, and if user is to close, start the timer, if user is still there, increment visit count, and send sms
         for (let place of user_avoidLocations) {
