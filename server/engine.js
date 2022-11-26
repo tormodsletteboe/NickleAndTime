@@ -66,7 +66,7 @@ cron.schedule('*/10 * * * * *', async () => {
                         let totalmsg = `${usrName} ${msg} ${place.name}`;
                        
                         //TODO: turn this on
-                        //sendMsg(totalmsg,usrPhoneNum);
+                        sendMsg(totalmsg,usrPhoneNum);
 
                         //add record to trigger_sms (ie, its like a history table)
                         sendRecordToTrigger_SMS_table(userId,place.id,msgId);

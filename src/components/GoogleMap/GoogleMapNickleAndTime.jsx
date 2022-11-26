@@ -58,8 +58,7 @@ function error(err) {
 function GoogleMapNickleAndTime() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [latMap, setMapLat] = useState();
-  const [lngMap, setMapLng] = useState();
+  
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
@@ -74,8 +73,7 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-    setMapLat(crd.latitude);
-    setMapLng(crd.longitude);
+   
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
