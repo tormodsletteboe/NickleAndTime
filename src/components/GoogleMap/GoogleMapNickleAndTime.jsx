@@ -21,7 +21,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
-
 const optionsCircle = {
   strokeColor: '#FF0000',
   strokeOpacity: 0.8,
@@ -59,6 +58,8 @@ function error(err) {
 function GoogleMapNickleAndTime() {
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
+  const [latMap, setMapLat] = useState();
+  const [lngMap, setMapLng] = useState();
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
@@ -73,6 +74,8 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
+    setMapLat(crd.latitude);
+    setMapLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -106,6 +109,7 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
+    //console.log('useeffect in google maps ran');
     getLocation();
   }, [])
 
@@ -152,17 +156,36 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: lat, lng: lng }}
+        center={{ lat: Number(lat), lng: Number(lng) }}
         zoom={13}
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
         {/* {console.log('usrloc',usrLoc)} */}
-        <Marker position={{ lat: lat, lng: lng }} />
+        <Marker position={{ lat: Number(lat), lng: Number(lng) }} 
+        draggable
+        onDragEnd={(e)=>{
+          setLat(e.latLng.lat());
+          setLng(e.latLng.lng());
+          dispatch({
+            type: 'UPDATE_CURRENT_LOCATION',
+            payload: {
+              current_latitude: e.latLng.lat(),
+              current_longitude: e.latLng.lng()
+            }
+          });
+        }}
+     
+        />
         {/* {console.log('usrLoc',usrLoc)} */}
-        {/* <Marker position={{ lat: Number(usrLoc.current_latitude), lng: Number(usrLoc.current_longitude) }} /> */}
+        {/* <Marker
+          position={{ lat: Number(latMap), lng: Number(lngMap) }}
+          icon={{
+            url: "/home.png"
+          }}
+        /> */}
         {placesToAvoid.map(place => {
-          if(place.active){
+          if (place.active) {
             return (<Circle
               key={place.id}
               center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
