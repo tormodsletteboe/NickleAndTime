@@ -87,7 +87,7 @@ export default function PlacesToAvoidDrawer() {
                             </Stack>
                         </ListItemButton>
                         <Switch checked={place.active} onChange={() => { dispatch({ type: 'TOGGLE_ACTIVE', payload:{placeId:place.id} }) }} />
-                        <Button color="error">
+                        <Button onClick={()=>{dispatch({type: 'DELETE_USER_PLACE',payload:{placeId:place.id}})}} color="error">
                             <DeleteIcon />
                         </Button>
                     </ListItem>

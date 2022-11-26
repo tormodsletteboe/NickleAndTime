@@ -69,6 +69,7 @@ function* placesToAvoidSaga() {
     yield takeLatest('ADD_PLACE_TO_AVOID', addPlaceToAvoid);
     yield takeLatest('FETCH_PLACES_TO_AVOID',fetchPlacesToAvoid);
     yield takeLatest('TOGGLE_ACTIVE',toggleActive);
+    yield takeLatest('DELETE_USER_PLACE',deleteUserPlace);
   }
   
   export default placesToAvoidSaga;
