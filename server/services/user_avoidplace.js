@@ -58,8 +58,43 @@ async function get_VisitCountAndVisitLimit(user_id, place_id) {
 
 }
 
+async function setCurrentlyVisiting(user_id,avoid_place_id,bool_val){
+    try {
+        const sqlText = `
+            UPDATE user_avoidplace
+            SET currently_visiting = $3
+            WHERE user_id = $1 AND avoid_place_id = $2
+            ;`;
+        const params = [user_id, avoid_place_id,bool_val];
+
+        let dbRes = await pool.query(sqlText, params);
+    }
+    catch (error) {
+        console.error('setCurrentlyVisiting failed: ', error);
+    }
+}
+
+async function getCurrentlyVisiting(user_id,avoid_place_id){
+    try {
+        const sqlText = `
+            SELECT currently_visiting FROM user_avoidplace
+            WHERE user_id = $1 AND avoid_place_id = $2
+            ;`;
+        const params = [user_id, avoid_place_id];
+
+        let dbRes = await pool.query(sqlText, params);
+        //console.log(dbRes.rows[0].currently_visiting)
+        return dbRes.rows[0].currently_visiting;
+    }
+    catch (error) {
+        console.error('getCurrentlyVisiting failed: ', error);
+    }
+}
+
 module.exports = {
     incrementVisitCount,
     resetVisitCount,
     get_VisitCountAndVisitLimit,
+    setCurrentlyVisiting,
+    getCurrentlyVisiting,
 }
