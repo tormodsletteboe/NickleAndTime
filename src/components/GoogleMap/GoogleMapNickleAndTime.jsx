@@ -21,20 +21,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
-const optionsCircle = {
-  strokeColor: '#FF0000',
-  strokeOpacity: 0.8,
-  strokeWeight: 2,
-  fillColor: '#FF0000',
-  fillOpacity: 0.35,
-  clickable: false,
-  draggable: false,
-  editable: false,
-  visible: true,
-  radius: 100,
-  zIndex: 1
-}
 
+
+const colorOptionsCirle = ['#008000','#FFFF00','#FF0000'];
 //google maps options
 const containerStyle = {
   width: '100%',
@@ -65,7 +54,7 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
-  //const usrLoc = useSelector((store) => store.currentLocation);
+ 
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -175,15 +164,34 @@ function GoogleMapNickleAndTime() {
         }}
      
         />
-        {/* {console.log('usrLoc',usrLoc)} */}
-        {/* <Marker
-          position={{ lat: Number(latMap), lng: Number(lngMap) }}
-          icon={{
-            url: "/home.png"
-          }}
-        /> */}
         {placesToAvoid.map(place => {
           if (place.active) {
+            let optionsCircle = {
+              strokeColor: '',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '',
+              fillOpacity: 0.35,
+              clickable: false,
+              draggable: false,
+              editable: false,
+              visible: true,
+              radius: 100,
+              zIndex: 1
+            }
+            console.log(place.name, place.visit_count,place.visit_limit);
+            if(place.visit_count>=place.visit_limit){
+              optionsCircle.strokeColor = '#000000';
+              optionsCircle.fillColor = '#FF0000';
+            }
+            else if(place.visit_limit-place.visit_count==1){
+              optionsCircle.strokeColor = '#000000';
+              optionsCircle.fillColor = '#FFFF00';
+            }
+            else{
+              optionsCircle.strokeColor = '#000000';
+              optionsCircle.fillColor = '#008000';
+            }
             return (<Circle
               key={place.id}
               center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
