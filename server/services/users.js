@@ -59,6 +59,16 @@ async function getUsersLocation(){
     }
 }
 
+async function getUser_Location(user_id){
+    try {
+        let dbRes = await pool.query(`SELECT current_latitude,current_longitude FROM "user_location" WHERE user_id=$1;`,[user_id]);
+        return dbRes.rows[0];
+    } 
+    catch (error) {
+        console.error('getUser_Location failed',error);
+    }
+}
+
 //find places that this user is avoiding
 async function getLocations_OfPlacesUserIsAvoiding(user_id){
     try {
@@ -86,5 +96,6 @@ module.exports = {
     getUserName,
     getUserPhoneNumber,
     getUsersLocation,
+    getUser_Location,
     getLocations_OfPlacesUserIsAvoiding,
  };

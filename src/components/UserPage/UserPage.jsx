@@ -29,8 +29,13 @@ function UserPage() {
     //set an interval to get location
     const interval = setInterval(() =>  dispatch({
       type:'FETCH_PLACES_TO_AVOID'
-    }), 10000);
-    return () => clearInterval(interval); // clear the interval when leaving this component
+    }), 1000);
+    return () => {
+      clearInterval(interval);
+      // dispatch({
+      //   type: 'REMOVE_CURRENT_LOCATION'
+      // });
+    }; // clear the interval when leaving this component
    
   }, []);
 

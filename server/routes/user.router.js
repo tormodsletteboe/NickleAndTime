@@ -202,4 +202,23 @@ router.delete('/delete', rejectUnauthenticated, (req, res) => {
  
 });
 
+router.delete('/currentLocation', rejectUnauthenticated, (req, res) => {
+  console.log('in delete route currentLocation');
+  const sqlText = `
+    DELETE FROM user_location
+    WHERE user_id = $1
+  ;`;
+  // console.log('user id: ',req.user.id);
+  const params = [req.user.id];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.log('delete /currentLocation failed: ', err);
+      res.sendStatus(500);
+    });
+ 
+});
+
 module.exports = router;

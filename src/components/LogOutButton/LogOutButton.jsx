@@ -11,7 +11,10 @@ function LogOutButton(props) {
       // is passed to it from it's parents through React props
       //variant="contained"
       className={props.className}
-      onClick={() => dispatch({ type: 'LOGOUT' })}
+      onClick={() => {
+        dispatch({ type:'REMOVE_CURRENT_LOCATION' });
+        dispatch({ type: 'LOGOUT' });
+      }}
     >
       Log Out
     </button>
