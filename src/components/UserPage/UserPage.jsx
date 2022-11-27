@@ -32,9 +32,7 @@ function UserPage() {
     }), 1000);
     return () => {
       clearInterval(interval);
-      // dispatch({
-      //   type: 'REMOVE_CURRENT_LOCATION'
-      // });
+
     }; // clear the interval when leaving this component
    
   }, []);

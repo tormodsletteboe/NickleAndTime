@@ -23,7 +23,6 @@ import Stack from '@mui/material/Stack';
 
 
 
-const colorOptionsCirle = ['#008000','#FFFF00','#FF0000'];
 //google maps options
 const containerStyle = {
   width: '100%',
