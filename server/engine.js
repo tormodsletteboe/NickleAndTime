@@ -1,19 +1,19 @@
 
 const cron = require('node-cron');
-const {sendMsg} = require('./send_sms');
-const { getUserName,getUserPhoneNumber,getUsersLocation, getLocations_OfPlacesUserIsAvoiding } = require('./services/users');
+const { sendMsg } = require('./send_sms');
+const { getUserName, getUserPhoneNumber, getUsersLocation, getUser_Location, getLocations_OfPlacesUserIsAvoiding } = require('./services/users');
 const { getDistanceFromLatLonIn_meters } = require('./services/distance.calc');
-const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit } = require('./services/user_avoidplace');
-const {getSeverity} = require('./services/serverity.calc');
-const {getMessage}= require('./services/messages');
-const {sendRecordToTrigger_SMS_table} = require('./services/trigger_sms');
+const { incrementVisitCount, resetVisitCount, get_VisitCountAndVisitLimit,getCurrentlyVisiting,setCurrentlyVisiting } = require('./services/user_avoidplace');
+const { getSeverity } = require('./services/serverity.calc');
+const { getMessage } = require('./services/messages');
+const { sendRecordToTrigger_SMS_table } = require('./services/trigger_sms');
 const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 10000; // 1 min
 
 //engine
-cron.schedule('*/10 * * * * *', async () => {
+cron.schedule('* * * * * *', async () => {
 
-    console.log('Heart beat ',new Date().toLocaleTimeString());
+    console.log('Heart beat ', new Date().toLocaleTimeString());
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.
     let usersLocation = await getUsersLocation();
 
@@ -34,14 +34,25 @@ cron.schedule('*/10 * * * * *', async () => {
             let dist_between_usrAndPlace = getDistanceFromLatLonIn_meters(usr_lat, usr_lng, lat, lng);
 
             console.log(`User: ${userId} is ${dist_between_usrAndPlace} meters from ${place.name}`)
+            if(dist_between_usrAndPlace>=dontGetCloserThanThis){
+                setCurrentlyVisiting(userId,place.id,false)
+            }
+            let currentlyVisiting = await getCurrentlyVisiting(userId,place.id);
+            console.log('currently visiting: ',currentlyVisiting);
             //check if user is to close
-            if (dist_between_usrAndPlace < dontGetCloserThanThis) {
+            if (dist_between_usrAndPlace < dontGetCloserThanThis && !currentlyVisiting) {
                 //this 👇 code (ie the setTimeout block) will need to change, not sure the timeout will work when you have multiple users logged in,
                 // maybe deal with this using the tables, boolean or timer
-
+                setCurrentlyVisiting(userId,place.id,true);
                 //wait timeUserIsAllowedToStayBeforeItCountsAsAVisit ie 1 min, 
+                console.log(new Date().toLocaleTimeString(),`setting a timeout for ${userId} and ${place.name}`)
                 setTimeout(async () => {
-
+                    console.log(new Date().toLocaleTimeString(),` timeout is over for ${userId} and ${place.name}`)
+                    //get up to date user location
+                    let userloc = await getUser_Location(userId);
+                    usr_lat = userloc.current_latitude;
+                    usr_lng = userloc.current_longitude;
+                    
                     //recalculate distance between user and place
                     dist_between_usrAndPlace = getDistanceFromLatLonIn_meters(usr_lat, usr_lng, lat, lng);
 
@@ -54,8 +65,8 @@ cron.schedule('*/10 * * * * *', async () => {
                         let result = await get_VisitCountAndVisitLimit(userId, place.id);
                         let visitCount = result.visit_count;
                         let visitLimit = result.visit_limit;
-                        let severity = getSeverity(visitCount,visitLimit);
-                        
+                        let severity = getSeverity(visitCount, visitLimit);
+
                         //get message to send out based on severity rating
                         let msgData = await getMessage(severity);
                         let msg = msgData.body;
@@ -64,23 +75,28 @@ cron.schedule('*/10 * * * * *', async () => {
                         let usrPhoneNum = await getUserPhoneNumber(userId);
                         console.log(`${usrName} ${msg} ${place.name}`);
                         let totalmsg = `${usrName} ${msg} ${place.name}`;
-                       
+
                         //TODO: turn this on
-                        sendMsg(totalmsg,usrPhoneNum);
+                        sendMsg(totalmsg, usrPhoneNum);
 
                         //add record to trigger_sms (ie, its like a history table)
-                        sendRecordToTrigger_SMS_table(userId,place.id,msgId);
+                        sendRecordToTrigger_SMS_table(userId, place.id, msgId);
+                    }
+                    else{
+                        //user moved away in time alotted
+                        setCurrentlyVisiting(userId,place.id,false);
+                        console.log(new Date().toLocaleTimeString(),`  ${userId} moved way from ${place.name}`);
                     }
                 }, timeUserIsAllowedToStayBeforeItCountsAsAVisit); //wait 1 min
             }
         }
     }
-   
+
 });
 
 //house keeping, should run 1 time per day, but for demo it will have to run, more often
 cron.schedule('* * * * *', () => {
-    console.log('Server doing house keeping',new Date().toLocaleTimeString());
+    console.log('Server doing house keeping', new Date().toLocaleTimeString());
     console.log('Cheking if any visit counts need to be reset');
     resetVisitCount();
 });
