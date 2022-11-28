@@ -156,7 +156,11 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(carLat), lng: Number(carLng) }}
+        // 44.978610, -93.266985
+
+
+
+        center={{ lat: Number(44.978610), lng: Number(-93.266985) }}
         zoom={15}
         // onClick={(e)=>console.log(e.latLng.lat())}
        
