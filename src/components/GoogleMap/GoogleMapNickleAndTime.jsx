@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-
+import Circles from './Circles';
 
 
 //google maps options
@@ -47,9 +47,8 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [mapLat,setMapLat] = useState();
-  const [mapLng,setMapLng] = useState();
-  
+  const [carLat,setCarLat]=useState();
+  const [carLng,setCarLng]=useState();
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
@@ -57,7 +56,7 @@ function GoogleMapNickleAndTime() {
 
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
-  const placesToAvoid = useSelector((store) => store.placesToAvoid);
+  
  
   //try to get a location
   const getLocation = () => {
@@ -66,7 +65,8 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-   
+    setCarLat(crd.latitude);
+    setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -100,7 +100,6 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
-    console.log('useeffect in google maps ran');
     getLocation();
   }, [])
 
@@ -109,6 +108,7 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
+      {/* search bar is in the stack */}
       <Stack
         direction="row"
         justifyContent="flex-start"
@@ -125,7 +125,7 @@ function GoogleMapNickleAndTime() {
           SetB_Name={setBusinessName}
         />
 
-
+      {/* visit limit */}
         <TextField
           size='small'
           variant="outlined"
@@ -147,18 +147,18 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(lat), lng: Number(lng) }}
+        center={{ lat: Number(carLat), lng: Number(carLng) }}
         zoom={13}
-        onCenterChanged={()=>console.log('test')}
+        onClick={(e)=>console.log(e.latLng.lat())}
+       
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
-        {/* {console.log('usrloc',usrLoc)} */}
-        <Marker position={{ lat: Number(lat), lng: Number(lng) }} 
+        <Marker position={{ lat: Number(carLat), lng: Number(carLng) }} 
         draggable
         onDragEnd={(e)=>{
-          setLat(e.latLng.lat());
-          setLng(e.latLng.lng());
+          setCarLat(e.latLng.lat());
+          setCarLng(e.latLng.lng());
           dispatch({
             type: 'UPDATE_CURRENT_LOCATION',
             payload: {
@@ -167,44 +167,12 @@ function GoogleMapNickleAndTime() {
             }
           });
         }}
-     
+        animation={2}
+        icon={{url:'./volvo.png'}}
         />
-        {placesToAvoid.map(place => {
-          if (place.active) {
-            let optionsCircle = {
-              strokeColor: '',
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: '',
-              fillOpacity: 0.35,
-              clickable: false,
-              draggable: false,
-              editable: false,
-              visible: true,
-              radius: 100,
-              zIndex: 1
-            }
-            console.log(place.name, place.visit_count,place.visit_limit);
-            if(place.visit_count>=place.visit_limit){
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#FF0000';
-            }
-            else if(place.visit_limit-place.visit_count==1){
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#FFFF00';
-            }
-            else{
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#008000';
-            }
-            return (<Circle
-              key={place.id}
-              center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
-              // required
-              options={optionsCircle}
-            />);
-          }
-        })}
+
+        {/* add avoid circles */}
+        <Circles/>
 
       </GoogleMap>
 
@@ -256,7 +224,4 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
   );
 };
 
-
-
-
-export default GoogleMapNickleAndTime
+export default GoogleMapNickleAndTime;
