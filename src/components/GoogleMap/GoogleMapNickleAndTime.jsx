@@ -51,7 +51,7 @@ function GoogleMapNickleAndTime() {
   const [carLng,setCarLng]=useState();
 
   const [placeSelected, SetPlaceSelected] = useState([]);
-  const [visitlimit, setVisitLimit] = useState();
+  const [visitlimit, setVisitLimit] = useState(0);
   const [businessName, setBusinessName] = useState();
 
   const dispatch = useDispatch();
@@ -142,6 +142,7 @@ function GoogleMapNickleAndTime() {
           inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           sx={{ height: 1 }}
           type="number"
+          value={visitlimit}
 
         />
         <Button
@@ -210,6 +211,7 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
     SetLng(lng);
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
+   
   };
 
   return (
