@@ -50,7 +50,7 @@ function Circles(){
               options={optionsCircle}
             />
             <Marker
-            key={place.latitude}
+           
             position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
             onClick={()=>{handleOnClick(place)}}
             />

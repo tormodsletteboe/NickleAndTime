@@ -149,7 +149,7 @@ function GoogleMapNickleAndTime() {
         mapContainerStyle={containerStyle}
         center={{ lat: Number(carLat), lng: Number(carLng) }}
         zoom={13}
-        onClick={(e)=>console.log(e.latLng.lat())}
+        // onClick={(e)=>console.log(e.latLng.lat())}
        
       >
         { /* Child components, such as markers, info windows, etc. */}
@@ -170,6 +170,7 @@ function GoogleMapNickleAndTime() {
         animation={2}
         icon={{url:'./volvo.png'}}
         />
+       
 
         {/* add avoid circles */}
         <Circles/>
