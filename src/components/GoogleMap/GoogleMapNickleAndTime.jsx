@@ -57,6 +57,13 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   
+  // useEffect(() => {
+  //   window.addEventListener('keydown', (evt) => {
+  //     if (evt.code === 'ArrowDown') {
+  //       setCarLat(carLat - 0.0001);
+  //     }
+  //   });
+  // })
  
   //try to get a location
   const getLocation = () => {
@@ -99,6 +106,7 @@ function GoogleMapNickleAndTime() {
 
   //on component load
   useEffect(() => {
+    
     //center the map on the location of the computer
     getLocation();
   }, [])
@@ -148,8 +156,8 @@ function GoogleMapNickleAndTime() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={{ lat: Number(carLat), lng: Number(carLng) }}
-        zoom={13}
-        onClick={(e)=>console.log(e.latLng.lat())}
+        zoom={15}
+        // onClick={(e)=>console.log(e.latLng.lat())}
        
       >
         { /* Child components, such as markers, info windows, etc. */}
@@ -170,6 +178,7 @@ function GoogleMapNickleAndTime() {
         animation={2}
         icon={{url:'./volvo.png'}}
         />
+       
 
         {/* add avoid circles */}
         <Circles/>
