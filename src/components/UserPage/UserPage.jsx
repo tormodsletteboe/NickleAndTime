@@ -17,9 +17,6 @@ function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-
-
-
 function UserPage() {
   
   const dispatch = useDispatch();
@@ -32,9 +29,7 @@ function UserPage() {
     }), 1000);
     return () => {
       clearInterval(interval);
-      // dispatch({
-      //   type: 'REMOVE_CURRENT_LOCATION'
-      // });
+
     }; // clear the interval when leaving this component
    
   }, []);
@@ -53,9 +48,7 @@ function UserPage() {
         current_longitude: crd.longitude
       }
     })
-    // dispatch({
-    //   type:'FETCH_PLACES_TO_AVOID'
-    // })
+    
   }
  
   return (
@@ -68,10 +61,6 @@ function UserPage() {
 
 // this allows us to use <App /> in index.js
 export default UserPage;
-{/* <h2>Welcome, {user.username}!</h2>
-      <p>Your ID is: {user.id}</p> */}
-{/* <LogOutButton className="btn" /> */ }
-// import LogOutButton from '../LogOutButton/LogOutButton';
 
 
 
