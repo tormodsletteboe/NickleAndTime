@@ -19,7 +19,6 @@ export default function PlacesToAvoidDrawer() {
 
     const dispatch = useDispatch();
     const placesToAvoid = useSelector((store) => store.placesToAvoid);
-    // console.log('asdfasdfasdfasdfasf',placesToAvoid);
     useEffect(() => {
         dispatch({
             type: 'FETCH_PLACES_TO_AVOID'
@@ -45,7 +44,7 @@ export default function PlacesToAvoidDrawer() {
         <Box
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
             role="presentation"
-            // onClick={toggleDrawer(anchor, false)}
+            
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
