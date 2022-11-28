@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-
+import Circles from './Circles';
 
 
 //google maps options
@@ -47,17 +47,13 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [mapLat,setMapLat] = useState();
-  const [mapLng,setMapLng] = useState();
-  
-
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
 
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
-  const placesToAvoid = useSelector((store) => store.placesToAvoid);
+  
  
   //try to get a location
   const getLocation = () => {
@@ -100,7 +96,6 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
-    console.log('useeffect in google maps ran');
     getLocation();
   }, [])
 
@@ -153,7 +148,6 @@ function GoogleMapNickleAndTime() {
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
-        {/* {console.log('usrloc',usrLoc)} */}
         <Marker position={{ lat: Number(lat), lng: Number(lng) }} 
         draggable
         onDragEnd={(e)=>{
@@ -169,42 +163,9 @@ function GoogleMapNickleAndTime() {
         }}
      
         />
-        {placesToAvoid.map(place => {
-          if (place.active) {
-            let optionsCircle = {
-              strokeColor: '',
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: '',
-              fillOpacity: 0.35,
-              clickable: false,
-              draggable: false,
-              editable: false,
-              visible: true,
-              radius: 100,
-              zIndex: 1
-            }
-            console.log(place.name, place.visit_count,place.visit_limit);
-            if(place.visit_count>=place.visit_limit){
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#FF0000';
-            }
-            else if(place.visit_limit-place.visit_count==1){
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#FFFF00';
-            }
-            else{
-              optionsCircle.strokeColor = '#000000';
-              optionsCircle.fillColor = '#008000';
-            }
-            return (<Circle
-              key={place.id}
-              center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
-              // required
-              options={optionsCircle}
-            />);
-          }
-        })}
+
+        {/* add circles */}
+        <Circles/>
 
       </GoogleMap>
 
@@ -256,7 +217,4 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
   );
 };
 
-
-
-
-export default GoogleMapNickleAndTime
+export default GoogleMapNickleAndTime;
