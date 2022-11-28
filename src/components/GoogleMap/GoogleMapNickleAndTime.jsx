@@ -47,6 +47,9 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
+  const [carLat,setCarLat]=useState();
+  const [carLng,setCarLng]=useState();
+
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
@@ -62,7 +65,8 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-   
+    setCarLat(crd.latitude);
+    setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -104,6 +108,7 @@ function GoogleMapNickleAndTime() {
       googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
       libraries={globalconst.libraries}
     >
+      {/* search bar is in the stack */}
       <Stack
         direction="row"
         justifyContent="flex-start"
@@ -120,7 +125,7 @@ function GoogleMapNickleAndTime() {
           SetB_Name={setBusinessName}
         />
 
-
+      {/* visit limit */}
         <TextField
           size='small'
           variant="outlined"
@@ -142,17 +147,18 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(lat), lng: Number(lng) }}
+        center={{ lat: Number(carLat), lng: Number(carLng) }}
         zoom={13}
-        onCenterChanged={()=>console.log('test')}
+        onClick={(e)=>console.log(e.latLng.lat())}
+       
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
-        <Marker position={{ lat: Number(lat), lng: Number(lng) }} 
+        <Marker position={{ lat: Number(carLat), lng: Number(carLng) }} 
         draggable
         onDragEnd={(e)=>{
-          setLat(e.latLng.lat());
-          setLng(e.latLng.lng());
+          setCarLat(e.latLng.lat());
+          setCarLng(e.latLng.lng());
           dispatch({
             type: 'UPDATE_CURRENT_LOCATION',
             payload: {
@@ -161,10 +167,11 @@ function GoogleMapNickleAndTime() {
             }
           });
         }}
-     
+        animation={2}
+        icon={{url:'./volvo.png'}}
         />
 
-        {/* add circles */}
+        {/* add avoid circles */}
         <Circles/>
 
       </GoogleMap>

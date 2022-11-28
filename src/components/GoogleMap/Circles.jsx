@@ -1,6 +1,11 @@
 import React from 'react'
 import { Circle } from '@react-google-maps/api';
 import {  useSelector } from 'react-redux';
+import {Marker} from '@react-google-maps/api';
+
+const handleOnClick =(place) =>{
+  console.log(place.name);
+}
 
 function Circles(){
     const placesToAvoid = useSelector((store) => store.placesToAvoid);
@@ -36,12 +41,21 @@ function Circles(){
               optionsCircle.strokeColor = '#000000';
               optionsCircle.fillColor = '#008000';
             }
-            return (<Circle
+            return (
+              <>
+              <Circle
               key={place.id}
               center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
               // required
               options={optionsCircle}
-            />);
+            />
+            <Marker
+            key={place.latitude}
+            position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+            onClick={()=>{handleOnClick(place)}}
+            />
+              </>
+            );
           }
         })}
        </>
