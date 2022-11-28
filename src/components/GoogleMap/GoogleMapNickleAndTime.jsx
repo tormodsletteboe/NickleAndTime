@@ -44,12 +44,17 @@ function error(err) {
 }
 
 function GoogleMapNickleAndTime() {
+
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
+  const [mapLat,setMapLat] = useState();
+  const [mapLng,setMapLng] = useState();
   
+
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState();
   const [businessName, setBusinessName] = useState();
+
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
@@ -95,7 +100,7 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
-    //console.log('useeffect in google maps ran');
+    console.log('useeffect in google maps ran');
     getLocation();
   }, [])
 
@@ -144,6 +149,7 @@ function GoogleMapNickleAndTime() {
         mapContainerStyle={containerStyle}
         center={{ lat: Number(lat), lng: Number(lng) }}
         zoom={13}
+        onCenterChanged={()=>console.log('test')}
       >
         { /* Child components, such as markers, info windows, etc. */}
         <></>
@@ -199,9 +205,6 @@ function GoogleMapNickleAndTime() {
             />);
           }
         })}
-
-
-
 
       </GoogleMap>
 
