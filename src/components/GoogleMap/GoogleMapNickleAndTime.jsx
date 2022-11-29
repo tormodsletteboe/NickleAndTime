@@ -47,11 +47,11 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [carLat,setCarLat]=useState();
-  const [carLng,setCarLng]=useState();
+  const [carLat,setCarLat]=useState(44.948545);
+  const [carLng,setCarLng]=useState(-93.349296);
 
   const [placeSelected, SetPlaceSelected] = useState([]);
-  const [visitlimit, setVisitLimit] = useState();
+  const [visitlimit, setVisitLimit] = useState(0);
   const [businessName, setBusinessName] = useState();
 
   const dispatch = useDispatch();
@@ -72,8 +72,8 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-    setCarLat(crd.latitude);
-    setCarLng(crd.longitude);
+    // setCarLat(crd.latitude);
+    // setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -142,6 +142,7 @@ function GoogleMapNickleAndTime() {
           inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
           sx={{ height: 1 }}
           type="number"
+          value={visitlimit}
 
         />
         <Button
@@ -155,8 +156,9 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(carLat), lng: Number(carLng) }}
-        zoom={15}
+        //44.948545, -93.349296
+        center={{ lat: Number(44.948545), lng: Number(-93.349296) }}
+        zoom={13}
         // onClick={(e)=>console.log(e.latLng.lat())}
        
       >
@@ -180,7 +182,7 @@ function GoogleMapNickleAndTime() {
         />
        
 
-        {/* add avoid circles */}
+        {/* add avoid circless */}
         <Circles/>
 
       </GoogleMap>
@@ -210,6 +212,7 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
     SetLng(lng);
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
+   
   };
 
   return (
