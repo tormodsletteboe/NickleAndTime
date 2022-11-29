@@ -182,7 +182,7 @@ function GoogleMapNickleAndTime() {
         />
        
 
-        {/* add avoid circles */}
+        {/* add avoid circless */}
         <Circles/>
 
       </GoogleMap>
