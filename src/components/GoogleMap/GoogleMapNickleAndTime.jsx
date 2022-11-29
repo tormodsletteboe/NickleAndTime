@@ -47,8 +47,8 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [carLat,setCarLat]=useState(44.978610);
-  const [carLng,setCarLng]=useState(-93.266985);
+  const [carLat,setCarLat]=useState(44.948545);
+  const [carLng,setCarLng]=useState(-93.349296);
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -156,12 +156,9 @@ function GoogleMapNickleAndTime() {
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        // 44.978610, -93.266985
-
-
-
-        center={{ lat: Number(44.978610), lng: Number(-93.266985) }}
-        zoom={16}
+        //44.948545, -93.349296
+        center={{ lat: Number(44.948545), lng: Number(-93.349296) }}
+        zoom={13}
         // onClick={(e)=>console.log(e.latLng.lat())}
        
       >
