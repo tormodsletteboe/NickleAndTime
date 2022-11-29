@@ -47,8 +47,8 @@ function GoogleMapNickleAndTime() {
 
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [carLat,setCarLat]=useState();
-  const [carLng,setCarLng]=useState();
+  const [carLat,setCarLat]=useState(44.978610);
+  const [carLng,setCarLng]=useState(-93.266985);
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -72,8 +72,8 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-    setCarLat(crd.latitude);
-    setCarLng(crd.longitude);
+    // setCarLat(crd.latitude);
+    // setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
   }
@@ -161,7 +161,7 @@ function GoogleMapNickleAndTime() {
 
 
         center={{ lat: Number(44.978610), lng: Number(-93.266985) }}
-        zoom={15}
+        zoom={16}
         // onClick={(e)=>console.log(e.latLng.lat())}
        
       >
