@@ -113,7 +113,7 @@ function GoogleMapNickleAndTime() {
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyDS1ELw3oAV20LEm8HZJ_WlMy-y7t82AMo"
+      googleMapsApiKey={process.env.REACT_APP_NEXT_PUBLIC_MAP_API_KEY}
       libraries={globalconst.libraries}
     >
       {/* search bar is in the stack */}
