@@ -1,9 +1,9 @@
-import React from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { Circle } from '@react-google-maps/api';
-import { useState, useEffect } from 'react';
-import './GoogleMapNickleAndTime.css';
-import globalconst from '../../GlobalVar.jsx';
+import React from "react";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { Circle } from "@react-google-maps/api";
+import { useState, useEffect } from "react";
+import "./GoogleMapNickleAndTime.css";
+import globalconst from "../../GlobalVar.jsx";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -16,27 +16,24 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { useDispatch, useSelector } from 'react-redux';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Circles from './Circles';
-
+import { useDispatch, useSelector } from "react-redux";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import Circles from "./Circles";
 
 //google maps options
 const containerStyle = {
-  width: '100%',
-  height: '700px'
+  width: "100%",
+  height: "700px",
 };
-
 
 //get location options
 const options = {
   enableHighAccuracy: true,
   timeout: 5000,
-  maximumAge: 0
+  maximumAge: 0,
 };
-
 
 //if get location failed
 function error(err) {
@@ -44,11 +41,10 @@ function error(err) {
 }
 
 function GoogleMapNickleAndTime() {
-
   const [lat, setLat] = useState();
   const [lng, setLng] = useState();
-  const [carLat,setCarLat]=useState(44.948545);
-  const [carLng,setCarLng]=useState(-93.349296);
+  const [carLat, setCarLat] = useState(44.948545);
+  const [carLng, setCarLng] = useState(-93.349296);
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -56,7 +52,7 @@ function GoogleMapNickleAndTime() {
 
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
-  
+
   // useEffect(() => {
   //   window.addEventListener('keydown', (evt) => {
   //     if (evt.code === 'ArrowDown') {
@@ -64,11 +60,11 @@ function GoogleMapNickleAndTime() {
   //     }
   //   });
   // })
- 
+
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
-  }
+  };
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
@@ -76,7 +72,7 @@ function GoogleMapNickleAndTime() {
     // setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
-  }
+  };
   //user clicks the add button
   function onAdd() {
     //create a dispatch with a payload to update 2 tables
@@ -92,24 +88,23 @@ function GoogleMapNickleAndTime() {
     const longitude = lng;
 
     dispatch({
-      type: 'ADD_PLACE_TO_AVOID',
+      type: "ADD_PLACE_TO_AVOID",
       payload: {
         user_id,
         visit_limit,
         name,
         google_place_id,
         latitude,
-        longitude
-      }
+        longitude,
+      },
     });
   }
 
   //on component load
   useEffect(() => {
-    
     //center the map on the location of the computer
     getLocation();
-  }, [])
+  }, []);
 
   return (
     <LoadScript
@@ -123,77 +118,71 @@ function GoogleMapNickleAndTime() {
         alignItems="flex-end"
         spacing={2}
         sx={{ marginBottom: 1 }}
-
       >
         <PlacesAutocomplete
-          className='autocomp'
+          className="autocomp"
           SetPlaceSelected={SetPlaceSelected}
           SetLat={setLat}
           SetLng={setLng}
           SetB_Name={setBusinessName}
         />
 
-      {/* visit limit */}
+        {/* visit limit */}
         <TextField
-          size='small'
+          size="small"
           variant="outlined"
-          label='Visits/Week'
+          label="Visits/Week"
           onChange={(evt) => setVisitLimit(Number(evt.target.value))}
-          inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           sx={{ height: 1 }}
           type="number"
           value={visitlimit}
-
         />
-        <Button
-          variant="contained"
-          onClick={onAdd}
-          sx={{ height: 40 }}
-        >
+        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
           Add
         </Button>
       </Stack>
 
       <GoogleMap
         mapContainerStyle={containerStyle}
-        //44.948545, -93.349296
         center={{ lat: Number(44.948545), lng: Number(-93.349296) }}
         zoom={13}
-        // onClick={(e)=>console.log(e.latLng.lat())}
-       
       >
-        { /* Child components, such as markers, info windows, etc. */}
+        {/* Child components, such as markers, info windows, etc. */}
         <></>
-        <Marker position={{ lat: Number(carLat), lng: Number(carLng) }} 
-        draggable
-        onDragEnd={(e)=>{
-          setCarLat(e.latLng.lat());
-          setCarLng(e.latLng.lng());
-          dispatch({
-            type: 'UPDATE_CURRENT_LOCATION',
-            payload: {
-              current_latitude: e.latLng.lat(),
-              current_longitude: e.latLng.lng()
-            }
-          });
-        }}
-        animation={2}
-        icon={{url:'./volvo.png'}}
+        <Marker
+          position={{ lat: Number(carLat), lng: Number(carLng) }}
+          draggable
+          onDragEnd={(e) => {
+            setCarLat(e.latLng.lat());
+            setCarLng(e.latLng.lng());
+            dispatch({
+              type: "UPDATE_CURRENT_LOCATION",
+              payload: {
+                current_latitude: e.latLng.lat(),
+                current_longitude: e.latLng.lng(),
+              },
+            });
+          }}
+          animation={2}
+          icon={{ url: "./volvo.png" }}
         />
-       
+        {/* <Marker position={{ lat: Number(44.948545), lng: Number(-93.349296) }} /> */}
 
         {/* add avoid circless */}
-        <Circles/>
-
+        <Circles />
       </GoogleMap>
-
     </LoadScript>
-  )
+  );
 }
 
 //component to search for a location to avoid
-const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => {
-
+const PlacesAutocomplete = ({
+  SetPlaceSelected,
+  SetLat,
+  SetLng,
+  SetB_Name,
+}) => {
   const {
     ready,
     value,
@@ -212,11 +201,10 @@ const PlacesAutocomplete = ({ SetPlaceSelected, SetLat, SetLng, SetB_Name }) => 
     SetLng(lng);
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
-   
   };
 
   return (
-    <Combobox className='combobox' onSelect={handleSelect}>
+    <Combobox className="combobox" onSelect={handleSelect}>
       <ComboboxInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
