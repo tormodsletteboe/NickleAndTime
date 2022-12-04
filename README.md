@@ -11,7 +11,7 @@
 
 _Duration: 2 Week Sprint_
 
-Nickle & Time lets the user add locations on a google map that they would like to avoid or only visit a few times per week. Using the user's current location it will detect if they are close to one of those places, and send them a friendly text message based on how many times they have visisted. As of Dec 1st 2022 new users will need to contact the author by email (bottom of page) before using.
+Nickle & Time lets users add locations to a google map, that they would like to avoid or only visit a few times per week. Using the user's current location it will detect if they are close to one of those places, and send them a friendly text message based on how many times they have visisted. As of Dec 1st 2022 new users will need to contact the author by email (bottom of page) before using.
 
 ## Screen Shot
 
@@ -36,6 +36,13 @@ Nickle & Time lets the user add locations on a google map that they would like t
 11. You can now enjoy Nickle & Time.
 
 ## Usage
+
+ To Register, add
+    - Username
+    - Password
+    - Phone Number 
+        - only accepted format (XXXXXXXXXX), ex: 5129186767, no leading +1 or dashes, or spaces
+        - user will need to email author to register the phone number with the txt message service
 
 
 1. To add a place to avoid
@@ -107,7 +114,7 @@ Link to software that is required to develop this website.
 
 
 ## Acknowledgement
-Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped us to make this application a reality. (Edan Schwartz, Kris Szafranski)
+Thanks to [Prime Digital Academy](https://www.primeacademy.io/?utm_campaign=brand_search&utm_medium=cpc&utm_source=google&utm_medium=ppc&utm_campaign=Brand+Search&utm_term=prime%20digital%20academy&utm_source=adwords&hsa_mt=e&hsa_kw=prime%20digital%20academy&hsa_grp=34455376016&hsa_tgt=kwd-292678835500&hsa_ad=260264094213&hsa_ver=3&hsa_acc=5885076177&hsa_cam=670836869&hsa_src=g&hsa_net=adwords) who equipped and helped me to make this application a reality. (Edan Schwartz, Kris Szafranski)
 
 ## Support
 If you have suggestions or issues, please email me at [tormod.slettebo@gmail.com] 
