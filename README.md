@@ -56,7 +56,7 @@ Nickle & Time lets users add locations to a google map, that they would like to 
         - red (no visits left this week)
 2. To see current places user is avoiding
     - Click Places To Avoid (bottom left under map)
-    - Each place has a name, visit count for the week, and visit limit per week
+    - Each place has a name, visit count for the week (resets 7 days after being added), and visit limit per week
     - Each place can also be deactivated/activated (place will no longer be tracked, no text messages sent)
     - Each place can be deleted permanently.
 3. Volvo Icon
