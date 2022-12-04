@@ -48,6 +48,18 @@ CREATE TABLE "messages" (
 	"severity" INT
 );
 
+INSERT INTO "messages" (body,severity)
+VALUES
+	(', enjoy',1),
+	(', have a good time at',1),
+	(', you are doing GREAT!! Enjoy',1 ),
+	(', this is your last time at',2),
+	(', you may want to think about this. It is expensive at',2),
+	(', are you sure you want to go to',2),
+	(', you have to stop !!!! Avoid',3),
+	(', get out of there !!! Run from',3),
+	(', you are spending too much, leave ',3);
+
  CREATE TABLE "trigger_sms" (
 	"id" SERIAL PRIMARY KEY,
 	"user_id" INT REFERENCES "user"(id),
