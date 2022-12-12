@@ -142,10 +142,10 @@ function GoogleMapNickleAndTime() {
           Add
         </Button>
       </Stack>
-
+//45.163385, -93.050790
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(44.948545), lng: Number(-93.349296) }}
+        center={{ lat: Number(45.163385), lng: Number(-93.050790) }}
         zoom={13}
       >
         {/* Child components, such as markers, info windows, etc. */}
