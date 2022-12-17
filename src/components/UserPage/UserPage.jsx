@@ -24,9 +24,13 @@ function UserPage() {
     //get location right away, then every so often
     getLocation();
     //set an interval to get location
-    const interval = setInterval(() =>  dispatch({
+    const interval = setInterval(() =>  
+    { 
+      dispatch({
       type:'FETCH_PLACES_TO_AVOID'
-    }), 1000);
+    });
+    getLocation();
+  }, 1000);
     return () => {
       clearInterval(interval);
 

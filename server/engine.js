@@ -8,7 +8,7 @@ const { getSeverity } = require('./services/serverity.calc');
 const { getMessage } = require('./services/messages');
 const { sendRecordToTrigger_SMS_table } = require('./services/trigger_sms');
 const dontGetCloserThanThis = 100; //100 meters
-const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 2000; // 1 min
+const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
 //engine
 cron.schedule('* * * * * *', async () => {
