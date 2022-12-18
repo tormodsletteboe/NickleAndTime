@@ -24,17 +24,17 @@ function UserPage() {
     //get location right away, then every so often
     getLocation();
     //set an interval to get location
-  //   const interval = setInterval(() =>  
-  //   { 
-  //     dispatch({
-  //     type:'FETCH_PLACES_TO_AVOID'
-  //   });
-  //   getLocation();
-  // }, 1000);
-  //   return () => {
-  //     clearInterval(interval);
+    const interval = setInterval(() =>  
+    { 
+      dispatch({
+      type:'FETCH_PLACES_TO_AVOID'
+    });
+   // getLocation();
+  }, 1000);
+    return () => {
+      clearInterval(interval);
 
-  //   }; // clear the interval when leaving this component
+    }; // clear the interval when leaving this component
    
   }, []);
 

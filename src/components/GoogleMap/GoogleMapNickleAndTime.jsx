@@ -1,7 +1,7 @@
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import "./GoogleMapNickleAndTime.css";
 import globalconst from "../../GlobalVar.jsx";
 import usePlacesAutocomplete, {
@@ -27,6 +27,11 @@ const containerStyle = {
   width: "100%",
   height: "700px",
 };
+const center = {
+  lat: 44.941738,
+  lng: -93.357366
+};
+  //44.941738, -93.357366
 
 //get location options
 const options = {
@@ -41,10 +46,19 @@ function error(err) {
 }
 
 function GoogleMapNickleAndTime() {
-  const [lat, setLat] = useState();
-  const [lng, setLng] = useState();
-  const [carLat, setCarLat] = useState(44.948545);
-  const [carLng, setCarLng] = useState(-93.349296);
+
+  console.log('main function ran');
+  //44.941738, -93.357366
+
+
+  const [lat, setLat] = useState(44.941738);
+  const [lng, setLng] = useState(-93.357366);
+
+  const maplat = useRef(44.941738);
+  const maplng = useRef(-93.357366);
+
+  const [carLat, setCarLat] = useState(44.941738);
+  const [carLng, setCarLng] = useState(-93.357366);
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -68,10 +82,13 @@ function GoogleMapNickleAndTime() {
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
-    // setCarLat(crd.latitude);
-    // setCarLng(crd.longitude);
+    setCarLat(crd.latitude);
+    setCarLng(crd.longitude);
     setLat(crd.latitude);
     setLng(crd.longitude);
+    maplat.current = crd.latitude;
+    maplng.current = crd.longitude;
+    console.log(maplat.current,maplng.current);
   };
   //user clicks the add button
   function onAdd() {
@@ -103,21 +120,25 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
+    console.log('useeffect ran');
     getLocation();
   }, []);
+
+  
+
 
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_PUBLIC_MAP_API_KEY}
       libraries={globalconst.libraries}
     >
-      {/* search bar is in the stack */}
-      <Stack
+    <Stack
         direction="row"
         justifyContent="flex-start"
         alignItems="flex-end"
         spacing={2}
         sx={{ marginBottom: 1 }}
+        
       >
         <PlacesAutocomplete
           className="autocomp"
@@ -126,6 +147,7 @@ function GoogleMapNickleAndTime() {
           SetLng={setLng}
           SetB_Name={setBusinessName}
         />
+
 
         {/* visit limit */}
         <TextField
@@ -137,17 +159,19 @@ function GoogleMapNickleAndTime() {
           sx={{ height: 1 }}
           type="number"
           value={visitlimit}
+          
         />
-        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
+        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }} >
           Add
         </Button>
       </Stack>
-
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={{ lat: Number(44.943044), lng: Number(-93.351229) }}
+        center={center}
         zoom={13}
       >
+        {/* search bar is in the stack */}
+      
         {/* Child components, such as markers, info windows, etc. */}
         <></>
         <Marker
@@ -190,15 +214,17 @@ const PlacesAutocomplete = ({
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
-
+ 
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
+   
     setValue(address, false);
     clearSuggestions();
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
     SetLat(lat);
     SetLng(lng);
+    
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
   };
