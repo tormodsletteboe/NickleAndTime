@@ -1,20 +1,34 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+
 function RegisterForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNnumber, setPhoneNumber] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNnumber, setPhoneNumber] = useState("");
+  const [verifyClicked,setVerifyClicked]=useState(false);
+
   const errors = useSelector((store) => store.errors);
+  
   const dispatch = useDispatch();
 
   const registerUser = (event) => {
     event.preventDefault();
     // console.log('asdfasfasdfasf',phoneNnumber);
+    dispatch({ type: "CLEAR_REGISTRATION_ERROR" });
+
+    if (phoneNnumber.length != 10) {
+      dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
+      return;
+    }
+    if (Number.isInteger(Number(phoneNnumber)) == false) {
+      dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
+      return;
+    }
     dispatch({
-      type: 'REGISTER',
+      type: "REGISTER",
       payload: {
         username: username,
         password: password,
@@ -22,7 +36,24 @@ function RegisterForm() {
       },
     });
   }; // end registerUser
-
+  const handleVerify = () => {
+    //TODO: need to check number is correct format
+    dispatch({ type: "CLEAR_REGISTRATION_ERROR" });
+    
+    if (phoneNnumber.length != 10) {
+      dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
+      return;
+    }
+    if (Number.isInteger(Number(phoneNnumber)) == false) {
+      dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
+      return;
+    }
+    dispatch({
+      type: "VERIFY_NUMBER",
+      payload: { name: username, phoneNnumber: phoneNnumber },
+    });
+    setVerifyClicked(true);
+  };
   return (
     <form className="formPanel" onSubmit={registerUser}>
       <Stack spacing={2}>
@@ -37,8 +68,8 @@ function RegisterForm() {
           {/* Username: */}
           <TextField
             variant="outlined"
-            size='small'
-            label='Username'
+            size="small"
+            label="Username"
             type="text"
             name="username"
             value={username}
@@ -52,8 +83,8 @@ function RegisterForm() {
           {/* Password: */}
           <TextField
             variant="outlined"
-            size='small'
-            label='Password'
+            size="small"
+            label="Password"
             type="password"
             name="password"
             value={password}
@@ -68,20 +99,32 @@ function RegisterForm() {
             {/* Phone #: */}
             <TextField
               variant="outlined"
-              size='small'
-              label='Phone Number'
+              size="small"
+              label="Phone Number"
               type="text"
               name="phone_number"
               required
               value={phoneNnumber}
+              helperText={"USA ONLY, ex: 9998887777"}
               onChange={(event) => {
                 setPhoneNumber(event.target.value);
               }}
             />
+            <Button onClick={handleVerify}>Verify</Button>
             {/* </label> */}
           </div>
         </div>
-        <Button variant='contained' className="btn" type="submit" name="submit" value="Register" >Register</Button>
+        {verifyClicked &&
+        <Button
+          variant="contained"
+          className="btn"
+          type="submit"
+          name="submit"
+          value="Register"
+        >
+          Register
+        </Button>
+        }
       </Stack>
     </form>
   );

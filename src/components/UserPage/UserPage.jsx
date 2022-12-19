@@ -30,7 +30,7 @@ function UserPage() {
       type:'FETCH_PLACES_TO_AVOID'
     });
    // getLocation();
-  }, 1000);
+  }, 100000);
     return () => {
       clearInterval(interval);
 
@@ -44,7 +44,7 @@ function UserPage() {
   }
   //update database with this users current location
   const success = (pos) => {
-    console.log('the position of this device changed, update sent to database');
+    //console.log('the position of this device changed, update sent to database');
     const crd = pos.coords;
     dispatch({
       type: 'UPDATE_CURRENT_LOCATION',

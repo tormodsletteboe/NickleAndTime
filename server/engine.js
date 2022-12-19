@@ -11,7 +11,7 @@ const dontGetCloserThanThis = 100; //100 meters
 const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 
 //engine
-cron.schedule('* * * * * *', async () => {
+cron.schedule(' * * * * *', async () => {
 
     console.log('Heart beat ', new Date().toLocaleTimeString());
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.

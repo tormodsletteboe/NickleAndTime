@@ -8,6 +8,8 @@ const userStrategy = require('../strategies/user.strategy');
 
 const router = express.Router();
 
+const { validateNumber } = require('../send_sms.js');
+
 
 // Handles Ajax request for user information if user is authenticated
 router.get('/', rejectUnauthenticated, (req, res) => {
@@ -41,7 +43,6 @@ router.post('/register', (req, res, next) => {
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   
-
   res.sendStatus(200);
 });
 
@@ -219,6 +220,18 @@ router.delete('/currentLocation', rejectUnauthenticated, (req, res) => {
       res.sendStatus(500);
     });
  
+});
+
+//validate phone number
+router.post('/validate_phonenumber',  (req, res) => {
+  let result =  validateNumber(req.body.name,req.body.phoneNnumber);
+  result.then(resolve =>{
+    //console.log('post validate phone',resolve);
+    res.send(resolve.validationCode);
+  }).catch((error)=>{
+    console.log('something happened',error);
+    res.send(error);
+  });
 });
 
 module.exports = router;
