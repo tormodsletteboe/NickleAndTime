@@ -1,7 +1,11 @@
 import React from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+} from "@react-google-maps/api";
 
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./GoogleMapNickleAndTime.css";
 import globalconst from "../../GlobalVar.jsx";
 import usePlacesAutocomplete, {
@@ -29,9 +33,9 @@ const containerStyle = {
 };
 const center = {
   lat: 44.941738,
-  lng: -93.357366
+  lng: -93.357366,
 };
-  //44.941738, -93.357366
+//44.941738, -93.357366
 
 //get location options
 const options = {
@@ -45,17 +49,11 @@ function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+
+
 function GoogleMapNickleAndTime() {
-
-  console.log('main function ran');
-  //44.941738, -93.357366
-
-
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
-
-  const maplat = useRef(44.941738);
-  const maplng = useRef(-93.357366);
 
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
@@ -67,28 +65,18 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
-  // useEffect(() => {
-  //   window.addEventListener('keydown', (evt) => {
-  //     if (evt.code === 'ArrowDown') {
-  //       setCarLat(carLat - 0.0001);
-  //     }
-  //   });
-  // })
 
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.watchPosition(success, error, options);
   };
+
   //successfully got a location
   const success = (pos) => {
     const crd = pos.coords;
     setCarLat(crd.latitude);
-    setCarLng(crd.longitude);
-    setLat(crd.latitude);
-    setLng(crd.longitude);
-    maplat.current = crd.latitude;
-    maplng.current = crd.longitude;
-    console.log(maplat.current,maplng.current);
+    setCarLng(crd.longitude);  
   };
   //user clicks the add button
   function onAdd() {
@@ -120,25 +108,25 @@ function GoogleMapNickleAndTime() {
   //on component load
   useEffect(() => {
     //center the map on the location of the computer
-    console.log('useeffect ran');
     getLocation();
   }, []);
 
-  
-
+  const handleOnClickMap = (e) => {
+    console.log("clicked the map", e);
+  };
 
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_PUBLIC_MAP_API_KEY}
       libraries={globalconst.libraries}
     >
-    <Stack
+      {/* search bar is in the stack */}
+      <Stack
         direction="row"
         justifyContent="flex-start"
         alignItems="flex-end"
         spacing={2}
         sx={{ marginBottom: 1 }}
-        
       >
         <PlacesAutocomplete
           className="autocomp"
@@ -148,20 +136,24 @@ function GoogleMapNickleAndTime() {
           SetB_Name={setBusinessName}
         />
 
-
         {/* visit limit */}
         <TextField
           size="small"
           variant="outlined"
           label="Visits/Week"
-          onChange={(evt) => setVisitLimit(Number(evt.target.value))}
+          onChange={(evt) => {
+            if (isNaN(evt.target.value)) {
+              setVisitLimit(0);
+            } else {
+              setVisitLimit(Number(evt.target.value));
+            }
+          }}
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           sx={{ height: 1 }}
-          type="number"
+          type="text"
           value={visitlimit}
-          
         />
-        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }} >
+        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
           Add
         </Button>
       </Stack>
@@ -169,9 +161,9 @@ function GoogleMapNickleAndTime() {
         mapContainerStyle={containerStyle}
         center={center}
         zoom={13}
+        onClick={handleOnClickMap}
       >
-        {/* search bar is in the stack */}
-      
+       
         {/* Child components, such as markers, info windows, etc. */}
         <></>
         <Marker
@@ -214,17 +206,16 @@ const PlacesAutocomplete = ({
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
- 
+
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
-   
     setValue(address, false);
     clearSuggestions();
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
     SetLat(lat);
     SetLng(lng);
-    
+
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
   };

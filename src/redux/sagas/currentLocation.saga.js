@@ -59,7 +59,7 @@ function* removeCurrentLocation(){
         // the config includes credentials which
         // allow the server session to recognize the user
         const res = yield axios.delete('/api/user/currentLocation',{data:'nothing'});
-        console.log(res);
+        //console.log(res);
         // yield put({
         //     type: 'GET_CURRENT_LOCATION'
         // })

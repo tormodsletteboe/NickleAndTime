@@ -20,7 +20,13 @@ const client = require('twilio')(accountSid, authToken);
     .then(message => console.log(message.sid));
   }
 
+  const validateNumber =  (name,phoneNumber)=>{
+    const result = client.validationRequests.create({friendlyName: name,phoneNumber:`+1${phoneNumber}`});
+    return result;
+  }
 
+ 
    module.exports = {
     sendMsg,
+    validateNumber,
   };

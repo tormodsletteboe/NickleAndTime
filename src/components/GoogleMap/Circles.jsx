@@ -1,7 +1,8 @@
 import React from 'react'
 import { Circle } from '@react-google-maps/api';
 import { useSelector } from 'react-redux';
-import { Marker } from '@react-google-maps/api';
+import { Marker, InfoWindow, } from '@react-google-maps/api';
+
 
 const handleOnClick = (place) => {
   console.log(place.name);
@@ -42,19 +43,21 @@ function Circles() {
             optionsCircle.fillColor = '#008000';
           }
           return (
-            <>
+            <div key={index}>
               <Circle
-                key={index}
+                
                 center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
                 // required
                 options={optionsCircle}
               />
               <Marker
-              key={place.latitude}
+             
                 position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
                 onClick={() => { handleOnClick(place) }}
+                title={place.name}
+                
               />
-            </>
+            </div>
           );
         }
       })}

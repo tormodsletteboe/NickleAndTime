@@ -1,4 +1,4 @@
-import { put, takeLatest } from 'redux-saga/effects';
+import { put, take, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
 // worker Saga: will be fired on "REGISTER" actions
@@ -23,8 +23,28 @@ function* registerUser(action) {
   }
 }
 
+function* verifyPhoneNumber(action){
+  try {
+    yield put({type:'CLEAR_REGISTRATION_ERROR'});
+   let validationCode = yield axios.post('/api/user/validate_phonenumber', action.payload);
+   if(validationCode.data.code ===21450){
+    yield put({ type: 'PHONENUMBER_ALREADY_REGISTERED' });
+   }
+   else if(validationCode.data.code === 13224 || validationCode.data.code === 400){
+    yield put({ type: 'NOT_A_VALID_PHONE_NUMBER' });
+   }
+   else{
+    yield put({type: 'ENTER_THIS_CODE',payload: validationCode.data});
+   }
+   
+  } catch (error) {
+    console.log('Error with phone verifycation:', error);
+  }
+}
+
 function* registrationSaga() {
   yield takeLatest('REGISTER', registerUser);
+  yield takeLatest('VERIFY_NUMBER',verifyPhoneNumber);
 }
 
 export default registrationSaga;
