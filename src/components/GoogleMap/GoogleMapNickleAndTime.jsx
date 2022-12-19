@@ -3,9 +3,10 @@ import {
   GoogleMap,
   LoadScript,
   Marker,
+  InfoWindow,
 } from "@react-google-maps/api";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./GoogleMapNickleAndTime.css";
 import globalconst from "../../GlobalVar.jsx";
 import usePlacesAutocomplete, {
@@ -25,6 +26,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Circles from "./Circles";
+import { useGoogleMap } from "@react-google-maps/api";
 
 //google maps options
 const containerStyle = {
@@ -49,9 +51,16 @@ function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
+const divStyle = {
+  background: `white`,
+  border: `1px solid #ccc`,
+  padding: 15,
+};
 
 
+//main comp
 function GoogleMapNickleAndTime() {
+
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
 
@@ -65,7 +74,6 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
-
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
@@ -76,33 +84,36 @@ function GoogleMapNickleAndTime() {
   const success = (pos) => {
     const crd = pos.coords;
     setCarLat(crd.latitude);
-    setCarLng(crd.longitude);  
+    setCarLng(crd.longitude);
   };
   //user clicks the add button
   function onAdd() {
     //create a dispatch with a payload to update 2 tables
+    try {
+      //junction table
+      const user_id = user.id;
+      const visit_limit = visitlimit;
 
-    //junction table
-    const user_id = user.id;
-    const visit_limit = visitlimit;
+      //place to avoid table
+      const name = businessName;
+      const google_place_id = placeSelected[0].place_id;
+      const latitude = lat;
+      const longitude = lng;
 
-    //place to avoid table
-    const name = businessName;
-    const google_place_id = placeSelected[0].place_id;
-    const latitude = lat;
-    const longitude = lng;
-
-    dispatch({
-      type: "ADD_PLACE_TO_AVOID",
-      payload: {
-        user_id,
-        visit_limit,
-        name,
-        google_place_id,
-        latitude,
-        longitude,
-      },
-    });
+      dispatch({
+        type: "ADD_PLACE_TO_AVOID",
+        payload: {
+          user_id,
+          visit_limit,
+          name,
+          google_place_id,
+          latitude,
+          longitude,
+        },
+      });
+    } catch (error) {
+      console.log("error in add", error);
+    }
   }
 
   //on component load
@@ -112,7 +123,7 @@ function GoogleMapNickleAndTime() {
   }, []);
 
   const handleOnClickMap = (e) => {
-    console.log("clicked the map", e);
+    console.log("clicked the map", e.placeId);
   };
 
   return (
@@ -162,10 +173,11 @@ function GoogleMapNickleAndTime() {
         center={center}
         zoom={13}
         onClick={handleOnClickMap}
+        options={{disableDefaultUI:true,clickableIcons:false}}
+        
       >
-       
         {/* Child components, such as markers, info windows, etc. */}
-        <></>
+
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
           draggable
@@ -184,7 +196,7 @@ function GoogleMapNickleAndTime() {
           icon={{ url: "./volvo.png" }}
         />
         {/* <Marker position={{ lat: Number(44.948545), lng: Number(-93.349296) }} /> */}
-
+          <InfoWin center={center} />
         {/* add avoid circless */}
         <Circles />
       </GoogleMap>
@@ -192,6 +204,23 @@ function GoogleMapNickleAndTime() {
   );
 }
 
+const InfoWin = ({center}) => {
+
+  const map = useGoogleMap();
+ // map.pan
+  
+  useEffect(()=>{
+    console.log('map',map);
+  },[])
+
+  return (
+    <InfoWindow position={center}>
+      <div style={divStyle}>
+        <h1>InfoWindow</h1>
+      </div>
+    </InfoWindow>
+  );
+};
 //component to search for a location to avoid
 const PlacesAutocomplete = ({
   SetPlaceSelected,
@@ -209,6 +238,7 @@ const PlacesAutocomplete = ({
 
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
+    //console.log('add',address);
     setValue(address, false);
     clearSuggestions();
     const results = await getGeocode({ address });
