@@ -137,11 +137,14 @@ function GoogleMapNickleAndTime() {
     e.stop();
    
     const results = await getGeocode({ placeId: e.placeId });
+    SetPlaceSelected(results);
     //console.log(results);
     //console.log(results[0].formatted_address);
 
     const { lat, lng } = await getLatLng(results[0]);
     
+    setLat(lat);
+    setLng(lng);
     setClickedPosition({ lat, lng });
     
     const request = {
@@ -158,7 +161,7 @@ function GoogleMapNickleAndTime() {
         place.geometry.location){
           marker.current.setPosition({lat,lng});
           marker.current.setMap(mapRef.current);
-         
+          
           
           infowindow.current.setContent(place.name);
           infowindow.current.open({
