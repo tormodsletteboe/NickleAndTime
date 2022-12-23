@@ -1,4 +1,6 @@
 import { useEffect, useState, Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -10,14 +12,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Stack, ListSubheader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Typography from '@mui/material/Typography';
 import ShareLocation from '@mui/icons-material/ShareLocation';
-import Popover from '@mui/material/Popover';
-
-import { useDispatch, useSelector } from 'react-redux';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
+
 import BasicPopover from './Popover.jsx';
+import HelpPopover from './HelpPopover.jsx';
+
+
 export default function PlacesToAvoidDrawer() {
 
     const dispatch = useDispatch();
@@ -55,7 +57,6 @@ export default function PlacesToAvoidDrawer() {
                     <Box sx={{display:'flex',justifyContent: 'space-between' }}>
                         {`#visits this week / #allowed visits this week`}
                         <BasicPopover/>
-                        
                     </Box>
                 </ListSubheader>
                 {placesToAvoid.map((place) => (
@@ -96,7 +97,10 @@ export default function PlacesToAvoidDrawer() {
         <div>
             {['bottom'].map((anchor) => (
                 <Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}>{"Places To Avoid"}</Button>
+                    <Stack direction={'row'} justifyContent={'space-between'}>
+                        <Button onClick={toggleDrawer(anchor, true)}>{"Places To Avoid"}</Button>
+                        <HelpPopover/>
+                    </Stack>
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
