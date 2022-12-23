@@ -8,13 +8,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { TextField, Stack } from '@mui/material';
+import { Stack, ListSubheader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import Typography from '@mui/material/Typography';
 import ShareLocation from '@mui/icons-material/ShareLocation';
+import Popover from '@mui/material/Popover';
+
 import { useDispatch, useSelector } from 'react-redux';
 import Switch from '@mui/material/Switch';
-
+import Tooltip from '@mui/material/Tooltip';
+import BasicPopover from './Popover.jsx';
 export default function PlacesToAvoidDrawer() {
 
     const dispatch = useDispatch();
@@ -48,49 +51,41 @@ export default function PlacesToAvoidDrawer() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
+                <ListSubheader>
+                    <Box sx={{display:'flex',justifyContent: 'space-between' }}>
+                        {`#visits this week / #allowed visits this week`}
+                        <BasicPopover/>
+                        
+                    </Box>
+                </ListSubheader>
                 {placesToAvoid.map((place) => (
+                    
                     <ListItem
                         key={place.id}
                         disablePadding
                         style={{ textDecoration : !place.active ? 'line-through' : 'none' }}
                     >
-                        <ListItemButton>
+                        <ListItemButton  >
+                        <Stack direction='row' spacing={1}>
                             <ListItemIcon>
                                 <ShareLocation />
                             </ListItemIcon>
                             <ListItemText primary={place.name} />
-                            <Stack
-                                direction="row"
-                                spacing={2}
-                            >
-                                <TextField
-                                    variant="outlined"
-                                    size='small'
-                                    label='Visits'
-                                    type="text"
-                                    name="visitCount"
-                                    value={place.visit_count}
-                                    disabled
-                                />
-                                <TextField
-                                    variant="outlined"
-                                    size='small'
-                                    label='Visit Limit/Week'
-                                    type="text"
-                                    name="visitLimit"
-                                    value={place.visit_limit}
-                                    disabled
-                                />
-
-
+                            <ListItemText primary={`${place.visit_count}/${place.visit_limit}`}/>
                             </Stack>
+                            <Tooltip title={place.active ? "Deactivate" : "Activate"}>
+                                <Switch checked={place.active} onChange={() => { dispatch({ type: 'TOGGLE_ACTIVE', payload:{placeId:place.id} }) }} />
+                            </Tooltip>
                         </ListItemButton>
-                        <Switch checked={place.active} onChange={() => { dispatch({ type: 'TOGGLE_ACTIVE', payload:{placeId:place.id} }) }} />
-                        <Button onClick={()=>{dispatch({type: 'DELETE_USER_PLACE',payload:{placeId:place.id}})}} color="error">
-                            <DeleteIcon />
-                        </Button>
+                        <Tooltip title="Permanently delete, you can always add it back later">
+                            <Button onClick={()=>{dispatch({type: 'DELETE_USER_PLACE',payload:{placeId:place.id}})}} color="error">
+                                <DeleteIcon />
+                            </Button>
+                        </Tooltip>
                     </ListItem>
+                    
                 ))}
+               
             </List>
             <Divider />
         </Box>
