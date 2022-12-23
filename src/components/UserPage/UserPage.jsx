@@ -30,7 +30,7 @@ function UserPage() {
       type:'FETCH_PLACES_TO_AVOID'
     });
    // getLocation();
-  }, 100000);
+  }, 2000);
     return () => {
       clearInterval(interval);
 
