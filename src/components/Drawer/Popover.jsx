@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-
+import ToggleOnSharpIcon from '@mui/icons-material/ToggleOnSharp';
+import DeleteIcon from '@mui/icons-material/Delete';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import './Popover.css';
 export default function BasicPopover({}) {
@@ -31,8 +32,9 @@ export default function BasicPopover({}) {
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}><span className='highlight'>Deactivate:</span> Allows you to visit a place without increasing the number of visits. Also, no text message is sent out.</Typography>
-        <Typography sx={{ p: 2 }}><span className='highlight'>Delete:</span> Permanently removes the place. You can always add it back.</Typography>
+        
+        <Typography sx={{ p: 2 ,display:'flex'}}><span className='highlight'><ToggleOnSharpIcon color='primary'sx={{mx: 2}}/></span> Deactivate allows you to visit a place without increasing the number of visits. Also, no text message is sent out.</Typography>
+        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><DeleteIcon color='error' sx={{mx: 2}}/></span> Permanently removes the place. You can always add it back.</Typography>
         <Typography sx={{ p: 2 }}><span className='highlight'></span>#visits is reset every 7 days,from when it was added.</Typography>
       </Popover>
     </div>
