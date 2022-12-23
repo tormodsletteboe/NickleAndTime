@@ -76,7 +76,7 @@ cron.schedule('* * * * * *', async () => {
                         console.log(`${usrName} ${msg} ${place.name}`);
                         let totalmsg = `${usrName} ${msg} ${place.name}`;
 
-                        //TODO: turn this on
+                        //send out the sms thorugh twilio
                         sendMsg(totalmsg, usrPhoneNum);
 
                         //add record to trigger_sms (ie, its like a history table)
@@ -94,7 +94,7 @@ cron.schedule('* * * * * *', async () => {
 
 });
 
-//house keeping, should run 1 time per day, but for demo it will have to run, more often
+//house keeping, should run 1 time per day, 
 cron.schedule('59 23 * * *', () => {
     console.log('Server doing house keeping', new Date().toLocaleTimeString());
     console.log('Cheking if any visit counts need to be reset');
