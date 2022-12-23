@@ -110,6 +110,7 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
     FROM "user_avoidplace"
     LEFT JOIN avoid_place ON avoid_place.id = user_avoidplace.avoid_place_id
     WHERE "user_id" = $1
+    ORDER BY avoid_place.id ASC
     ;`;
   const sqlParams = [req.user.id];
   pool.query(sqlText, sqlParams)
