@@ -26,7 +26,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Circles from "./Circles";
-
+import Tooltip from '@mui/material/Tooltip';
 import { useRef } from "react";
 import { useCallback } from "react";
 
@@ -184,7 +184,7 @@ function GoogleMapNickleAndTime() {
       marker.current = new window.google.maps.Marker()
     );
     }, []);
-    console.log('before return');
+   
   return (
    
     <LoadScript
@@ -208,9 +208,12 @@ function GoogleMapNickleAndTime() {
           Map={mapRef}
           BusinessNameFromClickedOnMap={businessName}
           AddressFromNameClickedOnMap={address}
+          SetBNameFromClickedOnMap={setBusinessName}
+          SetAddressFromNameClickedOnMap={setAddress}
         />
 
         {/* visit limit */}
+        <Tooltip title={'Choose visits allowed per week'}>
         <TextField
           size="small"
           variant="outlined"
@@ -227,6 +230,7 @@ function GoogleMapNickleAndTime() {
           type="text"
           value={visitlimit}
         />
+        </Tooltip>
         <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
           Add
         </Button>
@@ -289,7 +293,9 @@ const PlacesAutocomplete = ({
   SetB_Name,
   Map,
   BusinessNameFromClickedOnMap,
+  SetBNameFromClickedOnMap,
   AddressFromNameClickedOnMap,
+  SetAddressFromNameClickedOnMap,
 }) => {
   const {
     ready,
@@ -302,7 +308,7 @@ const PlacesAutocomplete = ({
 
  useEffect(()=>{
   if(BusinessNameFromClickedOnMap){
-    console.log(BusinessNameFromClickedOnMap)
+    console.log('b name ran',BusinessNameFromClickedOnMap)
     setValue(BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`);
   }
   
@@ -310,8 +316,11 @@ const PlacesAutocomplete = ({
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
     //console.log('add',address);
+    SetBNameFromClickedOnMap('');
+    SetAddressFromNameClickedOnMap('');
     setValue(address, false);
     clearSuggestions();
+  
     const results = await getGeocode({ address });
     console.log(address);
     console.log(results);
@@ -323,6 +332,8 @@ const PlacesAutocomplete = ({
 
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
+    
+    Map.current.setZoom(17);
     Map.current?.panTo({ lat: lat, lng: lng });
   };
 

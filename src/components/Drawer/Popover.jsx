@@ -35,7 +35,7 @@ export default function BasicPopover({}) {
         
         <Typography sx={{ p: 2 ,display:'flex'}}><span className='highlight'><ToggleOnSharpIcon color='primary'sx={{mx: 2}}/></span> Deactivate allows you to visit a place without increasing the number of visits. Also, no text message is sent out.</Typography>
         <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><DeleteIcon color='error' sx={{mx: 2}}/></span> Permanently removes the place. You can always add it back.</Typography>
-        <Typography sx={{ p: 2 }}><span className='highlight'></span>#visits is reset every 7 days,from when it was added.</Typography>
+        <Typography sx={{ p: 2 }}><span className='highlight'></span>#visits is reset every 7 days, from when it was added.</Typography>
       </Popover>
     </div>
   );
