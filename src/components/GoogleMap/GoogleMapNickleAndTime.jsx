@@ -26,7 +26,9 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Circles from "./Circles";
-import { useGoogleMap } from "@react-google-maps/api";
+
+import { useRef } from "react";
+import { useCallback } from "react";
 
 //google maps options
 const containerStyle = {
@@ -57,12 +59,15 @@ const divStyle = {
   padding: 15,
 };
 
-
 //main comp
 function GoogleMapNickleAndTime() {
-
+  const mapRef = useRef();
+  const marker = useRef();
+  const infowindow = useRef();
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
+
+  const [clickedPosition, setClickedPosition] = useState();
 
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
@@ -70,7 +75,7 @@ function GoogleMapNickleAndTime() {
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
   const [businessName, setBusinessName] = useState();
-
+  const [address,setAddress]=useState();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
@@ -120,13 +125,68 @@ function GoogleMapNickleAndTime() {
   useEffect(() => {
     //center the map on the location of the computer
     getLocation();
+    // infowindow.current = new window.google.maps.InfoWindow({content:'shit',ariaLabel: "shithistoisioesdf",});
+    // marker.current = new window.google.maps.Marker();
   }, []);
 
-  const handleOnClickMap = (e) => {
-    console.log("clicked the map", e.placeId);
+  const handleOnClickMap = async (e) => {
+    
+    if (!e.placeId) return;
+    
+    //prevent default infowindow
+    e.stop();
+   
+    const results = await getGeocode({ placeId: e.placeId });
+    SetPlaceSelected(results);
+    //console.log(results);
+    //console.log(results[0].formatted_address);
+
+    const { lat, lng } = await getLatLng(results[0]);
+    
+    setLat(lat);
+    setLng(lng);
+    setClickedPosition({ lat, lng });
+    
+    const request = {
+      placeId: e.placeId,
+      fields: ["name", "formatted_address", "place_id", "geometry"],
+    };
+    const service = new window.google.maps.places.PlacesService(mapRef.current);
+    //console.log(service);
+    service.getDetails(request,(place,status)=>{
+      
+      if(status === window.google.maps.places.PlacesServiceStatus.OK &&
+        place &&
+        place.geometry &&
+        place.geometry.location){
+          marker.current.setPosition({lat,lng});
+          marker.current.setMap(mapRef.current);
+          
+          
+          infowindow.current.setContent(place.name);
+          infowindow.current.open({
+            anchor:marker.current,
+            map: mapRef.current,
+          });
+          setBusinessName(place.name);
+          setAddress(place.formatted_address);
+          //TODO: set all this stuff here
+        }
+    });
+    
+    mapRef.current?.panTo({lat,lng});
   };
 
+  const onLoad = useCallback((map) => {
+    return(
+      mapRef.current = map,
+      infowindow.current = new window.google.maps.InfoWindow(),
+      marker.current = new window.google.maps.Marker()
+    );
+    }, []);
+    console.log('before return');
   return (
+   
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_PUBLIC_MAP_API_KEY}
       libraries={globalconst.libraries}
@@ -145,6 +205,9 @@ function GoogleMapNickleAndTime() {
           SetLat={setLat}
           SetLng={setLng}
           SetB_Name={setBusinessName}
+          Map={mapRef}
+          BusinessNameFromClickedOnMap={businessName}
+          AddressFromNameClickedOnMap={address}
         />
 
         {/* visit limit */}
@@ -173,8 +236,8 @@ function GoogleMapNickleAndTime() {
         center={center}
         zoom={13}
         onClick={handleOnClickMap}
-        options={{disableDefaultUI:true,clickableIcons:false}}
-        
+        options={{ disableDefaultUI: true, clickableIcons: true }}
+        onLoad={onLoad}
       >
         {/* Child components, such as markers, info windows, etc. */}
 
@@ -195,8 +258,9 @@ function GoogleMapNickleAndTime() {
           animation={2}
           icon={{ url: "./volvo.png" }}
         />
+        {/* {clickedPosition && <InfoWin center={clickedPosition}/>} */}
         {/* <Marker position={{ lat: Number(44.948545), lng: Number(-93.349296) }} /> */}
-          <InfoWin center={center} />
+        {/* <InfoWin center={center} /> */}
         {/* add avoid circless */}
         <Circles />
       </GoogleMap>
@@ -204,17 +268,13 @@ function GoogleMapNickleAndTime() {
   );
 }
 
-const InfoWin = ({center}) => {
+const InfoWin = ({ center }) => {
 
-  const map = useGoogleMap();
- // map.pan
-  
   useEffect(()=>{
-    console.log('map',map);
-  },[])
-
+    console.log('hello');
+  },[center])
   return (
-    <InfoWindow position={center}>
+    <InfoWindow position={center} on >
       <div style={divStyle}>
         <h1>InfoWindow</h1>
       </div>
@@ -227,6 +287,9 @@ const PlacesAutocomplete = ({
   SetLat,
   SetLng,
   SetB_Name,
+  Map,
+  BusinessNameFromClickedOnMap,
+  AddressFromNameClickedOnMap,
 }) => {
   const {
     ready,
@@ -235,19 +298,32 @@ const PlacesAutocomplete = ({
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
+//console.log(BusinessNameFromClickedOnMap);
 
+ useEffect(()=>{
+  if(BusinessNameFromClickedOnMap){
+    console.log(BusinessNameFromClickedOnMap)
+    setValue(BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`);
+  }
+  
+ },[BusinessNameFromClickedOnMap,AddressFromNameClickedOnMap])
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
     //console.log('add',address);
     setValue(address, false);
     clearSuggestions();
     const results = await getGeocode({ address });
+    console.log(address);
+    console.log(results);
+    console.log(results[0]);
+
     const { lat, lng } = await getLatLng(results[0]);
     SetLat(lat);
     SetLng(lng);
 
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
+    Map.current?.panTo({ lat: lat, lng: lng });
   };
 
   return (
