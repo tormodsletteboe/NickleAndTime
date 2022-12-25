@@ -51,7 +51,7 @@ export default function HelpPopover({}) {
           1. Search an address, or click a business icon <RoomIcon sx={{color:"#1976d2"}}/> on the map
         </Typography>
         <Typography sx={{ p: 2, display: "flex" }}>
-          2. Select number of Visits/Week allowed. Resets every 7 days.
+          2. Select number of Visits/Week allowed.
         </Typography>
        
         <Typography sx={{ p: 2, display: "flex" }}>

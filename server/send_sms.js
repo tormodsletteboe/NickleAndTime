@@ -21,7 +21,11 @@ const client = require('twilio')(accountSid, authToken);
   }
 
   const validateNumber =  (name,phoneNumber)=>{
-    const result = client.validationRequests.create({friendlyName: name,phoneNumber:`+1${phoneNumber}`});
+    const result = client.validationRequests.create({
+      friendlyName: name,
+      phoneNumber:`+1${phoneNumber}`
+     
+    });
     return result;
   }
 
