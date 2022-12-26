@@ -275,7 +275,6 @@ function GoogleMapNickleAndTime() {
 const InfoWin = ({ center }) => {
 
   useEffect(()=>{
-    console.log('hello');
   },[center])
   return (
     <InfoWindow position={center} on >

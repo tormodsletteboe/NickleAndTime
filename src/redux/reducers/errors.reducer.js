@@ -31,8 +31,10 @@ const registrationMessage = (state = "", action) => {
       return "Phone number is connected!";
     case "NOT_A_VALID_PHONE_NUMBER":
       return "Not a valid phone number!";
-    case "ENTER_THIS_CODE":
-      return `Answer your phone and enter code ${action.payload}`;
+    case "TEXT_SENT_OUT":
+      return `Enter the code sent to the provided phone number, and click CHECK CODE`;
+      case "ERROR_SENDING_OUT_SMS":
+        return `Unable to send out the verification code`;
     default:
       return state;
   }

@@ -55,7 +55,7 @@ export default function PlacesToAvoidDrawer() {
             <List>
                 <ListSubheader>
                     <Box sx={{display:'flex',justifyContent: 'space-between' }}>
-                        {`#visits this week / #allowed visits this week`}
+                        {`#visits this week / #allowed visits per week`}
                         <BasicPopover/>
                     </Box>
                 </ListSubheader>

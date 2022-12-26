@@ -3,20 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import { useSlider } from "@mui/base";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNnumber, setPhoneNumber] = useState("");
-  const [verifyClicked,setVerifyClicked]=useState(false);
+  const [code, setCode] = useState("");
+  const [verifyClicked, setVerifyClicked] = useState(false);
 
   const errors = useSelector((store) => store.errors);
-  
+  const statusCode = useSelector((store) => store.validationCode);
+
   const dispatch = useDispatch();
 
   const registerUser = (event) => {
     event.preventDefault();
-    // console.log('asdfasfasdfasf',phoneNnumber);
     dispatch({ type: "CLEAR_REGISTRATION_ERROR" });
 
     if (phoneNnumber.length != 10) {
@@ -35,19 +37,23 @@ function RegisterForm() {
         phoneNumber: phoneNnumber,
       },
     });
+
+    dispatch({
+      type: 'CLEAR_STATUS_SMSCODE'
+    });
   }; // end registerUser
 
-  const handleCode =() =>{
+  const handleCode = () => {
     //TODO: THIS IS WHERE I AM, clean up this stuff all the way tru, get rid of the phone call version.
     dispatch({
       type: "VERIFY_CODE_SMS",
-      payload:{phoneNumber: phoneNnumber,code:'762042'}
+      payload: { phoneNumber: phoneNnumber, code: code },
     });
-  }
+  };
   const handleVerify = () => {
     //TODO: need to check number is correct format
     dispatch({ type: "CLEAR_REGISTRATION_ERROR" });
-    
+
     if (phoneNnumber.length != 10) {
       dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
       return;
@@ -56,15 +62,12 @@ function RegisterForm() {
       dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
       return;
     }
-    // dispatch({
-    //   type: "VERIFY_NUMBER",
-    //   payload: { name: username, phoneNnumber: phoneNnumber },
-    // });
     dispatch({
       type: "VERIFY_NUMBER_SMS",
-      payload:{phoneNumber: phoneNnumber}
+      payload: { phoneNumber: phoneNnumber },
     });
-    setVerifyClicked(true);
+
+    
   };
   return (
     <form className="formPanel" onSubmit={registerUser}>
@@ -123,21 +126,34 @@ function RegisterForm() {
               }}
             />
             <Button onClick={handleVerify}>Verify</Button>
-            <Button onClick={handleCode}>Check Code</Button>
-            {/* </label> */}
+            <div className="">
+              <TextField
+                variant="outlined"
+                size="small"
+                label="Code"
+                type="text"
+                name="code"
+                required
+                value={code}
+                onChange={(event) => {
+                  setCode(event.target.value);
+                }}
+              />
+              <Button onClick={handleCode}>Check Code</Button>
+            </div>
           </div>
         </div>
-        {verifyClicked &&
-        <Button
-          variant="contained"
-          className="btn"
-          type="submit"
-          name="submit"
-          value="Register"
-        >
-          Register
-        </Button>
-        }
+        {statusCode && (
+          <Button
+            variant="contained"
+            className="btn"
+            type="submit"
+            name="submit"
+            value="Register"
+          >
+            Register
+          </Button>
+        )}
       </Stack>
     </form>
   );

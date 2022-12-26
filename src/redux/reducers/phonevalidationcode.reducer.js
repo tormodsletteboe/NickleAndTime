@@ -1,10 +1,14 @@
-const validationcodeReducer = (state = '', action) => {
-    switch (action.type) {
-      case 'SET_VALIDATION_CODE':
-        return action.payload;
-      default:
-        return state;
-    }
-  };
+const validationcodeReducer = (state = "", action) => {
+  switch (action.type) {
+    case "SMS_CODE_APPROVED":
+      return "approved";
+    case "SMS_CODE_NOT_APPROVED":
+      return "";
+    case "CLEAR_STATUS_SMSCODE":
+      return "";
+    default:
+      return state;
+  }
+};
 
-  export default validationcodeReducer;
+export default validationcodeReducer;
