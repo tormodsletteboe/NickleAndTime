@@ -38,6 +38,7 @@ function RegisterForm() {
   }; // end registerUser
 
   const handleCode =() =>{
+    //TODO: THIS IS WHERE I AM, clean up this stuff all the way tru, get rid of the phone call version.
     dispatch({
       type: "VERIFY_CODE_SMS",
       payload:{phoneNumber: phoneNnumber,code:'762042'}
