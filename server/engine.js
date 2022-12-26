@@ -74,7 +74,7 @@ cron.schedule('* * * * * *', async () => {
                         let usrName = await getUserName(userId);
                         let usrPhoneNum = await getUserPhoneNumber(userId);
                         console.log(`${usrName} ${msg} ${place.name}`);
-                        let totalmsg = `${usrName} ${msg} ${place.name}`;
+                        let totalmsg = `Nickle & Time: ${usrName} ${msg} ${place.name}`;
 
                         //send out the sms thorugh twilio
                         sendMsg(totalmsg, usrPhoneNum);
