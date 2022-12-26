@@ -5,6 +5,7 @@
 // and set the environment variables. See http://twil.io/secure
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.VERIFICATION_SID;
 
 const client = require('twilio')(accountSid, authToken);
 
@@ -29,8 +30,23 @@ const client = require('twilio')(accountSid, authToken);
     return result;
   }
 
+  const smsValidateNumber =(phoneNumber) =>{
+    client.verify.v2.services(verifySid)
+                .verifications
+                .create({to: `+1${phoneNumber}`, channel: 'sms'})
+                .then(verification => console.log(verification.status));
+  }
+
+  const checkStatusOfVerifyCodeSMS = (phoneNumber,code) =>{
+    client.verify.v2.services(verifySid)
+      .verificationChecks
+      .create({to: `+1${phoneNumber}`, code: code})
+      .then(verification_check => console.log(verification_check.status));
+  }
  
    module.exports = {
     sendMsg,
     validateNumber,
+    smsValidateNumber,
+    checkStatusOfVerifyCodeSMS,
   };

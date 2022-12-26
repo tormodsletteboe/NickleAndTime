@@ -36,6 +36,13 @@ function RegisterForm() {
       },
     });
   }; // end registerUser
+
+  const handleCode =() =>{
+    dispatch({
+      type: "VERIFY_CODE_SMS",
+      payload:{phoneNumber: phoneNnumber,code:'762042'}
+    });
+  }
   const handleVerify = () => {
     //TODO: need to check number is correct format
     dispatch({ type: "CLEAR_REGISTRATION_ERROR" });
@@ -48,9 +55,13 @@ function RegisterForm() {
       dispatch({ type: "NOT_A_VALID_PHONE_NUMBER" });
       return;
     }
+    // dispatch({
+    //   type: "VERIFY_NUMBER",
+    //   payload: { name: username, phoneNnumber: phoneNnumber },
+    // });
     dispatch({
-      type: "VERIFY_NUMBER",
-      payload: { name: username, phoneNnumber: phoneNnumber },
+      type: "VERIFY_NUMBER_SMS",
+      payload:{phoneNumber: phoneNnumber}
     });
     setVerifyClicked(true);
   };
@@ -111,6 +122,7 @@ function RegisterForm() {
               }}
             />
             <Button onClick={handleVerify}>Verify</Button>
+            <Button onClick={handleCode}>Check Code</Button>
             {/* </label> */}
           </div>
         </div>

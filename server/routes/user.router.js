@@ -8,7 +8,7 @@ const userStrategy = require('../strategies/user.strategy');
 
 const router = express.Router();
 
-const { validateNumber } = require('../send_sms.js');
+const { validateNumber,smsValidateNumber,checkStatusOfVerifyCodeSMS } = require('../send_sms.js');
 
 
 // Handles Ajax request for user information if user is authenticated
@@ -234,5 +234,35 @@ router.post('/validate_phonenumber',  (req, res) => {
     res.send(error);
   });
 });
+
+//smsValidateNumber
+router.post('/smsValidateNumber',  (req, res) => {
+  // let result =  
+  console.log('phone num',req.body.phoneNumber)
+  smsValidateNumber(req.body.phoneNumber);
+  // result.then(resolve =>{
+  //   //console.log('post validate phone',resolve);
+  //   res.send(resolve.validationCode);
+  // }).catch((error)=>{
+  //   console.log('something happened',error);
+  //   res.send(error);
+  // });
+});
+
+//checkStatusOfVerifyCodeSMS
+router.post('/checkStatusOfVerifyCodeSMS',  (req, res) => {
+  // let result =  
+  console.log('checkStatusOfVerifyCodeSMS',req.body.phoneNumber)
+  checkStatusOfVerifyCodeSMS(req.body.phoneNumber,req.body.code);
+  // result.then(resolve =>{
+  //   //console.log('post validate phone',resolve);
+  //   res.send(resolve.validationCode);
+  // }).catch((error)=>{
+  //   console.log('something happened',error);
+  //   res.send(error);
+  // });
+});
+
+
 
 module.exports = router;

@@ -41,10 +41,53 @@ function* verifyPhoneNumber(action){
     console.log('Error with phone verifycation:', error);
   }
 }
+function* verifyNumberBySMS(action){
+  try {
+   yield put({type:'CLEAR_REGISTRATION_ERROR'});
+   //let validationCode = 
+   console.log('sms',action.payload);
+   yield axios.post('/api/user/smsValidateNumber', action.payload);
+  //  if(validationCode.data.code ===21450){
+  //   yield put({ type: 'PHONENUMBER_ALREADY_REGISTERED' });
+  //  }
+  //  else if(validationCode.data.code === 13224 || validationCode.data.code === 400){
+  //   yield put({ type: 'NOT_A_VALID_PHONE_NUMBER' });
+  //  }
+  //  else{
+  //   yield put({type: 'ENTER_THIS_CODE',payload: validationCode.data});
+  //  }
+   
+  } catch (error) {
+    console.log('Error with phone verifycation by sms:', error);
+  }
+}
+
+function* verifyCodeSMS(action){
+  try {
+    yield put({type:'CLEAR_REGISTRATION_ERROR'});
+    //let validationCode = 
+    console.log('sms code',action.payload);
+    yield axios.post('/api/user/checkStatusOfVerifyCodeSMS', action.payload);
+   //  if(validationCode.data.code ===21450){
+   //   yield put({ type: 'PHONENUMBER_ALREADY_REGISTERED' });
+   //  }
+   //  else if(validationCode.data.code === 13224 || validationCode.data.code === 400){
+   //   yield put({ type: 'NOT_A_VALID_PHONE_NUMBER' });
+   //  }
+   //  else{
+   //   yield put({type: 'ENTER_THIS_CODE',payload: validationCode.data});
+   //  }
+    
+   } catch (error) {
+     console.log('Error with phone verifycation code by sms:', error);
+   }
+}
 
 function* registrationSaga() {
   yield takeLatest('REGISTER', registerUser);
   yield takeLatest('VERIFY_NUMBER',verifyPhoneNumber);
+  yield takeLatest('VERIFY_NUMBER_SMS',verifyNumberBySMS);
+  yield takeLatest('VERIFY_CODE_SMS',verifyCodeSMS);
 }
 
 export default registrationSaga;
