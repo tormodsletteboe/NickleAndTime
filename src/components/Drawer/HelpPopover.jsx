@@ -35,7 +35,7 @@ export default function HelpPopover({}) {
           vertical: "bottom",
           horizontal: "left",
         }}
-        sx={{maxHeight:'80%'}}
+        sx={{maxHeight:'70%'}}
       >
         {/* <span className="highlight">How to use this app:</span>  */}
         <Typography sx={{ pt: 2,px:2, display: "flex" }}>
