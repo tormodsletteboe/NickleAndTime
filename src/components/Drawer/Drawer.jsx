@@ -12,18 +12,23 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Stack, ListSubheader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ShareLocation from '@mui/icons-material/ShareLocation';
 import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
-
+import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import BasicPopover from './Popover.jsx';
 import HelpPopover from './HelpPopover.jsx';
+import CountUpWatch from '../GoogleMap/CountUpWatch.jsx';
+
+//color green,yellow,red, used for the icons in the drawer
+const colors = {1:'#008000',2:'#FFFF00', 3:'#FF0000'};
+
 
 
 export default function PlacesToAvoidDrawer() {
 
     const dispatch = useDispatch();
     const placesToAvoid = useSelector((store) => store.placesToAvoid);
+   
     useEffect(() => {
         dispatch({
             type: 'FETCH_PLACES_TO_AVOID'
@@ -69,7 +74,7 @@ export default function PlacesToAvoidDrawer() {
                         <ListItemButton  >
                         <Stack direction='row' spacing={1}>
                             <ListItemIcon>
-                                <ShareLocation />
+                                <CircleTwoToneIcon  sx={{mx: 2, color:colors[calculateColor(place.visit_count,place.visit_limit)],fontSize:40}}/>
                             </ListItemIcon>
                             <ListItemText primary={place.name} />
                             <ListItemText primary={`${place.visit_count}/${place.visit_limit}`}/>
@@ -91,6 +96,9 @@ export default function PlacesToAvoidDrawer() {
             <Divider />
         </Box>
     );
+
+   
+    
 
 
     return (
@@ -116,3 +124,26 @@ export default function PlacesToAvoidDrawer() {
 
 }
 
+//calculate the severity, used in this component to set color of circles in the drawer
+function calculateColor(visitCount,visitLimit){
+
+    
+    //serverity is 3 if visitlimit is 0, ie users should not go there ever
+    if (visitLimit == 0) {
+      return 3;
+    }
+    else {
+     
+      //if less than 0.5, ie user have visited the place less than half the times allowed
+      if (visitCount >= visitLimit) {
+       return 3;
+      }
+      else if (visitLimit - visitCount == 1) {
+        return 2;
+      }
+      else {
+        return 1;
+      }
+    }
+   
+ }

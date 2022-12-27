@@ -45,8 +45,7 @@ export default function HelpPopover({}) {
           places that you want to avoid. If you get to close, "within
           100m/330ft", a timer is set for 60 seconds. If you have not left the
           place after 60 seconds, #visits will increase by 1 and you will get a text message (if phone number
-          was succesfully registered). The message changes based on how many
-          times you have visited the place.
+          was succesfully registered). The text message changes based on how many visits you have left this week at the place.
         </Typography>
         <Typography sx={{ p: 2, display: "flex" }}>
           1. Search an address, or click a business icon <RoomIcon sx={{color:"#1976d2"}}/> on the map

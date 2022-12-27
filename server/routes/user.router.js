@@ -106,7 +106,8 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
           user_avoidplace.visit_limit,
           user_avoidplace.active,
           avoid_place.latitude,
-          avoid_place.longitude
+          avoid_place.longitude,
+          user_avoidplace.currently_visiting
     FROM "user_avoidplace"
     LEFT JOIN avoid_place ON avoid_place.id = user_avoidplace.avoid_place_id
     WHERE "user_id" = $1

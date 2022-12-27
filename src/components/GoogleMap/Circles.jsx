@@ -2,15 +2,20 @@ import React from 'react'
 import { Circle } from '@react-google-maps/api';
 import { useSelector } from 'react-redux';
 import { Marker, InfoWindow, } from '@react-google-maps/api';
-
-
+import CircularStatic from './CircularProgress';
+import { OverlayView } from '@react-google-maps/api';
 const handleOnClick = (place) => {
-  console.log(place.name);
+  // console.log(place.name);
 }
+const divStyle = {
+  background: 'white',
+  border: '1px solid #ccc',
+  padding: 15
+};
 
 function Circles() {
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
-
+  const currentlyVisiting = placesToAvoid.filter(place => place.currently_visiting);
 
   return (
     <>
@@ -45,18 +50,24 @@ function Circles() {
           return (
             <div key={index}>
               <Circle
-                
                 center={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
                 // required
                 options={optionsCircle}
               />
+               {!place.currently_visiting ?
               <Marker
-             
                 position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
                 onClick={() => { handleOnClick(place) }}
                 title={place.name}
-                
               />
+              :
+              <></>
+            }
+              {place.currently_visiting &&
+              <OverlayView position={{ lat: Number(place.latitude), lng: Number(place.longitude) }} mapPaneName={OverlayView.MARKER_LAYER} >
+                <CircularStatic/>
+              </OverlayView>
+              }
             </div>
           );
         }
