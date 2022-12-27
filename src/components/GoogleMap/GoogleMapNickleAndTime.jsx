@@ -67,7 +67,7 @@ function GoogleMapNickleAndTime() {
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
-
+  const watchIdRef = useRef();
 
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
@@ -94,18 +94,24 @@ function GoogleMapNickleAndTime() {
     // console.log('bounds ',bounds);
     // console.log('sw ',sw);
     // console.log('ne ',ne);
-
-    mapRef.current?.panTo({ lat: carLat, lng: carLng });
+    if(carLocationIsTheSameAsDeviceLocation){
+      mapRef.current?.panTo({ lat: carLat, lng: carLng });
+    }
+   
   };
 
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success3, error, options);
-    navigator.geolocation.watchPosition(success, error, options);
+    //start the watch right away, from useeffect
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
   };
+  const clearWatchId = () =>{
+    navigator.geolocation.clearWatch(watchIdRef.current);
+  }
   const getLocationOfDeviceAndSendTheCarThere = () => {
-    console.log(initialDeviceLocation.current);
-    
+    //start the watch
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
       payload: {
@@ -136,7 +142,7 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    //initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
@@ -307,6 +313,9 @@ function GoogleMapNickleAndTime() {
                       setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
                       if(!carLocationIsTheSameAsDeviceLocation){
                         getLocationOfDeviceAndSendTheCarThere();
+                      }
+                      else{
+                        clearWatchId();
                       }
                       
                     }}
