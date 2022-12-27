@@ -128,8 +128,9 @@ function GoogleMapNickleAndTime() {
     const crd = pos.coords;
     
     if (carLocationIsTheSameAsDeviceLocation) {
-      setCarLat(crd.latitude);
-      setCarLng(crd.longitude);
+     
+      // setCarLat(crd.latitude);
+      // setCarLng(crd.longitude);
       dispatch({
         type: "UPDATE_CURRENT_LOCATION",
         payload: {
