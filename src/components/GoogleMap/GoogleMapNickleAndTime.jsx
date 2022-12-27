@@ -59,10 +59,7 @@ function error(err) {
 
 //main comp
 function GoogleMapNickleAndTime() {
-  const [
-    carLocationIsTheSameAsDeviceLocation,
-    setCarLocationIsTheSameAsDeviceLocation,
-  ] = useState(true);
+  const [carSameAsDevice,setCarSameAsDevice] = useState(true);
   
   const mapRef = useRef();
   const marker = useRef();
@@ -95,7 +92,7 @@ function GoogleMapNickleAndTime() {
     // console.log('sw ',sw);
     // console.log('ne ',ne);
     
-    if(carLocationIsTheSameAsDeviceLocation){
+    if(carSameAsDevice){
       mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
    
@@ -127,10 +124,10 @@ function GoogleMapNickleAndTime() {
   const success = (pos) => {
     const crd = pos.coords;
     
-    if (carLocationIsTheSameAsDeviceLocation) {
+    if (!carSameAsDevice) {
      
-      // setCarLat(crd.latitude);
-      // setCarLng(crd.longitude);
+       setCarLat(crd.latitude);
+       setCarLng(crd.longitude);
       dispatch({
         type: "UPDATE_CURRENT_LOCATION",
         payload: {
@@ -295,22 +292,27 @@ function GoogleMapNickleAndTime() {
             <FormControlLabel
               value="top"
               control={
-                <Tooltip title={carLocationIsTheSameAsDeviceLocation ? (
+                <Tooltip title={carSameAsDevice ? (
                   <Typography variant="button">Volov icon location is equal to device location.</Typography>
                 ) : (
                   <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
                 )} >
                   <Switch
                     color="primary"
-                    checked={carLocationIsTheSameAsDeviceLocation}
-                    onChange={()=>{
-                      setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
+                    checked={carSameAsDevice}
+                    onChange={(event)=>{
+                      console.log('event target checked ',event.target.checked);
+                      console.log('vefore ',carSameAsDevice);
+                      setCarSameAsDevice(event.target.checked);
+                      console.log('after ',carSameAsDevice);
+                      
+                      
                     }}
                   />
                 </Tooltip>
               }
               label={
-                carLocationIsTheSameAsDeviceLocation ? (
+                carSameAsDevice ? (
                   <Typography variant="button">Volvo = Device</Typography>
                 ) : (
                   <Typography variant="button">Drag & Drop</Typography>
@@ -323,7 +325,7 @@ function GoogleMapNickleAndTime() {
 
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
-          draggable={!carLocationIsTheSameAsDeviceLocation}
+          draggable={!carSameAsDevice}
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
