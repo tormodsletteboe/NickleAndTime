@@ -15,8 +15,6 @@ const divStyle = {
 
 function Circles() {
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
-  const currentlyVisiting = placesToAvoid.filter(place => place.currently_visiting);
-
   return (
     <>
       {placesToAvoid.map((place,index) => {
