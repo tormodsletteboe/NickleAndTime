@@ -63,7 +63,7 @@ function GoogleMapNickleAndTime() {
     carLocationIsTheSameAsDeviceLocation,
     setCarLocationIsTheSameAsDeviceLocation,
   ] = useState(true);
-  const initialDeviceLocation = useRef();
+  
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
@@ -94,6 +94,7 @@ function GoogleMapNickleAndTime() {
     // console.log('bounds ',bounds);
     // console.log('sw ',sw);
     // console.log('ne ',ne);
+    
     if(carLocationIsTheSameAsDeviceLocation){
       mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
@@ -108,27 +109,11 @@ function GoogleMapNickleAndTime() {
     
   };
  
-  const getLocationOfDeviceAndSendTheCarThere = () => {
-    //start the watch
-   
-    dispatch({
-      type: "UPDATE_CURRENT_LOCATION",
-      payload: {
-        current_latitude: initialDeviceLocation.current.lat,
-        current_longitude: initialDeviceLocation.current.lng,
-      },
-    });
-    setCarLat(initialDeviceLocation.current.lat);
-    setCarLng(initialDeviceLocation.current.lng);
-    if (!mapRef.current) {
-      return;
-    }
-    mapRef.current.panTo({lat: carLat,lng: carLng});
-  };
+  
 
   const success3 = (pos) => {
+
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
     if (!mapRef.current) {
@@ -141,7 +126,7 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    
     if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
@@ -154,6 +139,8 @@ function GoogleMapNickleAndTime() {
       });
     }
   };
+
+
   //user clicks the add button
   function onAdd() {
     //create a dispatch with a payload to update 2 tables
@@ -317,9 +304,6 @@ function GoogleMapNickleAndTime() {
                     checked={carLocationIsTheSameAsDeviceLocation}
                     onChange={()=>{
                       setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
-                      if(!carLocationIsTheSameAsDeviceLocation){
-                        getLocationOfDeviceAndSendTheCarThere();
-                      }  
                     }}
                   />
                 </Tooltip>
