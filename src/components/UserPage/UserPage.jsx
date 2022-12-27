@@ -36,7 +36,7 @@ function UserPage() {
 
   //get the location of the user
   const getLocation = () => {
-    navigator.geolocation.watchPosition(success, error, options);
+    navigator.geolocation.getCurrentPosition(success, error, options);
   };
   //update database with this users current location
   const success = (pos) => {
