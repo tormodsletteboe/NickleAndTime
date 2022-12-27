@@ -105,13 +105,12 @@ function GoogleMapNickleAndTime() {
     navigator.geolocation.getCurrentPosition(success3, error, options);
     //start the watch right away, from useeffect
     watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
+    
   };
-  const clearWatchId = () =>{
-    navigator.geolocation.clearWatch(watchIdRef.current);
-  }
+ 
   const getLocationOfDeviceAndSendTheCarThere = () => {
     //start the watch
-    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
+   
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
       payload: {
@@ -142,10 +141,17 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    //initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
+      dispatch({
+        type: "UPDATE_CURRENT_LOCATION",
+        payload: {
+          current_latitude: crd.latitude,
+          current_longitude: crd.longitude,
+        },
+      });
     }
   };
   //user clicks the add button
@@ -313,11 +319,7 @@ function GoogleMapNickleAndTime() {
                       setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
                       if(!carLocationIsTheSameAsDeviceLocation){
                         getLocationOfDeviceAndSendTheCarThere();
-                      }
-                      else{
-                        clearWatchId();
-                      }
-                      
+                      }  
                     }}
                   />
                 </Tooltip>
