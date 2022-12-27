@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import ToggleOnSharpIcon from '@mui/icons-material/ToggleOnSharp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import CircleIcon from '@mui/icons-material/Circle';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import './Popover.css';
 export default function BasicPopover({}) {
@@ -33,6 +32,7 @@ export default function BasicPopover({}) {
           vertical: 'bottom',
           horizontal: 'left',
         }}
+        sx={{maxHeight:'70%'}}
       >
         
         <Typography sx={{ p: 2 ,display:'flex'}}><span className='highlight'><ToggleOnSharpIcon color='primary'sx={{mx: 2}}/></span> Deactivate allows you to visit a place without increasing the number of visits. Also, no text message is sent out.</Typography>

@@ -3,7 +3,7 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import RoomIcon from '@mui/icons-material/Room';
 import { Button, Icon } from "@mui/material";
-import CircleIcon from '@mui/icons-material/Circle';
+import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import "./Popover.css";
 
 
@@ -60,9 +60,9 @@ export default function HelpPopover({}) {
           className="highlight" 
           style={{backgroundColor: "#1976d2",border: 'solid', borderColor: '#1976d2',borderRadius: 5,color: 'white', margin:3}}>ADD</span> button.
         </Typography>
-        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleIcon sx={{mx: 2, color:'#FF0000'}}/></span> Red circles means you have no visits left this week.</Typography>
-        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleIcon sx={{mx: 2, color:'#FFFF00'}}/></span> Yellow circles means you have 1 visit left this week.</Typography>
-        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleIcon sx={{mx: 2, color:'#008000'}}/></span> Green circles means you have more than 1 visit left this week.</Typography>
+        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#FF0000'}}/></span> Red circles means you have no visits left this week.</Typography>
+        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#FFFF00'}}/></span> Yellow circles means you have 1 visit left this week.</Typography>
+        <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#008000'}}/></span> Green circles means you have more than 1 visit left this week.</Typography>
         
         <Typography sx={{ px: 2, py:0, display: "flex" }}>
           While keeping this browser open on your phone, drive to a location you are trying to avoid. Wait 60 seconds. You will receive a text message.
