@@ -69,17 +69,43 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
+//handle car position changed
+const handleCarPositionChanged =()=>{
+  if(!mapRef.current){
+    console.log('returned no mapRef');
+    return;
+  } 
+  // const bounds = mapRef.current.getBounds();
+  //  const sw = {lat: bounds.Wa.lo,lng:bounds.Ia.lo};
+  //  const ne = {lat:bounds.Wa.hi,lng:bounds.Ia.hi};
+
+  // console.log('bounds ',bounds);
+  // console.log('sw ',sw);
+  // console.log('ne ',ne);
+
+  mapRef.current.panTo({lat: carLat,lng:carLng});
+}
+
   //try to get a location
   const getLocation = () => {
-    navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.getCurrentPosition(success2, error, options);
     navigator.geolocation.watchPosition(success, error, options);
   };
 
   //successfully got a location
-  const success = (pos) => {
+  const success2 = (pos) => {
     const crd = pos.coords;
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
+  };
+  const success = (pos) => {
+    const crd = pos.coords;
+    const carLocationFollowDeviceLocation = false;
+    if(carLocationFollowDeviceLocation){
+      setCarLat(crd.latitude);
+      setCarLng(crd.longitude);
+    }
+    
   };
   //user clicks the add button
   function onAdd() {
@@ -233,7 +259,7 @@ function GoogleMapNickleAndTime() {
         onLoad={onLoad}
       >
         {/* Child components, such as markers, info windows, etc. */}
-
+         
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
           draggable
@@ -248,6 +274,7 @@ function GoogleMapNickleAndTime() {
               },
             });
           }}
+          onPositionChanged={handleCarPositionChanged}
           animation={2}
           icon={{ url: "./volvo.png" }}
         />
