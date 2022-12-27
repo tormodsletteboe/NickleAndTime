@@ -94,8 +94,10 @@ function GoogleMapNickleAndTime() {
     // console.log('bounds ',bounds);
     // console.log('sw ',sw);
     // console.log('ne ',ne);
-
-    mapRef.current?.panTo({ lat: carLat, lng: carLng });
+    if(carLocationIsTheSameAsDeviceLocation){
+      mapRef.current?.panTo({ lat: carLat, lng: carLng });
+    }
+   
   };
 
   //try to get a location
@@ -136,7 +138,7 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    //initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
