@@ -83,7 +83,7 @@ const handleCarPositionChanged =()=>{
   // console.log('sw ',sw);
   // console.log('ne ',ne);
 
-  mapRef.current.panTo({lat: carLat,lng:carLng});
+  mapRef.current?.panTo({lat: carLat,lng:carLng});
 }
 
   //try to get a location
@@ -189,7 +189,7 @@ const handleCarPositionChanged =()=>{
         }
     });
     
-    mapRef.current?.panTo({lat,lng});
+    //mapRef.current?.panTo({lat,lng});
   };
 
   const onLoad = useCallback((map) => {
