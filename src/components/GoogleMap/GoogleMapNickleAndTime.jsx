@@ -1,17 +1,19 @@
 import React from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-} from "@react-google-maps/api";
-
+import { useRef } from "react";
+import { useCallback } from "react";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import "./GoogleMapNickleAndTime.css";
 import globalconst from "../../GlobalVar.jsx";
+
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
+
 import {
   Combobox,
   ComboboxInput,
@@ -20,14 +22,18 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { useDispatch, useSelector } from "react-redux";
+
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Circles from "./Circles";
-import Tooltip from '@mui/material/Tooltip';
-import { useRef } from "react";
-import { useCallback } from "react";
+import Tooltip from "@mui/material/Tooltip";
+import FormGroup from "@mui/material/FormGroup";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import Switch from "@mui/material/Switch";
+import { Typography } from "@mui/material";
 
 //google maps options
 const containerStyle = {
@@ -39,7 +45,6 @@ const center = {
   lng: -93.357366,
 };
 
-
 //get location options
 const options = {
   enableHighAccuracy: true,
@@ -49,14 +54,21 @@ const options = {
 
 //if get location failed
 function error(err) {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
+  console.log(`ERROR(${err.code}): ${err.message}`);
 }
 
 //main comp
 function GoogleMapNickleAndTime() {
+  const [
+    carLocationIsTheSameAsDeviceLocation,
+    setCarLocationIsTheSameAsDeviceLocation,
+  ] = useState(true);
+  const initialDeviceLocation = useRef();
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
+
+
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
   const [carLat, setCarLat] = useState(44.941738);
@@ -65,47 +77,70 @@ function GoogleMapNickleAndTime() {
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
   const [businessName, setBusinessName] = useState();
-  const [address,setAddress]=useState();
+  const [address, setAddress] = useState();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
-//handle car position changed
-const handleCarPositionChanged =()=>{
-  if(!mapRef.current){
-    console.log('returned no mapRef');
-    return;
-  } 
-  // const bounds = mapRef.current.getBounds();
-  //  const sw = {lat: bounds.Wa.lo,lng:bounds.Ia.lo};
-  //  const ne = {lat:bounds.Wa.hi,lng:bounds.Ia.hi};
+  //handle car position changed
+  const handleCarPositionChanged = () => {
+    if (!mapRef.current) {
+      console.log("returned no mapRef");
+      return;
+    }
+    // const bounds = mapRef.current.getBounds();
+    //  const sw = {lat: bounds.Wa.lo,lng:bounds.Ia.lo};
+    //  const ne = {lat:bounds.Wa.hi,lng:bounds.Ia.hi};
 
-  // console.log('bounds ',bounds);
-  // console.log('sw ',sw);
-  // console.log('ne ',ne);
+    // console.log('bounds ',bounds);
+    // console.log('sw ',sw);
+    // console.log('ne ',ne);
 
-  mapRef.current?.panTo({lat: carLat,lng:carLng});
-}
+    mapRef.current?.panTo({ lat: carLat, lng: carLng });
+  };
 
   //try to get a location
   const getLocation = () => {
-    navigator.geolocation.getCurrentPosition(success2, error, options);
+    navigator.geolocation.getCurrentPosition(success3, error, options);
     navigator.geolocation.watchPosition(success, error, options);
   };
+  const getLocationOfDeviceAndSendTheCarThere = () => {
+    console.log(initialDeviceLocation.current);
+    
+    dispatch({
+      type: "UPDATE_CURRENT_LOCATION",
+      payload: {
+        current_latitude: initialDeviceLocation.current.lat,
+        current_longitude: initialDeviceLocation.current.lng,
+      },
+    });
+    setCarLat(initialDeviceLocation.current.lat);
+    setCarLng(initialDeviceLocation.current.lng);
+    if (!mapRef.current) {
+      return;
+    }
+    mapRef.current.panTo({lat: carLat,lng: carLng});
+  };
 
-  //successfully got a location
-  const success2 = (pos) => {
+  const success3 = (pos) => {
     const crd = pos.coords;
+    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
+    if (!mapRef.current) {
+      return;
+    }
+    mapRef.current.panTo({lat: carLat,lng: carLng});
   };
+
+
+  //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    const carLocationFollowDeviceLocation = false;
-    if(carLocationFollowDeviceLocation){
+    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
     }
-    
   };
   //user clicks the add button
   function onAdd() {
@@ -141,67 +176,62 @@ const handleCarPositionChanged =()=>{
   useEffect(() => {
     //center the map on the location of the computer
     getLocation();
-    // infowindow.current = new window.google.maps.InfoWindow({content:'shit',ariaLabel: "shithistoisioesdf",});
-    // marker.current = new window.google.maps.Marker();
   }, []);
 
   const handleOnClickMap = async (e) => {
-    
     if (!e.placeId) return;
-    
+
     //prevent default infowindow
     e.stop();
-   
+
     const results = await getGeocode({ placeId: e.placeId });
     SetPlaceSelected(results);
     //console.log(results);
     //console.log(results[0].formatted_address);
 
     const { lat, lng } = await getLatLng(results[0]);
-    
+
     setLat(lat);
     setLng(lng);
-    
-    
+
     const request = {
       placeId: e.placeId,
       fields: ["name", "formatted_address", "place_id", "geometry"],
     };
     const service = new window.google.maps.places.PlacesService(mapRef.current);
     //console.log(service);
-    service.getDetails(request,(place,status)=>{
-      
-      if(status === window.google.maps.places.PlacesServiceStatus.OK &&
+    service.getDetails(request, (place, status) => {
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
         place &&
         place.geometry &&
-        place.geometry.location){
-          marker.current.setPosition({lat,lng});
-          marker.current.setMap(mapRef.current);
-          
-          
-          infowindow.current.setContent(place.name);
-          infowindow.current.open({
-            anchor:marker.current,
-            map: mapRef.current,
-          });
-          setBusinessName(place.name);
-          setAddress(place.formatted_address);
-        }
+        place.geometry.location
+      ) {
+        marker.current.setPosition({ lat, lng });
+        marker.current.setMap(mapRef.current);
+
+        infowindow.current.setContent(place.name);
+        infowindow.current.open({
+          anchor: marker.current,
+          map: mapRef.current,
+        });
+        setBusinessName(place.name);
+        setAddress(place.formatted_address);
+      }
     });
-    
+
     //mapRef.current?.panTo({lat,lng});
   };
 
   const onLoad = useCallback((map) => {
-    return(
-      mapRef.current = map,
-      infowindow.current = new window.google.maps.InfoWindow(),
-      marker.current = new window.google.maps.Marker()
+    return (
+      (mapRef.current = map),
+      (infowindow.current = new window.google.maps.InfoWindow()),
+      (marker.current = new window.google.maps.Marker())
     );
-    }, []);
-   
+  }, []);
+
   return (
-   
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_PUBLIC_MAP_API_KEY}
       libraries={globalconst.libraries}
@@ -228,23 +258,23 @@ const handleCarPositionChanged =()=>{
         />
 
         {/* visit limit */}
-        <Tooltip title={'Choose visits allowed per week'}>
-        <TextField
-          size="small"
-          variant="outlined"
-          label="Visits/Week"
-          onChange={(evt) => {
-            if (isNaN(evt.target.value)) {
-              setVisitLimit(0);
-            } else {
-              setVisitLimit(Number(evt.target.value));
-            }
-          }}
-          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-          sx={{ height: 1 }}
-          type="text"
-          value={visitlimit}
-        />
+        <Tooltip title={"Choose visits allowed per week"}>
+          <TextField
+            size="small"
+            variant="outlined"
+            label="Visits/Week"
+            onChange={(evt) => {
+              if (isNaN(evt.target.value)) {
+                setVisitLimit(0);
+              } else {
+                setVisitLimit(Number(evt.target.value));
+              }
+            }}
+            inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            sx={{ height: 1 }}
+            type="text"
+            value={visitlimit}
+          />
         </Tooltip>
         <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
           Add
@@ -259,10 +289,45 @@ const handleCarPositionChanged =()=>{
         onLoad={onLoad}
       >
         {/* Child components, such as markers, info windows, etc. */}
-         
+
+        <FormControl component="fieldset">
+          <FormGroup aria-label="position" row>
+            <FormControlLabel
+              value="top"
+              control={
+                <Tooltip title={carLocationIsTheSameAsDeviceLocation ? (
+                  <Typography variant="button">Volov icon location is equal to device location.</Typography>
+                ) : (
+                  <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
+                )} >
+                  <Switch
+                    color="primary"
+                    checked={carLocationIsTheSameAsDeviceLocation}
+                    onChange={()=>{
+                      setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
+                      if(!carLocationIsTheSameAsDeviceLocation){
+                        getLocationOfDeviceAndSendTheCarThere();
+                      }
+                      
+                    }}
+                  />
+                </Tooltip>
+              }
+              label={
+                carLocationIsTheSameAsDeviceLocation ? (
+                  <Typography variant="button">Volvo = Device</Typography>
+                ) : (
+                  <Typography variant="button">Drag & Drop</Typography>
+                )
+              }
+              labelPlacement="bottom"
+            />
+          </FormGroup>
+        </FormControl>
+
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
-          draggable
+          draggable={!carLocationIsTheSameAsDeviceLocation}
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
@@ -288,7 +353,6 @@ const handleCarPositionChanged =()=>{
   );
 }
 
-
 //component to search for a location to avoid
 const PlacesAutocomplete = ({
   SetPlaceSelected,
@@ -308,21 +372,22 @@ const PlacesAutocomplete = ({
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
-//console.log(BusinessNameFromClickedOnMap);
+  //console.log(BusinessNameFromClickedOnMap);
 
- useEffect(()=>{
-  if(BusinessNameFromClickedOnMap){
-    console.log('b name ran',BusinessNameFromClickedOnMap)
-    setValue(BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`);
-    clearSuggestions();
-  }
-  
- },[AddressFromNameClickedOnMap])
+  useEffect(() => {
+    if (BusinessNameFromClickedOnMap) {
+      console.log("b name ran", BusinessNameFromClickedOnMap);
+      setValue(
+        BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`
+      );
+      clearSuggestions();
+    }
+  }, [AddressFromNameClickedOnMap]);
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
     //console.log('add',address);
-    SetBNameFromClickedOnMap('');
-    SetAddressFromNameClickedOnMap('');
+    SetBNameFromClickedOnMap("");
+    SetAddressFromNameClickedOnMap("");
     clearSuggestions();
     setValue(address, false);
     const results = await getGeocode({ address });
@@ -336,7 +401,7 @@ const PlacesAutocomplete = ({
 
     SetPlaceSelected(results);
     SetB_Name(address.split(",")[0]);
-    
+
     Map.current.setZoom(17);
     Map.current?.panTo({ lat: lat, lng: lng });
     clearSuggestions();
