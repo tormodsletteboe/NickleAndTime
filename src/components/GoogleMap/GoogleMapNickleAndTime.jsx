@@ -67,7 +67,7 @@ function GoogleMapNickleAndTime() {
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
-
+  const watchIdRef = useRef();
 
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
@@ -103,11 +103,15 @@ function GoogleMapNickleAndTime() {
   //try to get a location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success3, error, options);
-    navigator.geolocation.watchPosition(success, error, options);
+    //start the watch right away, from useeffect
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
   };
+  const clearWatchId = () =>{
+    navigator.geolocation.clearWatch(watchIdRef.current);
+  }
   const getLocationOfDeviceAndSendTheCarThere = () => {
-    console.log(initialDeviceLocation.current);
-    
+    //start the watch
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
       payload: {
@@ -309,6 +313,9 @@ function GoogleMapNickleAndTime() {
                       setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
                       if(!carLocationIsTheSameAsDeviceLocation){
                         getLocationOfDeviceAndSendTheCarThere();
+                      }
+                      else{
+                        clearWatchId();
                       }
                       
                     }}
