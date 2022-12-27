@@ -136,7 +136,7 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
+    //initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     if (carLocationIsTheSameAsDeviceLocation) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
