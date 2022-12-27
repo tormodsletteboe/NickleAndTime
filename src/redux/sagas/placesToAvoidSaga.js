@@ -77,9 +77,8 @@ function* deleteUserPlace(action){
           // send the action.payload as the body
         // the config includes credentials which
         // allow the server session to recognize the user
-        console.log('action payyyyyyy',action.payload)
        const res = yield axios.delete('/api/user/delete',{data: action.payload});
-       console.log(res);
+      
         yield put({
             type: 'FETCH_PLACES_TO_AVOID'
         });

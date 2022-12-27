@@ -3,7 +3,6 @@ import {
   GoogleMap,
   LoadScript,
   Marker,
-  InfoWindow,
 } from "@react-google-maps/api";
 
 import { useState, useEffect } from "react";
@@ -39,7 +38,7 @@ const center = {
   lat: 44.941738,
   lng: -93.357366,
 };
-//44.941738, -93.357366
+
 
 //get location options
 const options = {
@@ -53,12 +52,6 @@ function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-const divStyle = {
-  background: `white`,
-  border: `1px solid #ccc`,
-  padding: 15,
-};
-
 //main comp
 function GoogleMapNickleAndTime() {
   const mapRef = useRef();
@@ -66,9 +59,6 @@ function GoogleMapNickleAndTime() {
   const infowindow = useRef();
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
-
-  const [clickedPosition, setClickedPosition] = useState();
-
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
 
@@ -145,7 +135,7 @@ function GoogleMapNickleAndTime() {
     
     setLat(lat);
     setLng(lng);
-    setClickedPosition({ lat, lng });
+    
     
     const request = {
       placeId: e.placeId,
@@ -170,7 +160,6 @@ function GoogleMapNickleAndTime() {
           });
           setBusinessName(place.name);
           setAddress(place.formatted_address);
-          //TODO: set all this stuff here
         }
     });
     
@@ -272,19 +261,7 @@ function GoogleMapNickleAndTime() {
   );
 }
 
-const InfoWin = ({ center }) => {
 
-  useEffect(()=>{
-    console.log('hello');
-  },[center])
-  return (
-    <InfoWindow position={center} on >
-      <div style={divStyle}>
-        <h1>InfoWindow</h1>
-      </div>
-    </InfoWindow>
-  );
-};
 //component to search for a location to avoid
 const PlacesAutocomplete = ({
   SetPlaceSelected,
@@ -310,17 +287,17 @@ const PlacesAutocomplete = ({
   if(BusinessNameFromClickedOnMap){
     console.log('b name ran',BusinessNameFromClickedOnMap)
     setValue(BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`);
+    clearSuggestions();
   }
   
- },[BusinessNameFromClickedOnMap,AddressFromNameClickedOnMap])
+ },[AddressFromNameClickedOnMap])
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
     //console.log('add',address);
     SetBNameFromClickedOnMap('');
     SetAddressFromNameClickedOnMap('');
-    setValue(address, false);
     clearSuggestions();
-  
+    setValue(address, false);
     const results = await getGeocode({ address });
     console.log(address);
     console.log(results);
@@ -335,6 +312,7 @@ const PlacesAutocomplete = ({
     
     Map.current.setZoom(17);
     Map.current?.panTo({ lat: lat, lng: lng });
+    clearSuggestions();
   };
 
   return (

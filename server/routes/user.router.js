@@ -8,7 +8,7 @@ const userStrategy = require('../strategies/user.strategy');
 
 const router = express.Router();
 
-const { validateNumber } = require('../send_sms.js');
+const { validateNumber,smsValidateNumber,checkStatusOfVerifyCodeSMS } = require('../send_sms.js');
 
 
 // Handles Ajax request for user information if user is authenticated
@@ -25,7 +25,7 @@ router.post('/register', (req, res, next) => {
   const password = encryptLib.encryptPassword(req.body.password);
 
   const phoneNubmer = req.body.phoneNumber;
-  // console.log('xxxxxxxxxxxx',phoneNubmer);
+  
   const queryText = `INSERT INTO "user" (username, password, phone_number)
     VALUES ($1, $2, $3) RETURNING id`;
   pool
@@ -70,7 +70,7 @@ router.post('/places', rejectUnauthenticated, (req, res) => {
   const params = [req.body.name, req.body.latitude, req.body.longitude, req.body.google_place_id];
   pool.query(queryText, params)
     .then((dbRes) => {
-      // console.log('sdfasdfasdfasdfa', dbRes.rows[0].id);
+     
       const sqlText = `
   INSERT INTO user_avoidplace (user_id,avoid_place_id,visit_limit,"user_id_CONCAT_avoid_place_id")
   VALUES ($1,$2,$3,$4)
@@ -106,7 +106,8 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
           user_avoidplace.visit_limit,
           user_avoidplace.active,
           avoid_place.latitude,
-          avoid_place.longitude
+          avoid_place.longitude,
+          user_avoidplace.currently_visiting
     FROM "user_avoidplace"
     LEFT JOIN avoid_place ON avoid_place.id = user_avoidplace.avoid_place_id
     WHERE "user_id" = $1
@@ -115,7 +116,6 @@ router.get('/places', rejectUnauthenticated, (req, res) => {
   const sqlParams = [req.user.id];
   pool.query(sqlText, sqlParams)
     .then((dbRes) => {
-      // console.log('dbRes.rows asdfasdfasdf', dbRes.rows);
       res.send(dbRes.rows);
     })
     .catch((err) => {
@@ -230,9 +230,41 @@ router.post('/validate_phonenumber',  (req, res) => {
     //console.log('post validate phone',resolve);
     res.send(resolve.validationCode);
   }).catch((error)=>{
-    console.log('something happened',error);
+    console.log('error in validate phone number POST',error);
     res.send(error);
   });
 });
+
+//smsValidateNumber
+router.post('/smsValidateNumber',  (req, res) => {
+  // let result =  
+  
+  let result = smsValidateNumber(req.body.phoneNumber);
+  result.then(resolve =>{
+    
+    res.send(resolve.status);
+  }).catch((error)=>{
+    console.log('error in validate phone number by sms POST',error);
+    res.send(error);
+  });
+ 
+});
+
+//checkStatusOfVerifyCodeSMS
+router.post('/checkStatusOfVerifyCodeSMS',  (req, res) => {
+
+ 
+  let result = checkStatusOfVerifyCodeSMS(req.body.phoneNumber,req.body.code);
+  result.then(resolve =>{
+
+    res.send(resolve.status);
+  }).catch((error)=>{
+    console.log('error in validate code from sms POST',error);
+    res.send(error);
+  });
+  
+});
+
+
 
 module.exports = router;

@@ -5,28 +5,49 @@
 // and set the environment variables. See http://twil.io/secure
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const verifySid = process.env.VERIFICATION_SID;
 
-const client = require('twilio')(accountSid, authToken);
+const client = require("twilio")(accountSid, authToken);
 
-
-
-  const sendMsg =(message,to)=>{
-    client.messages
+const sendMsg = (message, to) => {
+  client.messages
     .create({
-       body: message,
-       from: '+14254751813',
-       to: `+1${to}`
-     })
-    .then(message => console.log(message.sid));
-  }
+      body: message,
+      from: "+14254751813",
+      to: `+1${to}`,
+    })
+    .then((message) => console.log(message.sid));
+};
 
-  const validateNumber =  (name,phoneNumber)=>{
-    const result = client.validationRequests.create({friendlyName: name,phoneNumber:`+1${phoneNumber}`});
-    return result;
-  }
+const validateNumber = (name, phoneNumber) => {
+  const result = client.validationRequests.create({
+    friendlyName: name,
+    phoneNumber: `+1${phoneNumber}`,
+  });
+  return result;
+};
 
+const smsValidateNumber = (phoneNumber) => {
  
-   module.exports = {
-    sendMsg,
-    validateNumber,
-  };
+  const result = client.verify.v2.services(verifySid).verifications.create({
+    to: `+1${phoneNumber}`,
+    channel: "sms",
+  });
+  return result;
+   
+};
+
+const checkStatusOfVerifyCodeSMS = (phoneNumber, code) => {
+  const result =client.verify.v2
+    .services(verifySid)
+    .verificationChecks.create({ to: `+1${phoneNumber}`, code: code });
+    return result;
+    
+};
+
+module.exports = {
+  sendMsg,
+  validateNumber,
+  smsValidateNumber,
+  checkStatusOfVerifyCodeSMS,
+};
