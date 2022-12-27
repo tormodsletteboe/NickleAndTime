@@ -33,6 +33,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Switch from "@mui/material/Switch";
+import Checkbox from '@mui/material/Checkbox';
 import { Typography } from "@mui/material";
 
 //google maps options
@@ -297,7 +298,7 @@ function GoogleMapNickleAndTime() {
                 ) : (
                   <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
                 )} >
-                  <Switch
+                  <Checkbox
                     color="primary"
                     checked={carSameAsDevice}
                     onChange={(event)=>{
