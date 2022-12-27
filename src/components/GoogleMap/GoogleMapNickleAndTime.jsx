@@ -32,7 +32,7 @@ import { useCallback } from "react";
 //google maps options
 const containerStyle = {
   width: "100%",
-  height: "700px",
+  height: "80vh",
 };
 const center = {
   lat: 44.941738,
