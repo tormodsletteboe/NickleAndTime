@@ -113,8 +113,8 @@ const handleChangeCheckbox = (event) => {
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
       payload: {
-        current_latitude: e.latLng.lat(),
-        current_longitude: e.latLng.lng(),
+        current_latitude: carLat,
+        current_longitude: carLng,
       },
     });
     mapRef.current?.panTo({ lat: carLat, lng: carLng });
