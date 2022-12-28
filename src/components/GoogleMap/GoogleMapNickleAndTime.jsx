@@ -48,10 +48,10 @@ const center = {
 
 //get location options
 const options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
+  enableHighAccuracy: false,
   maximumAge: 0,
 };
+//timeout: 5000,
 
 //if get location failed
 function error(err) {
@@ -71,6 +71,7 @@ function GoogleMapNickleAndTime() {
   const [lng, setLng] = useState(-93.357366);
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
+  const [deviceLocation,setDeviceLocation] = useState();
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -78,6 +79,23 @@ function GoogleMapNickleAndTime() {
   const [address, setAddress] = useState();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
+
+const handleChangeCheckbox = (event) => {
+    setCarSameAsDevice(event.target.checked);
+
+    //should be just carSameAsDevice but, it does not update this until after this function therefore !car...
+   if(!carSameAsDevice){
+    setCarLat(deviceLocation.lat);
+    setCarLng(deviceLocation.lng);
+    dispatch({
+      type: "UPDATE_CURRENT_LOCATION",
+      payload: {
+        current_latitude: deviceLocation.lat,
+        current_longitude: deviceLocation.lng,
+      },
+    });
+   }
+}
 
   //handle car position changed
   const handleCarPositionChanged = () => {
@@ -92,9 +110,9 @@ function GoogleMapNickleAndTime() {
     // console.log('bounds ',bounds);
     // console.log('sw ',sw);
     // console.log('ne ',ne);
-    
+    mapRef.current?.panTo({ lat: carLat, lng: carLng });
     if(carSameAsDevice){
-      mapRef.current?.panTo({ lat: carLat, lng: carLng });
+      
     }
    
   };
@@ -103,12 +121,7 @@ function GoogleMapNickleAndTime() {
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success3, error, options);
     //start the watch right away, from useeffect
-    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
-    
   };
- 
-  
-
   const success3 = (pos) => {
 
     const crd = pos.coords;
@@ -125,10 +138,9 @@ function GoogleMapNickleAndTime() {
   const success = (pos) => {
     const crd = pos.coords;
     
-    if (!carSameAsDevice) {
+    if (carSameAsDevice) {
      
-       setCarLat(crd.latitude);
-       setCarLng(crd.longitude);
+      setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
       dispatch({
         type: "UPDATE_CURRENT_LOCATION",
         payload: {
@@ -174,6 +186,11 @@ function GoogleMapNickleAndTime() {
   useEffect(() => {
     //center the map on the location of the computer
     getLocation();
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
+    
+    // return () => {
+    //   navigator.geolocation.clearWatch(watchIdRef.current);
+    // }; 
   }, []);
 
   const handleOnClickMap = async (e) => {
@@ -288,6 +305,7 @@ function GoogleMapNickleAndTime() {
       >
         {/* Child components, such as markers, info windows, etc. */}
 
+        
         <FormControl component="fieldset">
           <FormGroup aria-label="position" row>
             <FormControlLabel
@@ -298,17 +316,10 @@ function GoogleMapNickleAndTime() {
                 ) : (
                   <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
                 )} >
-                  <Checkbox
+                  <Switch
                     color="primary"
                     checked={carSameAsDevice}
-                    onChange={(event)=>{
-                      console.log('event target checked ',event.target.checked);
-                      console.log('vefore ',carSameAsDevice);
-                      setCarSameAsDevice(event.target.checked);
-                      console.log('after ',carSameAsDevice);
-                      
-                      
-                    }}
+                    onChange={handleChangeCheckbox}
                   />
                 </Tooltip>
               }
@@ -342,9 +353,7 @@ function GoogleMapNickleAndTime() {
           animation={2}
           icon={{ url: "./volvo.png" }}
         />
-        {/* {clickedPosition && <InfoWin center={clickedPosition}/>} */}
-        {/* <Marker position={{ lat: Number(44.948545), lng: Number(-93.349296) }} /> */}
-        {/* <InfoWin center={center} /> */}
+        
         {/* add avoid circless */}
         <Circles />
       </GoogleMap>
