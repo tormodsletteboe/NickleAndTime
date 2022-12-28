@@ -87,13 +87,13 @@ const handleChangeCheckbox = (event) => {
    if(!carSameAsDevice){
     setCarLat(deviceLocation.lat);
     setCarLng(deviceLocation.lng);
-    dispatch({
-      type: "UPDATE_CURRENT_LOCATION",
-      payload: {
-        current_latitude: deviceLocation.lat,
-        current_longitude: deviceLocation.lng,
-      },
-    });
+    // dispatch({
+    //   type: "UPDATE_CURRENT_LOCATION",
+    //   payload: {
+    //     current_latitude: deviceLocation.lat,
+    //     current_longitude: deviceLocation.lng,
+    //   },
+    // });
    }
 }
 
@@ -110,6 +110,13 @@ const handleChangeCheckbox = (event) => {
     // console.log('bounds ',bounds);
     // console.log('sw ',sw);
     // console.log('ne ',ne);
+    dispatch({
+      type: "UPDATE_CURRENT_LOCATION",
+      payload: {
+        current_latitude: e.latLng.lat(),
+        current_longitude: e.latLng.lng(),
+      },
+    });
     mapRef.current?.panTo({ lat: carLat, lng: carLng });
     if(carSameAsDevice){
       
@@ -141,13 +148,13 @@ const handleChangeCheckbox = (event) => {
     if (carSameAsDevice) {
      
       setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
-      dispatch({
-        type: "UPDATE_CURRENT_LOCATION",
-        payload: {
-          current_latitude: crd.latitude,
-          current_longitude: crd.longitude,
-        },
-      });
+      // dispatch({
+      //   type: "UPDATE_CURRENT_LOCATION",
+      //   payload: {
+      //     current_latitude: crd.latitude,
+      //     current_longitude: crd.longitude,
+      //   },
+      // });
     }
   };
 
@@ -341,13 +348,6 @@ const handleChangeCheckbox = (event) => {
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
-            dispatch({
-              type: "UPDATE_CURRENT_LOCATION",
-              payload: {
-                current_latitude: e.latLng.lat(),
-                current_longitude: e.latLng.lng(),
-              },
-            });
           }}
           onPositionChanged={handleCarPositionChanged}
           animation={2}
