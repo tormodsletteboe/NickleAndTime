@@ -16,7 +16,7 @@ import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import CircleTwoToneIcon from "@mui/icons-material/CircleTwoTone";
 import BasicPopover from "./Popover.jsx";
-import HelpPopover from "./HelpPopover.jsx";
+
 
 //color green,yellow,red, used for the icons in the drawer
 const colors = { 1: "#008000", 2: "#FFFF00", 3: "#FF0000" };
@@ -126,7 +126,7 @@ export default function PlacesToAvoidDrawer() {
             <Button onClick={toggleDrawer(anchor, true)}>
               {"Places To Avoid"}
             </Button>
-            <HelpPopover />
+            
           </Stack>
           <Drawer
             anchor={anchor}

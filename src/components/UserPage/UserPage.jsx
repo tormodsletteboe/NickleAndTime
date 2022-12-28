@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleMapNickleAndTime from "../GoogleMap/GoogleMapNickleAndTime";
 import PlacesToAvoidDrawer from "../Drawer/Drawer";
+import SimpleBottomNavigation from "../BottomNavigation/BottomNav";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -27,7 +28,7 @@ function UserPage() {
       dispatch({
         type: "FETCH_PLACES_TO_AVOID",
       });
-    }, 1000); //fetch places to avoid from database every 1 seconds
+    }, 100000); //fetch places to avoid from database every 1 seconds
 
     return () => {
       clearInterval(interval);
@@ -54,7 +55,8 @@ function UserPage() {
   return (
     <div className="container">
       <GoogleMapNickleAndTime />
-      <PlacesToAvoidDrawer />
+      {/* <PlacesToAvoidDrawer /> */}
+      <SimpleBottomNavigation/>
     </div>
   );
 }

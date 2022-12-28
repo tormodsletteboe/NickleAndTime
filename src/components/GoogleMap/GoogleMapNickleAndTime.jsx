@@ -33,7 +33,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Switch from "@mui/material/Switch";
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
 import { Typography } from "@mui/material";
 
 //google maps options
@@ -60,18 +60,19 @@ function error(err) {
 
 //main comp
 function GoogleMapNickleAndTime() {
-  const [switchState,setSwitchState] = useState(true);
-  const carSameAsDeviceRef = useRef(true);
+  const [switchState, setSwitchState] = useState(false);
+  const carSameAsDeviceRef = useRef(false);
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
   const watchIdRef = useRef();
+  const addbuttonClickedRef = useRef(false);
 
   const [lat, setLat] = useState(44.941738);
   const [lng, setLng] = useState(-93.357366);
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
-  const [deviceLocation,setDeviceLocation] = useState();
+  const [deviceLocation, setDeviceLocation] = useState();
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -80,22 +81,20 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
-const handleChangeCheckbox = (event) => {
-  
+  const handleChangeCheckbox = (event) => {
     setSwitchState(event.target.checked);
     carSameAsDeviceRef.current = event.target.checked;
-    
+
     //move the car to device location
-   if(carSameAsDeviceRef.current == true){
-    setCarLat(deviceLocation.lat);
-    setCarLng(deviceLocation.lng);
-   }
-}
+    if (carSameAsDeviceRef.current == true) {
+      setCarLat(deviceLocation.lat);
+      setCarLng(deviceLocation.lng);
+    }
+  };
 
   //handle car position changed
   const handleCarPositionChanged = () => {
     if (!mapRef.current) {
-      console.log("returned no mapRef");
       return;
     }
     dispatch({
@@ -105,12 +104,11 @@ const handleChangeCheckbox = (event) => {
         current_longitude: carLng,
       },
     });
-   
+
     //while driving pan as the icon moves
-    if(carSameAsDeviceRef.current==true){
+    if (carSameAsDeviceRef.current == true) {
       mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
-   
   };
 
   //try to get a location
@@ -119,30 +117,27 @@ const handleChangeCheckbox = (event) => {
     //start the watch right away, from useeffect
   };
   const success3 = (pos) => {
-
     const crd = pos.coords;
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
     if (!mapRef.current) {
       return;
     }
-    mapRef.current.panTo({lat: carLat,lng: carLng});
+    mapRef.current.panTo({ lat: carLat, lng: carLng });
   };
-
 
   //used for watchposition
   const success = (pos) => {
+    console.log("-------------", pos);
     const crd = pos.coords;
-    setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
-    
-    //only update the car location if driving, ie car and device location should be the same, 
-    if (carSameAsDeviceRef.current==true) {
+    setDeviceLocation({ lat: crd.latitude, lng: crd.longitude });
+
+    //only update the car location if driving, ie car and device location should be the same,
+    if (carSameAsDeviceRef.current == true) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
     }
-    
   };
-
 
   //user clicks the add button
   function onAdd() {
@@ -169,6 +164,17 @@ const handleChangeCheckbox = (event) => {
           longitude,
         },
       });
+
+      //clear the search bar
+      setAddress();
+      setBusinessName();
+      setVisitLimit(0);
+      SetPlaceSelected([]);
+      addbuttonClickedRef.current = true;
+      if (!mapRef.current) {
+        return;
+      }
+      mapRef.current?.panTo({ lat: lat, lng: lng });
     } catch (error) {
       console.log("error in add", error);
     }
@@ -179,15 +185,19 @@ const handleChangeCheckbox = (event) => {
     //center the map on the location of the computer
     getLocation();
     //start the watch, used with smart phones, random with pc
-    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      success,
+      error,
+      options
+    );
     //TODO:
     // return () => {
     //   navigator.geolocation.clearWatch(watchIdRef.current);
-    // }; 
+    // };
   }, []);
 
   const handleOnClickMap = async (e) => {
-    if (!e.placeId) return;
+    if (!e.placeId || carSameAsDeviceRef.current) return;
 
     //prevent default infowindow
     e.stop();
@@ -227,8 +237,6 @@ const handleChangeCheckbox = (event) => {
         setAddress(place.formatted_address);
       }
     });
-
-    //mapRef.current?.panTo({lat,lng});
   };
 
   const onLoad = useCallback((map) => {
@@ -263,6 +271,8 @@ const handleChangeCheckbox = (event) => {
           AddressFromNameClickedOnMap={address}
           SetBNameFromClickedOnMap={setBusinessName}
           SetAddressFromNameClickedOnMap={setAddress}
+          CarSameAsDeviceRef={carSameAsDeviceRef}
+          AddButtonWasClickedRef={addbuttonClickedRef}
         />
 
         {/* visit limit */}
@@ -271,6 +281,7 @@ const handleChangeCheckbox = (event) => {
             size="small"
             variant="outlined"
             label="Visits/Week"
+            disabled={carSameAsDeviceRef.current}
             onChange={(evt) => {
               if (isNaN(evt.target.value)) {
                 setVisitLimit(0);
@@ -284,7 +295,12 @@ const handleChangeCheckbox = (event) => {
             value={visitlimit}
           />
         </Tooltip>
-        <Button variant="contained" onClick={onAdd} sx={{ height: 40 }}>
+        <Button
+          disabled={carSameAsDeviceRef.current}
+          variant="contained"
+          onClick={onAdd}
+          sx={{ height: 40 }}
+        >
           Add
         </Button>
       </Stack>
@@ -297,18 +313,29 @@ const handleChangeCheckbox = (event) => {
         onLoad={onLoad}
       >
         {/* Child components, such as markers, info windows, etc. */}
-
         
-        <FormControl component="fieldset">
+          
+          
+        
+
+        <FormControl id="bottomright" component="fieldset" sx={{backgroundColor: 'white'}}>
           <FormGroup aria-label="position" row>
             <FormControlLabel
               value="top"
               control={
-                <Tooltip title={switchState ? (
-                  <Typography variant="button">Volov icon location is equal to device location.</Typography>
-                ) : (
-                  <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
-                )} >
+                <Tooltip
+                  title={
+                    switchState ? (
+                      <Typography variant="button">
+                        Volov icon moves as you drive.
+                      </Typography>
+                    ) : (
+                      <Typography variant="button">
+                        Volvo icon can be dragged and dropped freely on the map
+                      </Typography>
+                    )
+                  }
+                >
                   <Switch
                     color="primary"
                     checked={switchState}
@@ -318,7 +345,7 @@ const handleChangeCheckbox = (event) => {
               }
               label={
                 switchState ? (
-                  <Typography variant="button">Volvo = Device</Typography>
+                  <Typography variant="button">Driving Mode</Typography>
                 ) : (
                   <Typography variant="button">Drag & Drop</Typography>
                 )
@@ -334,13 +361,13 @@ const handleChangeCheckbox = (event) => {
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
-            mapRef.current?.panTo({ lat: e.latLng.lat(), lng: e.latLng.lng()});
+            mapRef.current?.panTo({ lat: e.latLng.lat(), lng: e.latLng.lng() });
           }}
           onPositionChanged={handleCarPositionChanged}
           animation={2}
           icon={{ url: "./volvo.png" }}
         />
-        
+
         {/* add avoid circless */}
         <Circles />
       </GoogleMap>
@@ -359,6 +386,8 @@ const PlacesAutocomplete = ({
   SetBNameFromClickedOnMap,
   AddressFromNameClickedOnMap,
   SetAddressFromNameClickedOnMap,
+  CarSameAsDeviceRef,
+  AddButtonWasClickedRef,
 }) => {
   const {
     ready,
@@ -370,12 +399,15 @@ const PlacesAutocomplete = ({
   //console.log(BusinessNameFromClickedOnMap);
 
   useEffect(() => {
+    console.log("did you run because add was clicked");
     if (BusinessNameFromClickedOnMap) {
-      console.log("b name ran", BusinessNameFromClickedOnMap);
       setValue(
         BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`
       );
-      clearSuggestions();
+    }
+    if (AddButtonWasClickedRef.current == true) {
+      setValue("");
+      AddButtonWasClickedRef.current = false;
     }
   }, [AddressFromNameClickedOnMap]);
   //handles the user selecting a location from suggested places
@@ -407,7 +439,7 @@ const PlacesAutocomplete = ({
       <ComboboxInput
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        disabled={!ready}
+        disabled={!ready || CarSameAsDeviceRef.current}
         className="combobox-input"
         placeholder="Search an address"
       />
@@ -422,5 +454,9 @@ const PlacesAutocomplete = ({
     </Combobox>
   );
 };
+
+
+
+
 
 export default GoogleMapNickleAndTime;

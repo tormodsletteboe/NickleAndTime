@@ -65,11 +65,11 @@ export default function HelpPopover({}) {
         <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#008000'}}/></span> Green circles means you have more than 1 visit left this week.</Typography>
         
         <Typography sx={{ px: 2, py:0, display: "flex" }}>
-          While keeping this browser open on your phone, drive to a location you are trying to avoid. Wait 60 seconds. You will receive a text message.
+          While keeping this browser open on your phone and the app in Driving Mode, drive to a location you are trying to avoid. Wait 60 seconds. You will receive a text message.
         </Typography>
         <Typography sx={{ p: 2, display: "flex" }}>
         Alternativly Drag and Drop the  <Icon fontSize="large"><img src='./volvo.png' style={{marginLeft: 5,marginRight:5}} /></Icon> inside the circle of a place you are trying to 
-        avoid, wait 60 seconds. (PC only)
+        avoid, wait 60 seconds.
         </Typography>
         
       </Popover>
