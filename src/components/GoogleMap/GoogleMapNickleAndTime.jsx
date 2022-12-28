@@ -132,8 +132,9 @@ const handleChangeCheckbox = (event) => {
     const crd = pos.coords;
     setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
     if (carSameAsDevice) {
-      setCarLat(deviceLocation.lat);
-      setCarLng(deviceLocation.lng);
+      setCarLat(crd.latitude);
+      setCarLng(crd.longitude);
+      mapRef.current?.panTo({lat: crd.latitude,lng: crd.longitude});
     }
     
   };
