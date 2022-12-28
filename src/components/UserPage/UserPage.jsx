@@ -27,7 +27,7 @@ function UserPage() {
       dispatch({
         type: "FETCH_PLACES_TO_AVOID",
       });
-    }, 100000); //fetch places to avoid from database every 1 seconds
+    }, 1000); //fetch places to avoid from database every 1 seconds
 
     return () => {
       clearInterval(interval);
