@@ -91,10 +91,28 @@ async function getCurrentlyVisiting(user_id,avoid_place_id){
     }
 }
 
+async function getCurrentlyActive(user_id,avoid_place_id){
+    try {
+        const sqlText = `
+            SELECT active FROM user_avoidplace
+            WHERE user_id = $1 AND avoid_place_id = $2
+            ;`;
+        const params = [user_id, avoid_place_id];
+
+        let dbRes = await pool.query(sqlText, params);
+        //console.log(dbRes.rows[0].currently_visiting)
+        return dbRes.rows[0].active;
+    }
+    catch (error) {
+        console.error('getCurrentlyActive failed: ', error);
+    }
+}
+
 module.exports = {
     incrementVisitCount,
     resetVisitCount,
     get_VisitCountAndVisitLimit,
     setCurrentlyVisiting,
     getCurrentlyVisiting,
+    getCurrentlyActive,
 }

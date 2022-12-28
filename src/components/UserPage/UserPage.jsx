@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 const options = {
   enableHighAccuracy: true,
   timeout: 5000,
-  maximumAge: 0,
+  maximumAge: 60000,
 };
 
 //get location error function

@@ -33,6 +33,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Switch from "@mui/material/Switch";
+import Checkbox from '@mui/material/Checkbox';
 import { Typography } from "@mui/material";
 
 //google maps options
@@ -47,10 +48,10 @@ const center = {
 
 //get location options
 const options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
+  enableHighAccuracy: false,
   maximumAge: 0,
 };
+//timeout: 5000,
 
 //if get location failed
 function error(err) {
@@ -59,11 +60,8 @@ function error(err) {
 
 //main comp
 function GoogleMapNickleAndTime() {
-  const [
-    carLocationIsTheSameAsDeviceLocation,
-    setCarLocationIsTheSameAsDeviceLocation,
-  ] = useState(true);
-  const initialDeviceLocation = useRef();
+  const [carSameAsDevice,setCarSameAsDevice] = useState(true);
+  
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
@@ -73,6 +71,7 @@ function GoogleMapNickleAndTime() {
   const [lng, setLng] = useState(-93.357366);
   const [carLat, setCarLat] = useState(44.941738);
   const [carLng, setCarLng] = useState(-93.357366);
+  const [deviceLocation,setDeviceLocation] = useState();
 
   const [placeSelected, SetPlaceSelected] = useState([]);
   const [visitlimit, setVisitLimit] = useState(0);
@@ -81,20 +80,31 @@ function GoogleMapNickleAndTime() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
+const handleChangeCheckbox = (event) => {
+    setCarSameAsDevice(event.target.checked);
+
+    //should be just carSameAsDevice but, it does not update this until after this function therefore !car...
+   if(!carSameAsDevice){
+    setCarLat(deviceLocation.lat);
+    setCarLng(deviceLocation.lng);
+   }
+}
+
   //handle car position changed
   const handleCarPositionChanged = () => {
     if (!mapRef.current) {
       console.log("returned no mapRef");
       return;
     }
-    // const bounds = mapRef.current.getBounds();
-    //  const sw = {lat: bounds.Wa.lo,lng:bounds.Ia.lo};
-    //  const ne = {lat:bounds.Wa.hi,lng:bounds.Ia.hi};
-
-    // console.log('bounds ',bounds);
-    // console.log('sw ',sw);
-    // console.log('ne ',ne);
-    if(carLocationIsTheSameAsDeviceLocation){
+    dispatch({
+      type: "UPDATE_CURRENT_LOCATION",
+      payload: {
+        current_latitude: carLat,
+        current_longitude: carLng,
+      },
+    });
+   
+    if(carSameAsDevice){
       mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
    
@@ -104,31 +114,10 @@ function GoogleMapNickleAndTime() {
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(success3, error, options);
     //start the watch right away, from useeffect
-    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
-    
   };
- 
-  const getLocationOfDeviceAndSendTheCarThere = () => {
-    //start the watch
-   
-    dispatch({
-      type: "UPDATE_CURRENT_LOCATION",
-      payload: {
-        current_latitude: initialDeviceLocation.current.lat,
-        current_longitude: initialDeviceLocation.current.lng,
-      },
-    });
-    setCarLat(initialDeviceLocation.current.lat);
-    setCarLng(initialDeviceLocation.current.lng);
-    if (!mapRef.current) {
-      return;
-    }
-    mapRef.current.panTo({lat: carLat,lng: carLng});
-  };
-
   const success3 = (pos) => {
+
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
     if (!mapRef.current) {
@@ -141,19 +130,13 @@ function GoogleMapNickleAndTime() {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    initialDeviceLocation.current={lat: crd.latitude,lng: crd.longitude}
-    if (carLocationIsTheSameAsDeviceLocation) {
-      setCarLat(crd.latitude);
-      setCarLng(crd.longitude);
-      dispatch({
-        type: "UPDATE_CURRENT_LOCATION",
-        payload: {
-          current_latitude: crd.latitude,
-          current_longitude: crd.longitude,
-        },
-      });
+    
+    if (carSameAsDevice) {
+      setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
     }
   };
+
+
   //user clicks the add button
   function onAdd() {
     //create a dispatch with a payload to update 2 tables
@@ -188,6 +171,12 @@ function GoogleMapNickleAndTime() {
   useEffect(() => {
     //center the map on the location of the computer
     getLocation();
+    //start the watch, used with smart phones, random with pc
+    watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
+    //TODO:
+    // return () => {
+    //   navigator.geolocation.clearWatch(watchIdRef.current);
+    // }; 
   }, []);
 
   const handleOnClickMap = async (e) => {
@@ -302,30 +291,26 @@ function GoogleMapNickleAndTime() {
       >
         {/* Child components, such as markers, info windows, etc. */}
 
+        
         <FormControl component="fieldset">
           <FormGroup aria-label="position" row>
             <FormControlLabel
               value="top"
               control={
-                <Tooltip title={carLocationIsTheSameAsDeviceLocation ? (
+                <Tooltip title={carSameAsDevice ? (
                   <Typography variant="button">Volov icon location is equal to device location.</Typography>
                 ) : (
                   <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
                 )} >
                   <Switch
                     color="primary"
-                    checked={carLocationIsTheSameAsDeviceLocation}
-                    onChange={()=>{
-                      setCarLocationIsTheSameAsDeviceLocation(!carLocationIsTheSameAsDeviceLocation);
-                      if(!carLocationIsTheSameAsDeviceLocation){
-                        getLocationOfDeviceAndSendTheCarThere();
-                      }  
-                    }}
+                    checked={carSameAsDevice}
+                    onChange={handleChangeCheckbox}
                   />
                 </Tooltip>
               }
               label={
-                carLocationIsTheSameAsDeviceLocation ? (
+                carSameAsDevice ? (
                   <Typography variant="button">Volvo = Device</Typography>
                 ) : (
                   <Typography variant="button">Drag & Drop</Typography>
@@ -338,25 +323,17 @@ function GoogleMapNickleAndTime() {
 
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
-          draggable={!carLocationIsTheSameAsDeviceLocation}
+          draggable={!carSameAsDevice}
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
-            dispatch({
-              type: "UPDATE_CURRENT_LOCATION",
-              payload: {
-                current_latitude: e.latLng.lat(),
-                current_longitude: e.latLng.lng(),
-              },
-            });
+            mapRef.current?.panTo({ lat: e.latLng.lat(), lng: e.latLng.lng()});
           }}
           onPositionChanged={handleCarPositionChanged}
           animation={2}
           icon={{ url: "./volvo.png" }}
         />
-        {/* {clickedPosition && <InfoWin center={clickedPosition}/>} */}
-        {/* <Marker position={{ lat: Number(44.948545), lng: Number(-93.349296) }} /> */}
-        {/* <InfoWin center={center} /> */}
+        
         {/* add avoid circless */}
         <Circles />
       </GoogleMap>
