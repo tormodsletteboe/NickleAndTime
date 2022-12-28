@@ -60,8 +60,8 @@ function error(err) {
 
 //main comp
 function GoogleMapNickleAndTime() {
-  const [carSameAsDevice,setCarSameAsDevice] = useState(true);
-  
+  const [switchState,setSwitchState] = useState(true);
+  const carSameAsDeviceRef = useRef(true);
   const mapRef = useRef();
   const marker = useRef();
   const infowindow = useRef();
@@ -81,10 +81,12 @@ function GoogleMapNickleAndTime() {
   const user = useSelector((store) => store.user);
 
 const handleChangeCheckbox = (event) => {
-    setCarSameAsDevice(event.target.checked);
-
-    //should be just carSameAsDevice but, it does not update this until after this function therefore !car...
-   if(!carSameAsDevice){
+  
+    setSwitchState(event.target.checked);
+    carSameAsDeviceRef.current = event.target.checked;
+    
+    //move the car to device location
+   if(carSameAsDeviceRef.current == true){
     setCarLat(deviceLocation.lat);
     setCarLng(deviceLocation.lng);
    }
@@ -104,7 +106,8 @@ const handleChangeCheckbox = (event) => {
       },
     });
    
-    if(carSameAsDevice){
+    //while driving pan as the icon moves
+    if(carSameAsDeviceRef.current==true){
       mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
    
@@ -131,10 +134,11 @@ const handleChangeCheckbox = (event) => {
   const success = (pos) => {
     const crd = pos.coords;
     setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
-    if (carSameAsDevice) {
+    
+    //only update the car location if driving, ie car and device location should be the same, 
+    if (carSameAsDeviceRef.current==true) {
       setCarLat(crd.latitude);
       setCarLng(crd.longitude);
-      mapRef.current?.panTo({lat: crd.latitude,lng: crd.longitude});
     }
     
   };
@@ -300,20 +304,20 @@ const handleChangeCheckbox = (event) => {
             <FormControlLabel
               value="top"
               control={
-                <Tooltip title={carSameAsDevice ? (
+                <Tooltip title={switchState ? (
                   <Typography variant="button">Volov icon location is equal to device location.</Typography>
                 ) : (
                   <Typography variant="button">Volvo icon can be dragged and dropped freely on the map</Typography>
                 )} >
                   <Switch
                     color="primary"
-                    checked={carSameAsDevice}
+                    checked={switchState}
                     onChange={handleChangeCheckbox}
                   />
                 </Tooltip>
               }
               label={
-                carSameAsDevice ? (
+                switchState ? (
                   <Typography variant="button">Volvo = Device</Typography>
                 ) : (
                   <Typography variant="button">Drag & Drop</Typography>
@@ -326,7 +330,7 @@ const handleChangeCheckbox = (event) => {
 
         <Marker
           position={{ lat: Number(carLat), lng: Number(carLng) }}
-          draggable={!carSameAsDevice}
+          draggable={!switchState}
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
