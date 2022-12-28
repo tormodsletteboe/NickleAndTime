@@ -87,13 +87,6 @@ const handleChangeCheckbox = (event) => {
    if(!carSameAsDevice){
     setCarLat(deviceLocation.lat);
     setCarLng(deviceLocation.lng);
-    // dispatch({
-    //   type: "UPDATE_CURRENT_LOCATION",
-    //   payload: {
-    //     current_latitude: deviceLocation.lat,
-    //     current_longitude: deviceLocation.lng,
-    //   },
-    // });
    }
 }
 
@@ -103,13 +96,6 @@ const handleChangeCheckbox = (event) => {
       console.log("returned no mapRef");
       return;
     }
-    // const bounds = mapRef.current.getBounds();
-    //  const sw = {lat: bounds.Wa.lo,lng:bounds.Ia.lo};
-    //  const ne = {lat:bounds.Wa.hi,lng:bounds.Ia.hi};
-
-    // console.log('bounds ',bounds);
-    // console.log('sw ',sw);
-    // console.log('ne ',ne);
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
       payload: {
@@ -117,9 +103,9 @@ const handleChangeCheckbox = (event) => {
         current_longitude: carLng,
       },
     });
-    mapRef.current?.panTo({ lat: carLat, lng: carLng });
+   
     if(carSameAsDevice){
-      
+      mapRef.current?.panTo({ lat: carLat, lng: carLng });
     }
    
   };
@@ -146,15 +132,7 @@ const handleChangeCheckbox = (event) => {
     const crd = pos.coords;
     
     if (carSameAsDevice) {
-     
       setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
-      // dispatch({
-      //   type: "UPDATE_CURRENT_LOCATION",
-      //   payload: {
-      //     current_latitude: crd.latitude,
-      //     current_longitude: crd.longitude,
-      //   },
-      // });
     }
   };
 
@@ -193,8 +171,9 @@ const handleChangeCheckbox = (event) => {
   useEffect(() => {
     //center the map on the location of the computer
     getLocation();
+    //start the watch, used with smart phones, random with pc
     watchIdRef.current = navigator.geolocation.watchPosition(success, error, options);
-    
+    //TODO:
     // return () => {
     //   navigator.geolocation.clearWatch(watchIdRef.current);
     // }; 
@@ -348,6 +327,7 @@ const handleChangeCheckbox = (event) => {
           onDragEnd={(e) => {
             setCarLat(e.latLng.lat());
             setCarLng(e.latLng.lng());
+            mapRef.current?.panTo({ lat: e.latLng.lat(), lng: e.latLng.lng()});
           }}
           onPositionChanged={handleCarPositionChanged}
           animation={2}
