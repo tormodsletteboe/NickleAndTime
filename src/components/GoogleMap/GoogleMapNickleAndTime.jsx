@@ -130,10 +130,12 @@ const handleChangeCheckbox = (event) => {
   //used for watchposition
   const success = (pos) => {
     const crd = pos.coords;
-    
+    setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
     if (carSameAsDevice) {
-      setDeviceLocation({lat: crd.latitude,lng: crd.longitude});
+      setCarLat(deviceLocation.lat);
+      setCarLng(deviceLocation.lng);
     }
+    
   };
 
 
