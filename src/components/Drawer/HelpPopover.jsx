@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import RoomIcon from '@mui/icons-material/Room';
 import { Button, Icon } from "@mui/material";
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
+import HelpIcon from '@mui/icons-material/Help';
+
 import "./Popover.css";
 
 
@@ -25,6 +27,7 @@ export default function HelpPopover({}) {
     <div>
       <Button variant="info" onClick={handleClick}>
         {"Help"}
+        <HelpIcon/>
       </Button>
       <Popover
         id={id}

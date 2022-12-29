@@ -16,7 +16,7 @@ import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import CircleTwoToneIcon from "@mui/icons-material/CircleTwoTone";
 import BasicPopover from "./Popover.jsx";
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 //color green,yellow,red, used for the icons in the drawer
 const colors = { 1: "#008000", 2: "#FFFF00", 3: "#FF0000" };
@@ -122,12 +122,10 @@ export default function PlacesToAvoidDrawer() {
     <div>
       {["bottom"].map((anchor) => (
         <Fragment key={anchor}>
-          <Stack direction={"row"} justifyContent={"space-between"}>
-            <Button onClick={toggleDrawer(anchor, true)}>
-              {"Places To Avoid"}
-            </Button>
-            
-          </Stack>
+          <Button onClick={toggleDrawer(anchor, true)}>
+            {"Places To Avoid"}
+            <LocationOnIcon />
+          </Button>
           <Drawer
             anchor={anchor}
             open={state[anchor]}
