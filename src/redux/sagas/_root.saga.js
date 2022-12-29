@@ -4,7 +4,7 @@ import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
 import placesToAvoidSaga from './placesToAvoidSaga';
 import currentLocation from './currentLocation.saga';
-
+import latestSMS from './snackbarSMS.saga';
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
 // This is imported in index.js as rootSaga
@@ -19,5 +19,6 @@ export default function* rootSaga() {
     userSaga(),
     placesToAvoidSaga(),
     currentLocation(),
+    latestSMS(),
   ]);
 }

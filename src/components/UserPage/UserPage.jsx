@@ -3,7 +3,7 @@ import GoogleMapNickleAndTime from "../GoogleMap/GoogleMapNickleAndTime";
 import SimpleBottomNavigation from "../BottomNavigation/BottomNav";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-
+import SnackbarAlert from "../SnackbarAlert/SnackbarAlert.jsx";
 //get location options
 const options = {
   enableHighAccuracy: true,
@@ -56,6 +56,7 @@ function UserPage() {
       <GoogleMapNickleAndTime />
       {/* <PlacesToAvoidDrawer /> */}
       <SimpleBottomNavigation/>
+      <SnackbarAlert />
     </div>
   );
 }

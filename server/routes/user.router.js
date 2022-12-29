@@ -265,6 +265,34 @@ router.post('/checkStatusOfVerifyCodeSMS',  (req, res) => {
   
 });
 
+//latestsms
+router.get('/latestsms', rejectUnauthenticated, (req, res) => {
+  const sqlText = `
+  SELECT 
+    	trigger_sms.id,
+    	"user".username,
+    	avoid_place."name",
+    	messages.body,
+    	trigger_sms.created_date
+    FROM trigger_sms
+    LEFT JOIN avoid_place ON avoid_place.id = trigger_sms.avoid_place_id
+    LEFT JOIN messages ON messages.id = trigger_sms.message_id
+    LEFT JOIN "user" ON "user".id = trigger_sms.user_id
+  WHERE user_id = $1
+  ORDER BY trigger_sms.id DESC
+  LIMIT 1
+ ;`;
+  const params = [req.user.id];
+  pool.query(sqlText, params)
+    .then((dbRes) => {
+      res.send(dbRes.rows);
+    })
+    .catch((err) => {
+      console.log('GET /latestsms failed: ', err);
+      res.sendStatus(500);
+    });
+});
+
 
 
 module.exports = router;
