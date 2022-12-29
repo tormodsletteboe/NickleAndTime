@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import Footer from '../Footer/Footer.jsx';
 import BottomNavigation from "@mui/material/BottomNavigation";
 
 import PlacesToAvoidDrawer from "../Drawer/Drawer";
@@ -19,6 +19,7 @@ export default function SimpleBottomNavigation() {
       sx={{justifyContent: 'space-around' }}
     >
       <PlacesToAvoidDrawer />
+      <Footer />
       <HelpPopover />
      
     </BottomNavigation>

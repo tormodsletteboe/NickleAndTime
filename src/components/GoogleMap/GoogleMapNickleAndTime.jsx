@@ -403,6 +403,9 @@ const PlacesAutocomplete = ({
       setValue("");
       AddButtonWasClickedRef.current = false;
     }
+    if(CarSameAsDeviceRef.current==true){
+      clearSuggestions();
+    }
   }, [AddressFromNameClickedOnMap]);
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
