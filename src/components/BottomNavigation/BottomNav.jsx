@@ -19,7 +19,6 @@ export default function SimpleBottomNavigation() {
       sx={{justifyContent: 'space-around' }}
     >
       <PlacesToAvoidDrawer />
-      <Footer />
       <HelpPopover />
      
     </BottomNavigation>

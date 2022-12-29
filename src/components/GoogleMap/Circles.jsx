@@ -32,7 +32,7 @@ function Circles() {
             radius: 100,
             zIndex: 1
           }
-          //console.log(place.name, place.visit_count, place.visit_limit);
+         
           if (place.visit_count >= place.visit_limit) {
             optionsCircle.strokeColor = '#000000';
             optionsCircle.fillColor = '#FF0000';

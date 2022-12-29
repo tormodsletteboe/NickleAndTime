@@ -58,7 +58,7 @@ router.post('/logout', (req, res) => {
 router.post('/places', rejectUnauthenticated, (req, res) => {
 
   //send data to database
-  console.log('in POST');
+  
   const queryText = `
   INSERT INTO avoid_place (name,latitude,longitude,google_place_id)
   VALUES ($1,$2,$3,$4)
@@ -186,12 +186,12 @@ router.put('/toggleactive', rejectUnauthenticated, (req, res) => {
 });
 
 router.delete('/delete', rejectUnauthenticated, (req, res) => {
-  console.log('in delete route');
+  
   const sqlText = `
     DELETE FROM user_avoidplace
     WHERE user_id = $1 AND avoid_place_id=$2
   ;`;
-  console.log('user id: ',req.user.id,'req.body.placeId',req.body.placeId);
+  
   const params = [req.user.id,req.body.placeId];
   pool.query(sqlText, params)
     .then((dbRes) => {
@@ -205,12 +205,12 @@ router.delete('/delete', rejectUnauthenticated, (req, res) => {
 });
 
 router.delete('/currentLocation', rejectUnauthenticated, (req, res) => {
-  console.log('in delete route currentLocation');
+
   const sqlText = `
     DELETE FROM user_location
     WHERE user_id = $1
   ;`;
-  // console.log('user id: ',req.user.id);
+  
   const params = [req.user.id];
   pool.query(sqlText, params)
     .then((dbRes) => {
@@ -227,7 +227,7 @@ router.delete('/currentLocation', rejectUnauthenticated, (req, res) => {
 router.post('/validate_phonenumber',  (req, res) => {
   let result =  validateNumber(req.body.name,req.body.phoneNnumber);
   result.then(resolve =>{
-    //console.log('post validate phone',resolve);
+
     res.send(resolve.validationCode);
   }).catch((error)=>{
     console.log('error in validate phone number POST',error);

@@ -11,7 +11,7 @@ async function incrementVisitCount(user_id, avoid_place_id) {
         const params = [user_id, avoid_place_id];
 
         let dbRes = await pool.query(sqlText, params);
-        //console.log(`Incremented User: ${user_id} at place: ${avoid_place_id}`);
+       
     }
     catch (error) {
         console.error('incrementVisitCount failed: ', error);
@@ -29,7 +29,6 @@ async function resetVisitCount() {
     ;`;
 
         let dbRes = await pool.query(sqlText);
-        //console.log(`Server reset the visit count on ${dbRes.rowCount} rows`);
     }
     catch (error) {
         console.error('resetVisitCount failed: ', err);
@@ -49,7 +48,7 @@ async function get_VisitCountAndVisitLimit(user_id, place_id) {
     ;`;
         const params = [user_id,place_id];
         let dbRes = await pool.query(sqlText,params);
-        // console.log(`Server get_VisitCountAndVisitLimit  ${dbRes.rowCount} rows`);
+        
         return dbRes.rows[0];
     }
     catch (error) {
@@ -83,7 +82,7 @@ async function getCurrentlyVisiting(user_id,avoid_place_id){
         const params = [user_id, avoid_place_id];
 
         let dbRes = await pool.query(sqlText, params);
-        //console.log(dbRes.rows[0].currently_visiting)
+       
         return dbRes.rows[0].currently_visiting;
     }
     catch (error) {
@@ -100,7 +99,7 @@ async function getCurrentlyActive(user_id,avoid_place_id){
         const params = [user_id, avoid_place_id];
 
         let dbRes = await pool.query(sqlText, params);
-        //console.log(dbRes.rows[0].currently_visiting)
+       
         return dbRes.rows[0].active;
     }
     catch (error) {

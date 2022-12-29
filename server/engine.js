@@ -13,7 +13,7 @@ const timeUserIsAllowedToStayBeforeItCountsAsAVisit = 60000; // 1 min
 //engine
 cron.schedule('* * * * * *', async () => {
 
-    //console.log('Heart beat ', new Date().toLocaleTimeString());
+    
     //get the current location of several users, TODO: this can be improved by only getting actively loggin in users.
     let usersLocation = await getUsersLocation();
 
@@ -38,9 +38,7 @@ cron.schedule('* * * * * *', async () => {
                 setCurrentlyVisiting(userId,place.id,false)
             }
             let currentlyVisiting = await getCurrentlyVisiting(userId,place.id);
-            // console.log('------------------');
-            // console.log(`User: ${userId} is ${dist_between_usrAndPlace} meters from ${place.name} currently visiting: `,currentlyVisiting)
-            // console.log('------------------');
+            
             //check if user is to close
             if (dist_between_usrAndPlace < dontGetCloserThanThis && !currentlyVisiting) {
                 //this 👇 code (ie the setTimeout block) will need to change, not sure the timeout will work when you have multiple users logged in,

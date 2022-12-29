@@ -120,6 +120,7 @@ function GoogleMapNickleAndTime() {
   };
   const success3 = (pos) => {
     const crd = pos.coords;
+    setDeviceLocation({lat: crd.latitude,lng:crd.longitude});
     setCarLat(crd.latitude);
     setCarLng(crd.longitude);
     if (!mapRef.current) {
@@ -130,7 +131,7 @@ function GoogleMapNickleAndTime() {
 
   //used for watchposition
   const success = (pos) => {
-    console.log("-------------", pos);
+   
     const crd = pos.coords;
     setDeviceLocation({ lat: crd.latitude, lng: crd.longitude });
 
@@ -199,26 +200,23 @@ function GoogleMapNickleAndTime() {
   }, []);
 
   const handleOnClickMap = async (e) => {
-    if (!e.placeId || carSameAsDeviceRef.current){
+    if (!e.placeId || carSameAsDeviceRef.current) {
       marker.current.setMap(null);
-      infowindow=null;
+     
       //trigger a re render of autocomplete, im a terrible coder for this hahahaha
       //TODO:This is where I am 22
       setAddress("");
       setBusinessName("");
       return;
-    } 
+    }
 
     //prevent default infowindow
     e.stop();
 
     const results = await getGeocode({ placeId: e.placeId });
     SetPlaceSelected(results);
-    //console.log(results);
-    //console.log(results[0].formatted_address);
 
     const { lat, lng } = await getLatLng(results[0]);
-
     setLat(lat);
     setLng(lng);
 
@@ -227,7 +225,7 @@ function GoogleMapNickleAndTime() {
       fields: ["name", "formatted_address", "place_id", "geometry"],
     };
     const service = new window.google.maps.places.PlacesService(mapRef.current);
-    //console.log(service);
+
     service.getDetails(request, (place, status) => {
       if (
         status === window.google.maps.places.PlacesServiceStatus.OK &&
@@ -257,6 +255,7 @@ function GoogleMapNickleAndTime() {
     );
   }, []);
 
+ 
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_PUBLIC_MAP_API_KEY}
@@ -385,6 +384,13 @@ function GoogleMapNickleAndTime() {
   );
 }
 
+// const parameterObj={
+//   requestOptions: {
+//     location:{lat:44.936604,lng:-93.365735},
+//     radius:1000,
+//   }
+// };
+
 //component to search for a location to avoid
 const PlacesAutocomplete = ({
   SetPlaceSelected,
@@ -398,6 +404,7 @@ const PlacesAutocomplete = ({
   SetAddressFromNameClickedOnMap,
   CarSameAsDeviceRef,
   AddButtonWasClickedRef,
+
 }) => {
   const {
     ready,
@@ -406,10 +413,8 @@ const PlacesAutocomplete = ({
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
-  //console.log(BusinessNameFromClickedOnMap);
-
   useEffect(() => {
-    console.log("did you run because add was clicked");
+   
     if (BusinessNameFromClickedOnMap) {
       setValue(
         BusinessNameFromClickedOnMap + ` ${AddressFromNameClickedOnMap}`
@@ -425,16 +430,13 @@ const PlacesAutocomplete = ({
   }, [AddressFromNameClickedOnMap]);
   //handles the user selecting a location from suggested places
   const handleSelect = async (address) => {
-    //console.log('add',address);
+   
     SetBNameFromClickedOnMap("");
     SetAddressFromNameClickedOnMap("");
     clearSuggestions();
     setValue(address, false);
     const results = await getGeocode({ address });
-    console.log(address);
-    console.log(results);
-    console.log(results[0]);
-
+  
     const { lat, lng } = await getLatLng(results[0]);
     SetLat(lat);
     SetLng(lng);
@@ -469,3 +471,7 @@ const PlacesAutocomplete = ({
 };
 
 export default GoogleMapNickleAndTime;
+
+
+
+

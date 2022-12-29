@@ -4,7 +4,7 @@ const pool = require('../modules/pool');
 async function getUsers() {
     try {
         let dbRes = await pool.query(`SELECT * FROM "user";`);
-        //console.log('dbRes',dbRes);
+       
         return dbRes.rows;
     } 
     catch (error) {
@@ -21,7 +21,7 @@ async function getUserName(user_id) {
         ;`;
         const params =[user_id];
         let dbRes = await pool.query(sqlText,params);
-        //console.log(' Name dbRes',dbRes);
+        
         return dbRes.rows[0].username;
     } 
     catch (error) {
@@ -38,7 +38,7 @@ async function getUserPhoneNumber(user_id) {
         ;`;
         const params =[user_id];
         let dbRes = await pool.query(sqlText,params);
-        //console.log('PHONE dbRes',dbRes);
+       
         return dbRes.rows[0].phone_number;
     } 
     catch (error) {
@@ -51,7 +51,7 @@ async function getUserPhoneNumber(user_id) {
 async function getUsersLocation(){
     try {
         let dbRes = await pool.query(`SELECT * FROM "user_location";`);
-        //console.log('dbRes',dbRes);
+       
         return dbRes.rows;
     } 
     catch (error) {
@@ -84,7 +84,7 @@ async function getLocations_OfPlacesUserIsAvoiding(user_id){
         ;`;
         const params = [user_id];
         let dbRes = await pool.query(sqlText,params);
-        //console.log('dbRes',dbRes);
+        
         return dbRes.rows;
     } 
     catch (error) {

@@ -1,6 +1,5 @@
 import React from "react";
 import GoogleMapNickleAndTime from "../GoogleMap/GoogleMapNickleAndTime";
-import PlacesToAvoidDrawer from "../Drawer/Drawer";
 import SimpleBottomNavigation from "../BottomNavigation/BottomNav";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -41,7 +40,7 @@ function UserPage() {
   };
   //update database with this users current location
   const success = (pos) => {
-    //console.log('the position of this device changed, update sent to database');
+   
     const crd = pos.coords;
     dispatch({
       type: "UPDATE_CURRENT_LOCATION",
