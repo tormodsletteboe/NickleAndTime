@@ -1,10 +1,12 @@
 import * as React from "react";
-import Footer from '../Footer/Footer.jsx';
+
 import BottomNavigation from "@mui/material/BottomNavigation";
 
 import PlacesToAvoidDrawer from "../Drawer/Drawer";
 import HelpPopover from "../Drawer/HelpPopover";
 import { Paper } from "@mui/material";
+
+
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);
 

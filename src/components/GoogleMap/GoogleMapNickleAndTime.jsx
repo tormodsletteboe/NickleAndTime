@@ -248,6 +248,7 @@ function GoogleMapNickleAndTime() {
   };
 
   const onLoad = useCallback((map) => {
+    dispatch({type:'SET_MAP',payload:map});
     return (
       (mapRef.current = map),
       (infowindow.current = new window.google.maps.InfoWindow()),
