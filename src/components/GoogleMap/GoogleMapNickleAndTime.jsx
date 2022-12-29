@@ -31,9 +31,7 @@ import Tooltip from "@mui/material/Tooltip";
 import FormGroup from "@mui/material/FormGroup";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 import Switch from "@mui/material/Switch";
-import Checkbox from "@mui/material/Checkbox";
 import { Typography } from "@mui/material";
 
 //google maps options
@@ -314,10 +312,6 @@ function GoogleMapNickleAndTime() {
       >
         {/* Child components, such as markers, info windows, etc. */}
         
-          
-          
-        
-
         <FormControl id="bottomright" component="fieldset" sx={{backgroundColor: 'white'}}>
           <FormGroup aria-label="position" row>
             <FormControlLabel
