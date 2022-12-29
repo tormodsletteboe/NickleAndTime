@@ -202,6 +202,10 @@ function GoogleMapNickleAndTime() {
     if (!e.placeId || carSameAsDeviceRef.current){
       marker.current.setMap(null);
       infowindow=null;
+      //trigger a re render of autocomplete, im a terrible coder for this hahahaha
+      //TODO:This is where I am
+      setAddress("");
+      setBusinessName("");
       return;
     } 
 
