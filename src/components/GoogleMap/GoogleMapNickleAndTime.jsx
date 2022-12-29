@@ -87,6 +87,10 @@ function GoogleMapNickleAndTime() {
     if (carSameAsDeviceRef.current == true) {
       setCarLat(deviceLocation.lat);
       setCarLng(deviceLocation.lng);
+
+      //trigger a re render of autocomplete, im a terrible coder for this hahahaha
+      setAddress("");
+      setBusinessName("");
     }
   };
 
@@ -195,7 +199,11 @@ function GoogleMapNickleAndTime() {
   }, []);
 
   const handleOnClickMap = async (e) => {
-    if (!e.placeId || carSameAsDeviceRef.current) return;
+    if (!e.placeId || carSameAsDeviceRef.current){
+      marker.current.setMap(null);
+      infowindow=null;
+      return;
+    } 
 
     //prevent default infowindow
     e.stop();
@@ -311,8 +319,12 @@ function GoogleMapNickleAndTime() {
         onLoad={onLoad}
       >
         {/* Child components, such as markers, info windows, etc. */}
-        
-        <FormControl id="bottomright" component="fieldset" sx={{backgroundColor: 'white'}}>
+
+        <FormControl
+          id="bottomright"
+          component="fieldset"
+          sx={{ backgroundColor: "white" }}
+        >
           <FormGroup aria-label="position" row>
             <FormControlLabel
               value="top"
@@ -403,7 +415,7 @@ const PlacesAutocomplete = ({
       setValue("");
       AddButtonWasClickedRef.current = false;
     }
-    if(CarSameAsDeviceRef.current==true){
+    if (CarSameAsDeviceRef.current == true) {
       clearSuggestions();
     }
   }, [AddressFromNameClickedOnMap]);
@@ -451,9 +463,5 @@ const PlacesAutocomplete = ({
     </Combobox>
   );
 };
-
-
-
-
 
 export default GoogleMapNickleAndTime;
