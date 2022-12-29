@@ -24,7 +24,7 @@ const colors = { 1: "#008000", 2: "#FFFF00", 3: "#FF0000" };
 export default function PlacesToAvoidDrawer() {
   const dispatch = useDispatch();
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
-  const map = useSelector((store)=> store.map);
+  const map = useSelector((store) => store.map);
 
   useEffect(() => {
     dispatch({
@@ -37,11 +37,7 @@ export default function PlacesToAvoidDrawer() {
     bottom: false,
     right: false,
   });
-const handleListItemButtonClick =() =>{
-
-  //this is where I am, thursday lunch
-  //()=>map?.panTo({lat:place.latitude,lng:place.longitude})
-}
+  
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -52,8 +48,10 @@ const handleListItemButtonClick =() =>{
 
     setState({ ...state, [anchor]: open });
   };
+  
 
   const list = (anchor) => (
+    
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
       role="presentation"
@@ -72,7 +70,11 @@ const handleListItemButtonClick =() =>{
             disablePadding
             style={{ textDecoration: !place.active ? "line-through" : "none" }}
           >
-            <ListItemButton onClick={handleListItemButtonClick}>
+            <ListItemButton onClick={()=>{
+              if(!map) return;
+              console.log('place ',place);
+              map.panTo({lat: Number(place.latitude) ,lng: Number(place.longitude)});
+            }}>
               <Stack direction="row" spacing={1}>
                 <ListItemIcon>
                   <CircleTwoToneIcon
