@@ -11,7 +11,7 @@
 
 _Duration: 2 Week Sprint_
 
-Nickle & Time lets users add locations to a google map, that they would like to avoid or only visit a few times per week. Using the user's current location it will detect if they are close to one of those places, and send them a friendly text message based on how many times they have visisted. As of Dec 1st 2022 new users will need to contact the author by email (bottom of page) before using.
+Nickle & Time lets users add locations, to a google map, that they would like to avoid or only visit a few times per week. Using the user's current location it will detect if they are close to one of those places, and send them a friendly text message based on how many times they have visisted. 
 
 ## Screen Shot
 
@@ -41,9 +41,7 @@ Nickle & Time lets users add locations to a google map, that they would like to 
     - Username
     - Password
     - Phone Number 
-        - only accepted format (XXXXXXXXXX), ex: 5129186767, no leading +1 or dashes, or spaces
-        - user will need to email author to register the phone number with the txt message service
-
+        - only accepted format (XXXXXXXXXX), ex: 9998887777, no leading +1 or dashes, or spaces
 
 1. To add a place to avoid
     - Search for an address

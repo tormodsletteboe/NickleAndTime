@@ -25,6 +25,7 @@ export default function PlacesToAvoidDrawer() {
   const dispatch = useDispatch();
   const placesToAvoid = useSelector((store) => store.placesToAvoid);
   const map = useSelector((store) => store.map);
+  const switchState = useSelector((store) => store.switchState);
 
   useEffect(() => {
     dispatch({
@@ -72,8 +73,11 @@ export default function PlacesToAvoidDrawer() {
           >
             <ListItemButton onClick={()=>{
               if(!map) return;
-              console.log('place ',place);
-              map.panTo({lat: Number(place.latitude) ,lng: Number(place.longitude)});
+              
+              if(switchState==false){
+                map.panTo({lat: Number(place.latitude) ,lng: Number(place.longitude)});
+              }
+              
             }}>
               <Stack direction="row" spacing={1}>
                 <ListItemIcon>

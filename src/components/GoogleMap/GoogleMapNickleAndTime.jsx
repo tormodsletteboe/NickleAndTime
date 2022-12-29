@@ -81,6 +81,7 @@ function GoogleMapNickleAndTime() {
 
   const handleChangeCheckbox = (event) => {
     setSwitchState(event.target.checked);
+    dispatch({type: "SET_SWITCH_STATE",payload: event.target.checked});
     carSameAsDeviceRef.current = event.target.checked;
 
     //move the car to device location
