@@ -69,7 +69,7 @@ export default function CircularStatic() {
     };
   }, []);
 
-  if (clocktIncrement == 60) {
+  if (clocktIncrement == 61) {
     dispatch({ type: "FETCH_LATEST_SMS" });
   }
   if (clocktIncrement <= 60) {

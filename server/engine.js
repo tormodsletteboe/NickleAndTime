@@ -75,7 +75,7 @@ cron.schedule('* * * * * *', async () => {
                         let visitCount = result.visit_count;
                         let visitLimit = result.visit_limit;
                         let severity = getSeverity(visitCount, visitLimit);
-                        console.log('sev------------- ', severity);
+                        // console.log('sev------------- ', severity);
                         //get message to send out based on severity rating
                         let msgData = await getMessage(severity);
                         let msg = msgData.body;

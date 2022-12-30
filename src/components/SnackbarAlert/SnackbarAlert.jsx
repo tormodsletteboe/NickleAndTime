@@ -28,7 +28,7 @@ export default function CustomizedSnackbars() {
     setPrevMsgId(smsMessage.id);
     dispatch({type: "UNSET_LATEST_SMS"});
   };
-
+  console.log('----------------- ',smsMessage.body);
   return ( (prevMsgId == 0 || smsMessage.id != prevMsgId ) &&
     <Stack spacing={2} sx={{ width: '100%' }}>
       {console.log('smsM ', smsMessage)}
