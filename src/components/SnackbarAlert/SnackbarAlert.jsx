@@ -29,12 +29,12 @@ export default function CustomizedSnackbars() {
     dispatch({type: "UNSET_LATEST_SMS"});
   };
 
-  return ( (smsMessage.id != prevMsgId) &&
+  return ( (prevMsgId == 0 || smsMessage.id != prevMsgId ) &&
     <Stack spacing={2} sx={{ width: '100%' }}>
       {console.log('smsM ', smsMessage)}
       <Snackbar open={Object.keys(smsMessage).length === 0 ? false : true} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={severitySMS[smsMessage.severity]} sx={{ width: '100%' }}>
-          {smsMessage.username} {smsMessage.body} {smsMessage.place_name}
+          {smsMessage.username} {smsMessage.body}{" "}{smsMessage.place_name}
         </Alert>
       </Snackbar>
     </Stack>
