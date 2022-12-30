@@ -7,7 +7,7 @@ import {useSelector,useDispatch} from 'react-redux';
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-
+const severitySMS = {"1": 'success',"2": 'warning',"3":'error' }
 export default function CustomizedSnackbars() {
 
   
@@ -20,15 +20,18 @@ export default function CustomizedSnackbars() {
     if (reason === 'clickaway') {
       return;
     }
+
+    //TODO: need to get rid of old msg before showing new, this does not do it
     dispatch({type: 'UNSET_SNACKBAR_ALERT'});
+    dispatch({type: "UNSET_LATEST_SMS"});
     
   };
 
-  return ( showAlert &&
+  return ( (smsMessage && showAlert) &&
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          {smsMessage.username} {smsMessage.body} {smsMessage.name}
+        <Alert onClose={handleClose} severity={severitySMS[smsMessage.severity]} sx={{ width: '100%' }}>
+          {smsMessage.username} {smsMessage.body} {smsMessage.place_name}
         </Alert>
       </Snackbar>
     </Stack>

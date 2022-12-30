@@ -271,9 +271,10 @@ router.get('/latestsms', rejectUnauthenticated, (req, res) => {
   SELECT 
     	trigger_sms.id,
     	"user".username,
-    	avoid_place."name",
+    	avoid_place."name" AS "place_name",
     	messages.body,
-    	trigger_sms.created_date
+    	trigger_sms.created_date,
+      messages.severity
     FROM trigger_sms
     LEFT JOIN avoid_place ON avoid_place.id = trigger_sms.avoid_place_id
     LEFT JOIN messages ON messages.id = trigger_sms.message_id
