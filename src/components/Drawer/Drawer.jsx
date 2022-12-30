@@ -75,6 +75,7 @@ export default function PlacesToAvoidDrawer() {
               if(!map) return;
               
               if(switchState==false){
+                map.setZoom(17);
                 map.panTo({lat: Number(place.latitude) ,lng: Number(place.longitude)});
               }
               

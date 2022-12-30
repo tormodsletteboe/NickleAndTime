@@ -69,13 +69,13 @@ cron.schedule('* * * * * *', async () => {
                     if (dist_between_usrAndPlace < dontGetCloserThanThis && stillActive) {
 
                         //increment visit count
-                        incrementVisitCount(userId, place.id);
+                        await incrementVisitCount(userId, place.id);
                         //getVisitCount and VisitLimit -> calculate a severity rating -> get a message based on that rating
                         let result = await get_VisitCountAndVisitLimit(userId, place.id);
                         let visitCount = result.visit_count;
                         let visitLimit = result.visit_limit;
                         let severity = getSeverity(visitCount, visitLimit);
-
+                        console.log('sev------------- ', severity);
                         //get message to send out based on severity rating
                         let msgData = await getMessage(severity);
                         let msg = msgData.body;

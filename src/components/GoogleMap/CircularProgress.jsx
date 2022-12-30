@@ -5,7 +5,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-
 function CircularProgressWithLabel(props) {
   const dispatch = useDispatch();
   return (
@@ -70,16 +69,14 @@ export default function CircularStatic() {
     };
   }, []);
 
-  if(clocktIncrement==60){
-      dispatch({type: 'SET_SNACKBAR_ALERT'});
-      dispatch({type:'FETCH_LATEST_SMS'});
+  if (clocktIncrement == 60) {
+    dispatch({ type: "FETCH_LATEST_SMS" });
   }
-  if (clocktIncrement <= 60 ) {
+  if (clocktIncrement <= 60) {
     return (
       <CircularProgressWithLabel value={progress} clock={clocktIncrement} />
     );
-  }
-  else {
+  } else {
     return <></>;
   }
 }

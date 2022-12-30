@@ -6,7 +6,6 @@ import currentLocation from "./currentLocation.reducer";
 import validationCode from "./phonevalidationcode.reducer";
 import map from "./map.reducer";
 import switchState from './switchstate.reducer';
-import snackbaralert from './snackbaralert.reducer';
 import latestSMS from './latestsms.reducer';
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -22,7 +21,6 @@ const rootReducer = combineReducers({
   validationCode,
   map,
   switchState,
-  snackbaralert,
   latestSMS,
 });
 
