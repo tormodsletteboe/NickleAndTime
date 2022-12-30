@@ -5,7 +5,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import { Button, Icon } from "@mui/material";
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import HelpIcon from '@mui/icons-material/Help';
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import "./Popover.css";
 
 
@@ -58,10 +58,12 @@ export default function HelpPopover({}) {
           2. Select number of Visits/Week allowed.
         </Typography>
        
-        <Typography sx={{ p: 2, display: "flex" }}>
+        <Typography sx={{ p: 2, display: "flex", flexWrap:"wrap",alignItems:"center" }}>
           3. Click <span 
           className="highlight" 
-          style={{backgroundColor: "#1976d2",border: 'solid', borderColor: '#1976d2',borderRadius: 5,color: 'white', margin:3}}>ADD</span> button.
+          style={{backgroundColor: "#1976d2",border: 'solid', borderColor: '#1976d2',borderRadius: 5,color: 'white', margin:3}}>ADD</span>
+           button. The place will be added to the map with a color circle. All the places you are avoiding can be found in
+            <span className="highlight" style={{backgroundColor: "white",color: '#1976d2', margin:3}} >PLACES TO AVOID</span><LocationOnIcon sx={{color:'#1976d2'}}/>
         </Typography>
         <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#FF0000'}}/></span> Red circles means you have no visits left this week.</Typography>
         <Typography sx={{ p: 2 ,display:'flex' }}><span className='highlight'><CircleTwoToneIcon sx={{mx: 2, color:'#FFFF00'}}/></span> Yellow circles means you have 1 visit left this week.</Typography>
@@ -70,7 +72,7 @@ export default function HelpPopover({}) {
         <Typography sx={{ px: 2, py:0, display: "flex" }}>
           While keeping this browser open on your phone and the app in Driving Mode, drive to a location you are trying to avoid. Wait 60 seconds. You will receive a text message.
         </Typography>
-        <Typography sx={{ p: 2, display: "flex" }}>
+        <Typography sx={{ p: 2, display: "flex", flexWrap:"wrap",alignItems:"center" }}>
         Alternativly Drag and Drop the  <Icon fontSize="large"><img src='./volvo.png' style={{marginLeft: 5,marginRight:5}} /></Icon> inside the circle of a place you are trying to 
         avoid, wait 60 seconds.
         </Typography>
