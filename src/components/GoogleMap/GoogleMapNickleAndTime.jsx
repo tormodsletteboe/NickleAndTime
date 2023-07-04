@@ -431,6 +431,7 @@ const PlacesAutocomplete = ({
     }
   }, [AddressFromNameClickedOnMap]);
   //handles the user selecting a location from suggested places
+  //test 1
   const handleSelect = async (address) => {
    
     SetBNameFromClickedOnMap("");
